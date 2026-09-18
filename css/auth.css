@@ -1612,3 +1612,31 @@ a {
     }
 
 }
+.admin-login-link {
+    margin-top: 18px;
+    padding-top: 18px;
+
+    border-top: 1px solid #e8edf5;
+
+    text-align: center;
+
+    font-size: 11px;
+    color: #718096;
+}
+
+.admin-login-link a {
+    margin-left: 5px;
+
+    color: #2563eb;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.admin-login-link a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
