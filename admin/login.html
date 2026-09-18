@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login | PJT CLASSES</title>
+
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+
+<body>
+
+    <div class="admin-login-page">
+
+        <!-- LEFT BRAND SECTION -->
+        <section class="admin-brand">
+
+            <div class="brand-content">
+
+                <div class="brand-logo">
+                    <img src="../assets/images/logo/logo.png" alt="PJT Classes">
+                </div>
+
+                <span class="brand-label">ADMIN PANEL</span>
+
+                <h1>
+                    Manage PJT CLASSES
+                    <span>with ease.</span>
+                </h1>
+
+                <p>
+                    Access student records, performance, behaviour,
+                    fee tracking and notifications from one secure panel.
+                </p>
+
+                <div class="brand-points">
+
+                    <div class="brand-point">
+                        <span>✓</span>
+                        <div>
+                            <strong>Student Management</strong>
+                            <small>Manage registered students</small>
+                        </div>
+                    </div>
+
+                    <div class="brand-point">
+                        <span>✓</span>
+                        <div>
+                            <strong>Performance & Behaviour</strong>
+                            <small>Track student progress</small>
+                        </div>
+                    </div>
+
+                    <div class="brand-point">
+                        <span>✓</span>
+                        <div>
+                            <strong>Fee Management</strong>
+                            <small>Track monthly payments</small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- LOGIN SECTION -->
+        <section class="admin-login-section">
+
+            <div class="admin-login-card">
+
+                <div class="mobile-logo">
+                    <img src="../assets/images/logo/logo.png" alt="PJT Classes">
+                </div>
+
+                <div class="login-heading">
+
+                    <span class="small-heading">
+                        PJT CLASSES
+                    </span>
+
+                    <h2>Admin Login</h2>
+
+                    <p>
+                        Sign in to access the administration panel.
+                    </p>
+
+                </div>
+
+
+                <form id="adminLoginForm" novalidate>
+
+                    <!-- ADMIN ID -->
+                    <div class="form-group">
+
+                        <label for="adminId">
+                            Admin ID
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">◉</span>
+
+                            <input
+                                type="text"
+                                id="adminId"
+                                name="adminId"
+                                placeholder="Enter admin ID"
+                                autocomplete="username"
+                            >
+
+                        </div>
+
+                        <span
+                            class="form-error"
+                            id="adminIdError">
+                        </span>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+                    <div class="form-group">
+
+                        <label for="adminPassword">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">●</span>
+
+                            <input
+                                type="password"
+                                id="adminPassword"
+                                name="password"
+                                placeholder="Enter password"
+                                autocomplete="current-password"
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="adminPasswordToggle"
+                                aria-label="Show password">
+                                Show
+                            </button>
+
+                        </div>
+
+                        <span
+                            class="form-error"
+                            id="adminPasswordError">
+                        </span>
+
+                    </div>
+
+
+                    <!-- LOGIN MESSAGE -->
+                    <div
+                        class="login-message"
+                        id="adminLoginMessage"
+                        role="alert">
+                    </div>
+
+
+                    <!-- LOGIN BUTTON -->
+                    <button
+                        type="submit"
+                        class="admin-login-button"
+                        id="adminLoginButton">
+
+                        <span class="button-text">
+                            Sign In
+                        </span>
+
+                        <span class="button-loader"></span>
+
+                    </button>
+
+                </form>
+
+
+                <div class="login-footer">
+
+                    <span>Authorized administration access only</span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <script src="../js/admin.js"></script>
+
+</body>
+</html>

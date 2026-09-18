@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Details | PJT CLASSES</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin-student-details.css">
+</head>
+
+<body>
+
+<div class="admin-app">
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="sidebar-header">
+
+            <a href="dashboard.html" class="sidebar-logo">
+                <img src="../assets/images/logo/logo.png" alt="PJT Classes">
+
+                <div>
+                    <strong>PJT CLASSES</strong>
+                    <span>ADMIN PANEL</span>
+                </div>
+            </a>
+
+            <button
+                type="button"
+                class="sidebar-close"
+                id="sidebarClose">
+                ×
+            </button>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <div class="nav-section-title">
+                MAIN
+            </div>
+
+            <a href="dashboard.html" class="admin-nav-link">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="students.html" class="admin-nav-link active">
+                <span class="nav-icon">♙</span>
+                <span>Students</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                STUDENT MANAGEMENT
+            </div>
+
+            <a href="performance.html" class="admin-nav-link">
+                <span class="nav-icon">▥</span>
+                <span>Performance</span>
+            </a>
+
+            <a href="behaviour.html" class="admin-nav-link">
+                <span class="nav-icon">✓</span>
+                <span>Behaviour</span>
+            </a>
+
+            <a href="fees.html" class="admin-nav-link">
+                <span class="nav-icon">₹</span>
+                <span>Fees</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                COMMUNICATION
+            </div>
+
+            <a href="notifications.html" class="admin-nav-link">
+                <span class="nav-icon">♢</span>
+                <span>Notifications</span>
+                <span class="nav-count">2</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                SYSTEM
+            </div>
+
+            <a href="settings.html" class="admin-nav-link">
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-profile-mini">
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+                <div class="admin-profile-info">
+                    <strong>Administrator</strong>
+                    <span>ADMIN-001</span>
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="sidebar-logout"
+                id="logoutButton">
+
+                <span>↪</span>
+                Logout
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+        <!-- TOPBAR -->
+        <header class="admin-topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    type="button"
+                    class="menu-button"
+                    id="menuButton">
+                    ☰
+                </button>
+
+                <div>
+                    <span class="page-label">
+                        STUDENT MANAGEMENT
+                    </span>
+
+                    <h1>Student Details</h1>
+                </div>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <a
+                    href="notifications.html"
+                    class="notification-button">
+
+                    ♢
+
+                    <span class="notification-badge">
+                        2
+                    </span>
+
+                </a>
+
+
+                <div class="topbar-admin">
+
+                    <div class="topbar-avatar">
+                        A
+                    </div>
+
+                    <div class="topbar-admin-info">
+                        <strong>Administrator</strong>
+                        <span>Admin</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+        <div class="admin-content">
+
+
+            <!-- BACK -->
+            <div class="back-row">
+
+                <a href="students.html" class="back-button">
+                    ← Back to Students
+                </a>
+
+            </div>
+
+
+            <!-- STUDENT PROFILE HEADER -->
+            <section class="student-profile-card">
+
+                <div class="student-profile-main">
+
+                    <div class="large-student-avatar" id="studentAvatar">
+                        RK
+                    </div>
+
+                    <div class="student-profile-info">
+
+                        <span class="profile-kicker">
+                            STUDENT PROFILE
+                        </span>
+
+                        <h2 id="studentName">
+                            Rahul Kumar
+                        </h2>
+
+                        <div class="student-meta">
+
+                            <span id="studentId">
+                                STU-2026-001
+                            </span>
+
+                            <span>•</span>
+
+                            <span id="studentClass">
+                                Class 10
+                            </span>
+
+                            <span>•</span>
+
+                            <span>
+                                Session 2026–27
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="profile-status">
+
+                    <span class="status-dot"></span>
+
+                    Active Student
+
+                </div>
+
+            </section>
+
+
+            <!-- INFORMATION GRID -->
+            <section class="details-grid">
+
+
+                <!-- PERSONAL INFORMATION -->
+                <div class="details-card personal-card">
+
+                    <div class="details-card-header">
+
+                        <div>
+                            <span class="card-kicker">
+                                PERSONAL
+                            </span>
+
+                            <h3>Personal Information</h3>
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+                        <div class="info-item">
+                            <span>Full Name</span>
+                            <strong id="infoName">
+                                Rahul Kumar
+                            </strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Student ID</span>
+                            <strong id="infoId">
+                                STU-2026-001
+                            </strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Class</span>
+                            <strong id="infoClass">
+                                Class 10
+                            </strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Phone Number</span>
+                            <strong id="infoPhone">
+                                9876543210
+                            </strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Parent / Guardian</span>
+                            <strong id="infoGuardian">
+                                Rajesh Kumar
+                            </strong>
+                        </div>
+
+                        <div class="info-item">
+                            <span>Guardian Phone</span>
+                            <strong id="infoGuardianPhone">
+                                9876543220
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FEE SUMMARY -->
+                <div class="details-card fee-summary-card">
+
+                    <div class="details-card-header">
+
+                        <div>
+                            <span class="card-kicker">
+                                FEES
+                            </span>
+
+                            <h3>Fee Summary</h3>
+                        </div>
+
+                        <a href="fees.html" class="small-link">
+                            Manage →
+                        </a>
+
+                    </div>
+
+
+                    <div class="fee-summary-main">
+
+                        <div class="fee-amount-box">
+
+                            <span>Annual Fee</span>
+
+                            <strong>
+                                ₹7,200
+                            </strong>
+
+                        </div>
+
+                        <div class="fee-amount-box paid-box">
+
+                            <span>Paid</span>
+
+                            <strong id="paidAmount">
+                                ₹3,600
+                            </strong>
+
+                        </div>
+
+                        <div class="fee-amount-box pending-box">
+
+                            <span>Pending</span>
+
+                            <strong id="pendingAmount">
+                                ₹3,600
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="fee-progress-area">
+
+                        <div class="progress-label">
+
+                            <span>
+                                Payment Progress
+                            </span>
+
+                            <strong id="paymentPercentage">
+                                50%
+                            </strong>
+
+                        </div>
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill"
+                                id="paymentProgress"
+                                style="width: 50%;">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- PERFORMANCE + BEHAVIOUR -->
+            <section class="details-grid second-grid">
+
+
+                <!-- PERFORMANCE -->
+                <div class="details-card">
+
+                    <div class="details-card-header">
+
+                        <div>
+                            <span class="card-kicker">
+                                ACADEMIC
+                            </span>
+
+                            <h3>Performance</h3>
+                        </div>
+
+                        <a
+                            href="performance.html"
+                            class="small-link">
+                            Manage →
+                        </a>
+
+                    </div>
+
+
+                    <div class="performance-summary">
+
+                        <div class="performance-score">
+
+                            <strong>
+                                78%
+                            </strong>
+
+                            <span>
+                                Overall Performance
+                            </span>
+
+                        </div>
+
+
+                        <div class="subject-bars">
+
+                            <div class="subject-row">
+
+                                <div>
+                                    <span>Mathematics</span>
+                                    <strong>82%</strong>
+                                </div>
+
+                                <div class="subject-track">
+                                    <div
+                                        class="subject-fill"
+                                        style="width:82%;">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="subject-row">
+
+                                <div>
+                                    <span>Science</span>
+                                    <strong>76%</strong>
+                                </div>
+
+                                <div class="subject-track">
+                                    <div
+                                        class="subject-fill"
+                                        style="width:76%;">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="subject-row">
+
+                                <div>
+                                    <span>English</span>
+                                    <strong>80%</strong>
+                                </div>
+
+                                <div class="subject-track">
+                                    <div
+                                        class="subject-fill"
+                                        style="width:80%;">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BEHAVIOUR -->
+                <div class="details-card">
+
+                    <div class="details-card-header">
+
+                        <div>
+                            <span class="card-kicker">
+                                STUDENT RECORD
+                            </span>
+
+                            <h3>Behaviour</h3>
+                        </div>
+
+                        <a
+                            href="behaviour.html"
+                            class="small-link">
+                            Manage →
+                        </a>
+
+                    </div>
+
+
+                    <div class="behaviour-summary">
+
+                        <div class="behaviour-rating">
+
+                            <div class="rating-circle">
+                                A
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Good
+                                </strong>
+
+                                <span>
+                                    Current behaviour status
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="behaviour-notes">
+
+                            <span>
+                                Latest Note
+                            </span>
+
+                            <p>
+                                Regular attendance and participates
+                                well during class activities.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- FEE MONTHS -->
+            <section class="details-card monthly-fee-card">
+
+                <div class="details-card-header">
+
+                    <div>
+                        <span class="card-kicker">
+                            MARCH – FEBRUARY
+                        </span>
+
+                        <h3>Monthly Fee Status</h3>
+                    </div>
+
+                    <a
+                        href="fees.html"
+                        class="small-link">
+                        Open Fee Management →
+                    </a>
+
+                </div>
+
+
+                <div class="monthly-fee-grid">
+
+                    <div class="month-item paid">
+                        <span>Mar</span>
+                        <strong>Paid</strong>
+                    </div>
+
+                    <div class="month-item paid">
+                        <span>Apr</span>
+                        <strong>Paid</strong>
+                    </div>
+
+                    <div class="month-item pending">
+                        <span>May</span>
+                        <strong>Pending</strong>
+                    </div>
+
+                    <div class="month-item paid">
+                        <span>Jun</span>
+                        <strong>Paid</strong>
+                    </div>
+
+                    <div class="month-item paid">
+                        <span>Jul</span>
+                        <strong>Paid</strong>
+                    </div>
+
+                    <div class="month-item pending">
+                        <span>Aug</span>
+                        <strong>Pending</strong>
+                    </div>
+
+                    <div class="month-item pending">
+                        <span>Sep</span>
+                        <strong>Pending</strong>
+                    </div>
+
+                    <div class="month-item paid">
+                        <span>Oct</span>
+                        <strong>Paid</strong>
+                    </div>
+
+                    <div class="month-item pending">
+                        <span>Nov</span>
+                        <strong>Pending</strong>
+                    </div>
+
+                    <div class="month-item pending">
+                        <span>Dec</span>
+                        <strong>Pending</strong>
+                    </div>
+
+                    <div class="month-item paid">
+                        <span>Jan</span>
+                        <strong>Paid</strong>
+                    </div>
+
+                    <div class="month-item pending">
+                        <span>Feb</span>
+                        <strong>Pending</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- MEMBERS -->
+            <section class="details-card members-card">
+
+                <div class="details-card-header">
+
+                    <div>
+                        <span class="card-kicker">
+                            FAMILY
+                        </span>
+
+                        <h3>Added Members</h3>
+                    </div>
+
+                    <span class="member-limit">
+                        Maximum 3 members
+                    </span>
+
+                </div>
+
+
+                <div class="members-list">
+
+                    <div class="member-item">
+
+                        <div class="member-avatar">
+                            AK
+                        </div>
+
+                        <div class="member-info">
+
+                            <strong>
+                                Ankit Kumar
+                            </strong>
+
+                            <span>
+                                Brother · Added member
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="member-item">
+
+                        <div class="member-avatar">
+                            SK
+                        </div>
+
+                        <div class="member-info">
+
+                            <strong>
+                                Suman Kumar
+                            </strong>
+
+                            <span>
+                                Sister · Added member
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="member-empty">
+
+                        <span>
+                            + 
+                        </span>
+
+                        <p>
+                            No third member added
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- FOOTER -->
+            <footer class="admin-footer">
+
+                <span>
+                    © 2026 PJT CLASSES
+                </span>
+
+                <span>
+                    Administration Panel
+                </span>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="../js/admin.js"></script>
+<script src="../js/admin-student-details.js"></script>
+
+</body>
+</html>

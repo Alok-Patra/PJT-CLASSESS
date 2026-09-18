@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | PJT Classes</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/settings.css">
+</head>
+
+<body>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="../assets/images/logo/logo.png" alt="PJT Classes">
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-item">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="profile.html" class="nav-item">
+                <span class="nav-icon">♙</span>
+                <span>Profile</span>
+            </a>
+
+            <a href="performance.html" class="nav-item">
+                <span class="nav-icon">◈</span>
+                <span>Performance</span>
+            </a>
+
+            <a href="behaviour.html" class="nav-item">
+                <span class="nav-icon">◉</span>
+                <span>Behaviour</span>
+            </a>
+
+            <a href="fees.html" class="nav-item">
+                <span class="nav-icon">₹</span>
+                <span>Fees</span>
+            </a>
+
+            <a href="notifications.html" class="nav-item">
+                <span class="nav-icon">♢</span>
+                <span>Notifications</span>
+                <span class="nav-badge" id="notificationBadge">2</span>
+            </a>
+
+            <a href="settings.html" class="nav-item active">
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+
+        <!-- Sidebar Bottom -->
+
+        <div class="sidebar-bottom">
+
+            <div class="student-mini-profile">
+
+                <div class="mini-avatar">
+                    RK
+                </div>
+
+                <div class="mini-info">
+                    <strong>Rahul Kumar</strong>
+                    <span>STU-2026-001</span>
+                </div>
+
+            </div>
+
+
+            <button class="logout-btn" id="logoutBtn">
+                <span>↪</span>
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <button class="menu-btn" id="menuBtn">
+                ☰
+            </button>
+
+
+            <div class="topbar-search">
+
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    id="settingsSearch"
+                >
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <button
+                    class="notification-top-btn"
+                    id="notificationBtn"
+                    title="Notifications"
+                >
+                    ♢
+                    <span id="topNotificationBadge">2</span>
+                </button>
+
+
+                <div class="topbar-user">
+
+                    <div class="top-avatar">
+                        RK
+                    </div>
+
+                    <div class="top-user-info">
+                        <strong>Rahul Kumar</strong>
+                        <span>Class 10</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =========================================
+             SETTINGS PAGE
+        ========================================== -->
+
+        <section class="settings-page">
+
+
+            <!-- PAGE HEADER -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <span class="page-label">
+                        STUDENT PORTAL
+                    </span>
+
+                    <h1>
+                        Settings
+                    </h1>
+
+                    <p>
+                        Manage your account and notification preferences.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SETTINGS GRID -->
+
+            <div class="settings-grid">
+
+
+                <!-- =================================
+                     ACCOUNT INFORMATION
+                ================================== -->
+
+                <div class="settings-card">
+
+                    <div class="settings-card-header">
+
+                        <div class="settings-card-icon blue">
+                            ♙
+                        </div>
+
+                        <div>
+                            <h2>Account Information</h2>
+
+                            <p>
+                                Your registered student account details
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-content">
+
+                        <div class="info-row">
+
+                            <div>
+                                <span class="info-label">
+                                    Student Name
+                                </span>
+
+                                <strong>
+                                    Rahul Kumar
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <div>
+                                <span class="info-label">
+                                    Student ID
+                                </span>
+
+                                <strong>
+                                    STU-2026-001
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <div>
+                                <span class="info-label">
+                                    Class
+                                </span>
+
+                                <strong>
+                                    Class 10
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-row">
+
+                            <div>
+                                <span class="info-label">
+                                    Session
+                                </span>
+
+                                <strong>
+                                    2026–27
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <a href="profile.html" class="settings-link">
+                            View profile
+                            <span>→</span>
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================
+                     NOTIFICATION SETTINGS
+                ================================== -->
+
+                <div class="settings-card">
+
+                    <div class="settings-card-header">
+
+                        <div class="settings-card-icon green">
+                            ♢
+                        </div>
+
+                        <div>
+                            <h2>Notifications</h2>
+
+                            <p>
+                                Manage your notification preferences
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-content">
+
+
+                        <div class="setting-option">
+
+                            <div class="setting-text">
+
+                                <strong>
+                                    Fee reminders
+                                </strong>
+
+                                <span>
+                                    Receive reminders when monthly fees are pending.
+                                </span>
+
+                            </div>
+
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="feeNotifications"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+
+                        <div class="setting-option">
+
+                            <div class="setting-text">
+
+                                <strong>
+                                    Class announcements
+                                </strong>
+
+                                <span>
+                                    Receive important announcements from PJT Classes.
+                                </span>
+
+                            </div>
+
+
+                            <label class="switch">
+
+                                <input
+                                    type="checkbox"
+                                    id="announcementNotifications"
+                                    checked
+                                >
+
+                                <span class="slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================
+                     CHANGE PASSWORD
+                ================================== -->
+
+                <div class="settings-card">
+
+                    <div class="settings-card-header">
+
+                        <div class="settings-card-icon orange">
+                            🔒
+                        </div>
+
+                        <div>
+                            <h2>Change Password</h2>
+
+                            <p>
+                                Update your student account password
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <form class="password-form" id="passwordForm">
+
+
+                        <div class="form-group">
+
+                            <label for="currentPassword">
+                                Current Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="currentPassword"
+                                placeholder="Enter current password"
+                                required
+                            >
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="newPassword">
+                                New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="newPassword"
+                                placeholder="Enter new password"
+                                required
+                            >
+
+                        </div>
+
+
+
+                        <div class="form-group">
+
+                            <label for="confirmPassword">
+                                Confirm New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                placeholder="Confirm new password"
+                                required
+                            >
+
+                        </div>
+
+
+
+                        <button
+                            type="submit"
+                            class="save-password-btn"
+                        >
+                            Update Password
+                        </button>
+
+
+                        <p
+                            class="password-message"
+                            id="passwordMessage"
+                        ></p>
+
+                    </form>
+
+                </div>
+
+
+
+                <!-- =================================
+                     LOGOUT
+                ================================== -->
+
+                <div class="settings-card logout-card">
+
+                    <div class="settings-card-header">
+
+                        <div class="settings-card-icon red">
+                            ↪
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Logout
+                            </h2>
+
+                            <p>
+                                Sign out from your student account
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="logout-content">
+
+                        <p>
+                            Make sure you have saved any important
+                            information before logging out.
+                        </p>
+
+                        <button
+                            class="logout-page-btn"
+                            id="pageLogoutBtn"
+                        >
+                            Logout from Account
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================
+         MOBILE BOTTOM NAV
+    ========================================== -->
+
+    <nav class="mobile-bottom-nav">
+
+        <a href="dashboard.html">
+            <span>⌂</span>
+            <small>Home</small>
+        </a>
+
+        <a href="profile.html">
+            <span>♙</span>
+            <small>Profile</small>
+        </a>
+
+        <a href="performance.html">
+            <span>◈</span>
+            <small>Performance</small>
+        </a>
+
+        <a href="fees.html">
+            <span>₹</span>
+            <small>Fees</small>
+        </a>
+
+        <a href="notifications.html">
+            <span>♢</span>
+            <small>Alerts</small>
+        </a>
+
+    </nav>
+
+
+
+    <script src="../js/settings.js"></script>
+
+</body>
+</html>

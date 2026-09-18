@@ -1,0 +1,492 @@
+/* =========================================
+   PJT CLASSES
+   GLOBAL STUDENT PORTAL STYLES
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f6f8fc;
+    color: #172033;
+    min-height: 100vh;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 224px;
+    height: 100vh;
+    background: #ffffff;
+    border-right: 1px solid #e7ebf2;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Logo */
+
+.sidebar-logo {
+    height: 88px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.sidebar-logo img {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    display: block;
+}
+
+
+/* =========================================
+   SIDEBAR NAVIGATION
+========================================= */
+
+.sidebar-nav {
+    padding: 22px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+}
+
+.nav-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 11px 13px;
+    border-radius: 9px;
+    color: #667085;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    background: #f5f8ff;
+    color: #2563eb;
+}
+
+.nav-item.active {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.nav-icon {
+    width: 22px;
+    min-width: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+}
+
+.nav-badge {
+    margin-left: auto;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border-radius: 20px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 10px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* =========================================
+   SIDEBAR BOTTOM
+========================================= */
+
+.sidebar-bottom {
+    padding: 15px 12px 18px;
+    border-top: 1px solid #edf0f5;
+}
+
+.student-mini-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 5px 13px;
+}
+
+.mini-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.mini-info {
+    min-width: 0;
+}
+
+.mini-info strong {
+    display: block;
+    color: #172033;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-info span {
+    display: block;
+    color: #98a2b3;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.logout-btn {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    color: #667085;
+    border-radius: 8px;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.logout-btn:hover {
+    background: #fff5f5;
+    color: #dc2626;
+    border-color: #fecaca;
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.main-content {
+    margin-left: 224px;
+    min-height: 100vh;
+}
+
+
+/* =========================================
+   TOPBAR
+========================================= */
+
+.topbar {
+    height: 72px;
+    background: #ffffff;
+    border-bottom: 1px solid #e7ebf2;
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 500;
+}
+
+.topbar-search {
+    flex: 1;
+    max-width: 450px;
+}
+
+.topbar-search input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #e2e7ef;
+    border-radius: 9px;
+    background: #f9fafc;
+    padding: 0 14px;
+    color: #172033;
+    outline: none;
+    font-size: 13px;
+}
+
+.topbar-search input::placeholder {
+    color: #98a2b3;
+}
+
+.topbar-search input:focus {
+    border-color: #93b4f8;
+    background: #ffffff;
+}
+
+
+/* =========================================
+   TOPBAR RIGHT
+========================================= */
+
+.topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.notification-top-btn {
+    width: 38px;
+    height: 38px;
+    border: 1px solid #e6eaf0;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #667085;
+    cursor: pointer;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.top-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.top-user-info strong {
+    display: block;
+    color: #172033;
+    font-size: 12px;
+}
+
+.top-user-info span {
+    display: block;
+    color: #98a2b3;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+
+/* =========================================
+   MOBILE MENU
+========================================= */
+
+.menu-btn {
+    display: none;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #e2e7ef;
+    background: #ffffff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #344054;
+}
+
+
+/* =========================================
+   SIDEBAR OVERLAY
+========================================= */
+
+.sidebar-overlay {
+    display: none;
+}
+
+
+/* =========================================
+   MOBILE BOTTOM NAVIGATION
+========================================= */
+
+.mobile-bottom-nav {
+    display: none;
+}
+
+
+/* =========================================
+   RESPONSIVE TABLET
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main-content {
+        margin-left: 210px;
+    }
+
+    .topbar {
+        padding: 0 20px;
+    }
+
+}
+
+
+/* =========================================
+   RESPONSIVE MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 245px;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 8px 0 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.35);
+        z-index: 900;
+    }
+
+    .sidebar-overlay.show {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .topbar {
+        height: 64px;
+        padding: 0 15px;
+        gap: 10px;
+    }
+
+    .menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .topbar-search {
+        max-width: none;
+    }
+
+    .topbar-search input {
+        height: 38px;
+    }
+
+    .top-user-info {
+        display: none;
+    }
+
+    .topbar-right {
+        gap: 8px;
+    }
+
+    .notification-top-btn {
+        width: 36px;
+        height: 36px;
+    }
+
+    .mobile-bottom-nav {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 65px;
+        background: #ffffff;
+        border-top: 1px solid #e7ebf2;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        z-index: 800;
+        padding: 4px 5px;
+    }
+
+    .mobile-bottom-nav a {
+        flex: 1;
+        height: 55px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        color: #98a2b3;
+        font-size: 17px;
+    }
+
+    .mobile-bottom-nav a small {
+        font-size: 9px;
+        font-weight: 600;
+    }
+
+    .mobile-bottom-nav a.active {
+        color: #2563eb;
+    }
+
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+
+    .topbar-search input {
+        font-size: 12px;
+        padding: 0 10px;
+    }
+
+    .top-avatar {
+        width: 34px;
+        height: 34px;
+    }
+
+}

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fees | PJT Classes</title>
+
+    <link rel="stylesheet" href="../css/fees.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+
+        <img
+            src="../assets/images/logo/logo.png"
+            alt="PJT Classes Logo"
+        >
+
+        <button
+            class="sidebar-close"
+            id="sidebarClose"
+            aria-label="Close menu"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">◉</span>
+            <span>My Profile</span>
+        </a>
+
+        <a href="performance.html" class="nav-item">
+            <span class="nav-icon">▥</span>
+            <span>Performance</span>
+        </a>
+
+        <a href="behaviour.html" class="nav-item">
+            <span class="nav-icon">✓</span>
+            <span>Behaviour</span>
+        </a>
+
+        <a href="fees.html" class="nav-item active">
+            <span class="nav-icon">₹</span>
+            <span>Fees</span>
+        </a>
+
+        <a href="notifications.html" class="nav-item">
+
+            <span class="nav-icon">♢</span>
+
+            <span>Notifications</span>
+
+            <span class="notification-badge">
+                2
+            </span>
+
+        </a>
+
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-student">
+
+            <div class="student-avatar">
+                RK
+            </div>
+
+            <div>
+
+                <strong>
+                    Rahul Kumar
+                </strong>
+
+                <small>
+                    STU-2026-001
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MOBILE OVERLAY
+===================================================== -->
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+></div>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main-content">
+
+
+    <!-- =================================================
+         TOPBAR
+    ================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button
+                class="mobile-menu"
+                id="mobileMenu"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+            <div>
+
+                <h1>
+                    Fees
+                </h1>
+
+                <p>
+                    Track your monthly fee payments
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <button
+                class="notification-button"
+                id="notificationButton"
+                aria-label="Notifications"
+            >
+
+                ♢
+
+                <span>
+                    2
+                </span>
+
+            </button>
+
+
+            <div class="topbar-user">
+
+                <div class="user-avatar">
+                    RK
+                </div>
+
+                <div class="user-info">
+
+                    <strong>
+                        Rahul Kumar
+                    </strong>
+
+                    <small>
+                        Class 10
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =================================================
+         FEES PAGE
+    ================================================== -->
+
+    <section class="fees-page">
+
+
+        <!-- =================================================
+             PAGE INTRO
+        ================================================== -->
+
+        <div class="page-intro">
+
+            <div>
+
+                <span class="page-label">
+                    FEE MANAGEMENT
+                </span>
+
+                <h2>
+                    Monthly Fee Status
+                </h2>
+
+                <p>
+                    Track your March to February fee payments.
+                </p>
+
+            </div>
+
+
+            <div class="academic-session">
+
+                <span>
+                    Academic Session
+                </span>
+
+                <strong>
+                    2026 – 27
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FEE SUMMARY
+        ================================================== -->
+
+        <div class="summary-grid">
+
+
+            <!-- ANNUAL FEE -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    ₹
+                </div>
+
+                <div>
+
+                    <span>
+                        Annual Fee
+                    </span>
+
+                    <strong id="annualFee">
+                        ₹7,200
+                    </strong>
+
+                    <small>
+                        ₹600 × 12 months
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- PAID -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon paid-icon">
+                    ✓
+                </div>
+
+                <div>
+
+                    <span>
+                        Paid Amount
+                    </span>
+
+                    <strong id="paidAmount">
+                        ₹3,600
+                    </strong>
+
+                    <small id="paidMonths">
+                        6 months paid
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- PENDING -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon pending-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <span>
+                        Pending Amount
+                    </span>
+
+                    <strong
+                        id="pendingAmount"
+                        class="pending-text"
+                    >
+                        ₹3,600
+                    </strong>
+
+                    <small id="pendingMonths">
+                        6 months pending
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- MONTHLY FEE -->
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    M
+                </div>
+
+                <div>
+
+                    <span>
+                        Monthly Fee
+                    </span>
+
+                    <strong>
+                        ₹600
+                    </strong>
+
+                    <small>
+                        Per month
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PAYMENT PROGRESS
+        ================================================== -->
+
+        <div class="progress-card">
+
+            <div class="progress-heading">
+
+                <div>
+
+                    <span class="section-label">
+                        PAYMENT PROGRESS
+                    </span>
+
+                    <h3>
+                        Annual Fee Progress
+                    </h3>
+
+                </div>
+
+
+                <strong id="paymentPercentage">
+                    50%
+                </strong>
+
+            </div>
+
+
+            <div class="large-progress-track">
+
+                <div
+                    class="large-progress-bar"
+                    id="largeProgressBar"
+                ></div>
+
+            </div>
+
+
+            <div class="progress-footer">
+
+                <span>
+                    <strong id="progressPaid">
+                        ₹3,600
+                    </strong>
+                    paid
+                </span>
+
+                <span>
+                    <strong>
+                        ₹7,200
+                    </strong>
+                    total
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             MONTHLY FEE TABLE
+        ================================================== -->
+
+        <div class="fees-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        MONTHLY PAYMENTS
+                    </span>
+
+                    <h3>
+                        March 2026 – February 2027
+                    </h3>
+
+                    <p>
+                        Monthly fee: ₹600
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="fee-table-wrapper">
+
+                <table class="fee-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Month
+                            </th>
+
+                            <th>
+                                Due Amount
+                            </th>
+
+                            <th>
+                                Amount Paid
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="feeTableBody">
+
+                        <!-- JavaScript will generate rows -->
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PENDING ALERT
+        ================================================== -->
+
+        <div
+            class="fee-alert"
+            id="feeAlert"
+        >
+
+            <div class="alert-icon">
+                !
+            </div>
+
+            <div>
+
+                <strong>
+                    Fee Payment Reminder
+                </strong>
+
+                <p id="feeAlertText">
+                    You have pending monthly fees.
+                    Please contact the PJT Classes administration
+                    for payment details.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             INFORMATION
+        ================================================== -->
+
+        <div class="fee-information">
+
+            <div class="info-icon">
+                i
+            </div>
+
+            <div>
+
+                <strong>
+                    Fee Information
+                </strong>
+
+                <p>
+                    The monthly coaching fee is ₹600.
+                    The academic fee cycle runs from March
+                    through February. Payment status is maintained
+                    by PJT Classes administration.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     MOBILE BOTTOM NAV
+===================================================== -->
+
+<nav class="mobile-bottom-nav">
+
+    <a href="dashboard.html">
+
+        <span>⌂</span>
+
+        <small>
+            Home
+        </small>
+
+    </a>
+
+
+    <a href="profile.html">
+
+        <span>◉</span>
+
+        <small>
+            Profile
+        </small>
+
+    </a>
+
+
+    <a href="performance.html">
+
+        <span>▥</span>
+
+        <small>
+            Performance
+        </small>
+
+    </a>
+
+
+    <a
+        href="fees.html"
+        class="active"
+    >
+
+        <span>₹</span>
+
+        <small>
+            Fees
+        </small>
+
+    </a>
+
+
+    <a href="notifications.html">
+
+        <span>♢</span>
+
+        <small>
+            Alerts
+        </small>
+
+    </a>
+
+</nav>
+
+
+
+<script src="../js/fees.js"></script>
+
+</body>
+</html>

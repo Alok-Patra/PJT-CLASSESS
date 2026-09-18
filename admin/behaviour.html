@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Behaviour | PJT CLASSES</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../css/admin-behaviour.css"
+    >
+
+</head>
+
+<body>
+
+<div class="admin-app">
+
+
+    <!-- SIDEBAR OVERLAY -->
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay">
+    </div>
+
+
+    <!-- SIDEBAR -->
+    <aside
+        class="admin-sidebar"
+        id="adminSidebar">
+
+
+        <div class="sidebar-header">
+
+            <a
+                href="dashboard.html"
+                class="sidebar-logo"
+            >
+
+                <img
+                    src="../assets/images/logo/logo.png"
+                    alt="PJT Classes"
+                >
+
+                <div>
+
+                    <strong>PJT CLASSES</strong>
+
+                    <span>ADMIN PANEL</span>
+
+                </div>
+
+            </a>
+
+
+            <button
+                type="button"
+                class="sidebar-close"
+                id="sidebarClose"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+
+            <div class="nav-section-title">
+                MAIN
+            </div>
+
+
+            <a
+                href="dashboard.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">⌂</span>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a
+                href="students.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">♙</span>
+
+                <span>Students</span>
+
+            </a>
+
+
+            <div class="nav-section-title">
+                STUDENT MANAGEMENT
+            </div>
+
+
+            <a
+                href="performance.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">▥</span>
+
+                <span>Performance</span>
+
+            </a>
+
+
+            <a
+                href="behaviour.html"
+                class="admin-nav-link active"
+            >
+
+                <span class="nav-icon">✓</span>
+
+                <span>Behaviour</span>
+
+            </a>
+
+
+            <a
+                href="fees.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">₹</span>
+
+                <span>Fees</span>
+
+            </a>
+
+
+            <div class="nav-section-title">
+                COMMUNICATION
+            </div>
+
+
+            <a
+                href="notifications.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">♢</span>
+
+                <span>Notifications</span>
+
+                <span class="nav-count">2</span>
+
+            </a>
+
+
+            <div class="nav-section-title">
+                SYSTEM
+            </div>
+
+
+            <a
+                href="settings.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">⚙</span>
+
+                <span>Settings</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-profile-mini">
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+                <div class="admin-profile-info">
+
+                    <strong>
+                        Administrator
+                    </strong>
+
+                    <span>
+                        ADMIN-001
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="sidebar-logout"
+                id="logoutButton"
+            >
+
+                <span>↪</span>
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="admin-main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="admin-topbar">
+
+
+            <div class="topbar-left">
+
+                <button
+                    type="button"
+                    class="menu-button"
+                    id="menuButton"
+                >
+                    ☰
+                </button>
+
+
+                <div>
+
+                    <span class="page-label">
+                        STUDENT MANAGEMENT
+                    </span>
+
+                    <h1>
+                        Behaviour
+                    </h1>
+
+                </div>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <a
+                    href="notifications.html"
+                    class="notification-button"
+                >
+
+                    ♢
+
+                    <span class="notification-badge">
+                        2
+                    </span>
+
+                </a>
+
+
+                <div class="topbar-admin">
+
+                    <div class="topbar-avatar">
+                        A
+                    </div>
+
+                    <div class="topbar-admin-info">
+
+                        <strong>
+                            Administrator
+                        </strong>
+
+                        <span>
+                            Admin
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <div class="admin-content">
+
+
+            <!-- INTRO -->
+
+            <div class="page-intro">
+
+                <div>
+
+                    <span class="content-kicker">
+                        STUDENT CONDUCT
+                    </span>
+
+                    <h2>
+                        Student Behaviour
+                    </h2>
+
+                    <p>
+                        View and update behaviour records
+                        for students.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- STUDENT SELECTOR -->
+
+            <section class="behaviour-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-kicker">
+                            SELECT STUDENT
+                        </span>
+
+                        <h3>
+                            Behaviour Record
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="selector-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="studentSelect">
+                            Student
+                        </label>
+
+                        <select
+                            id="studentSelect"
+                        >
+
+                            <option value="">
+                                Select a student
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="student-preview">
+
+                        <div
+                            class="preview-avatar"
+                            id="previewAvatar"
+                        >
+                            --
+                        </div>
+
+
+                        <div>
+
+                            <strong id="previewName">
+                                Select Student
+                            </strong>
+
+                            <span id="previewInfo">
+                                Student ID · Class
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- BEHAVIOUR DETAILS -->
+
+            <section class="behaviour-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-kicker">
+                            BEHAVIOUR DETAILS
+                        </span>
+
+                        <h3>
+                            Student Conduct
+                        </h3>
+
+                    </div>
+
+
+                    <span
+                        class="record-status"
+                        id="recordStatus"
+                    >
+                        Current Record
+                    </span>
+
+                </div>
+
+
+                <!-- CURRENT RATING -->
+
+                <div class="behaviour-overview">
+
+
+                    <div class="rating-circle"
+                         id="ratingCircle">
+
+                        -
+
+                    </div>
+
+
+                    <div class="rating-content">
+
+                        <span>
+                            Current Behaviour
+                        </span>
+
+                        <strong id="behaviourRating">
+                            Select Student
+                        </strong>
+
+                        <p id="behaviourSummary">
+                            Select a student to view
+                            their behaviour record.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RATING SELECT -->
+
+                <div class="form-group">
+
+                    <label for="behaviourSelect">
+                        Behaviour Status
+                    </label>
+
+
+                    <select
+                        id="behaviourSelect"
+                    >
+
+                        <option value="">
+                            Select behaviour status
+                        </option>
+
+                        <option value="Excellent">
+                            Excellent
+                        </option>
+
+                        <option value="Good">
+                            Good
+                        </option>
+
+                        <option value="Needs Attention">
+                            Needs Attention
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- REMARKS -->
+
+                <div class="form-group remarks-group">
+
+                    <label for="behaviourRemarks">
+                        Remarks
+                    </label>
+
+                    <textarea
+                        id="behaviourRemarks"
+                        rows="5"
+                        placeholder="Enter behaviour remarks..."
+                    ></textarea>
+
+                </div>
+
+
+                <!-- ACTION -->
+
+                <div class="form-actions">
+
+                    <div
+                        class="form-message"
+                        id="formMessage"
+                    ></div>
+
+
+                    <button
+                        type="button"
+                        class="save-button"
+                        id="saveBehaviour"
+                    >
+
+                        <span>
+                            Save Behaviour
+                        </span>
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- CURRENT RECORD -->
+
+            <section class="behaviour-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-kicker">
+                            CURRENT RECORD
+                        </span>
+
+                        <h3>
+                            Behaviour Overview
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="record-grid">
+
+
+                    <div class="record-item">
+
+                        <span>
+                            Student
+                        </span>
+
+                        <strong id="recordName">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="record-item">
+
+                        <span>
+                            Student ID
+                        </span>
+
+                        <strong id="recordId">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="record-item">
+
+                        <span>
+                            Class
+                        </span>
+
+                        <strong id="recordClass">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="record-item">
+
+                        <span>
+                            Behaviour
+                        </span>
+
+                        <strong id="recordBehaviour">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- FOOTER -->
+
+            <footer class="admin-footer">
+
+                <span>
+                    © 2026 PJT CLASSES
+                </span>
+
+                <span>
+                    Administration Panel
+                </span>
+
+            </footer>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="../js/admin.js"></script>
+
+<script src="../js/admin-behaviour.js"></script>
+
+</body>
+
+</html>

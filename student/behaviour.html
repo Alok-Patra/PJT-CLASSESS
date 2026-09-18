@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Behaviour | PJT Classes</title>
+
+    <link rel="stylesheet" href="../css/behaviour.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+
+        <img
+            src="../assets/images/logo/logo.png"
+            alt="PJT Classes Logo"
+        >
+
+        <button
+            class="sidebar-close"
+            id="sidebarClose"
+            aria-label="Close menu"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            <span>Dashboard</span>
+        </a>
+
+
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">◉</span>
+            <span>My Profile</span>
+        </a>
+
+
+        <a href="performance.html" class="nav-item">
+            <span class="nav-icon">▥</span>
+            <span>Performance</span>
+        </a>
+
+
+        <a href="behaviour.html" class="nav-item active">
+            <span class="nav-icon">✓</span>
+            <span>Behaviour</span>
+        </a>
+
+
+        <a href="fees.html" class="nav-item">
+            <span class="nav-icon">₹</span>
+            <span>Fees</span>
+        </a>
+
+
+        <a href="notifications.html" class="nav-item">
+
+            <span class="nav-icon">♢</span>
+
+            <span>Notifications</span>
+
+            <span class="notification-badge">
+                2
+            </span>
+
+        </a>
+
+
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-student">
+
+            <div class="student-avatar">
+                RK
+            </div>
+
+            <div>
+
+                <strong>
+                    Rahul Kumar
+                </strong>
+
+                <small>
+                    STU-2026-001
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MOBILE OVERLAY
+===================================================== -->
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+></div>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main-content">
+
+
+    <!-- =================================================
+         TOPBAR
+    ================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button
+                class="mobile-menu"
+                id="mobileMenu"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+
+            <div>
+
+                <h1>
+                    Behaviour
+                </h1>
+
+                <p>
+                    View your behaviour and conduct record
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <button
+                class="notification-button"
+                id="notificationButton"
+                aria-label="Notifications"
+            >
+
+                ♢
+
+                <span>
+                    2
+                </span>
+
+            </button>
+
+
+            <div class="topbar-user">
+
+                <div class="user-avatar">
+                    RK
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        Rahul Kumar
+                    </strong>
+
+                    <small>
+                        Class 10
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =================================================
+         PAGE
+    ================================================== -->
+
+    <section class="behaviour-page">
+
+
+        <!-- =================================================
+             INTRO
+        ================================================== -->
+
+        <div class="page-intro">
+
+            <div>
+
+                <span class="page-label">
+                    BEHAVIOUR & CONDUCT
+                </span>
+
+                <h2>
+                    Your Behaviour Record
+                </h2>
+
+                <p>
+                    Review your discipline, participation and classroom conduct.
+                </p>
+
+            </div>
+
+
+            <div class="academic-session">
+
+                <span>
+                    Academic Session
+                </span>
+
+                <strong>
+                    2026 – 27
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             OVERALL SCORE
+        ================================================== -->
+
+        <div class="overall-card">
+
+            <div class="overall-left">
+
+                <div class="score-circle">
+
+                    <div>
+
+                        <strong>
+                            85
+                        </strong>
+
+                        <span>
+                            /100
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="overall-content">
+
+                    <span class="overall-label">
+                        OVERALL BEHAVIOUR
+                    </span>
+
+                    <h3>
+                        Excellent
+                    </h3>
+
+                    <p>
+                        Your overall classroom conduct is being
+                        maintained at a good level.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="overall-status">
+
+                <span class="status-dot"></span>
+
+                Positive Conduct
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             BEHAVIOUR CATEGORIES
+        ================================================== -->
+
+        <div class="behaviour-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        BEHAVIOUR ASSESSMENT
+                    </span>
+
+                    <h3>
+                        Conduct Overview
+                    </h3>
+
+                    <p>
+                        Current assessment across different behaviour areas
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="behaviour-grid">
+
+
+                <!-- DISCIPLINE -->
+
+                <div class="behaviour-item">
+
+                    <div class="behaviour-top">
+
+                        <div class="behaviour-icon">
+                            D
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Discipline
+                            </strong>
+
+                            <span>
+                                Classroom discipline
+                            </span>
+
+                        </div>
+
+                        <strong class="behaviour-score">
+                            Good
+                        </strong>
+
+                    </div>
+
+
+                    <div class="behaviour-track">
+
+                        <div
+                            class="behaviour-progress"
+                            data-progress="86"
+                        ></div>
+
+                    </div>
+
+                    <small>
+                        86%
+                    </small>
+
+                </div>
+
+
+
+                <!-- PARTICIPATION -->
+
+                <div class="behaviour-item">
+
+                    <div class="behaviour-top">
+
+                        <div class="behaviour-icon">
+                            P
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Participation
+                            </strong>
+
+                            <span>
+                                Classroom participation
+                            </span>
+
+                        </div>
+
+                        <strong class="behaviour-score">
+                            Excellent
+                        </strong>
+
+                    </div>
+
+
+                    <div class="behaviour-track">
+
+                        <div
+                            class="behaviour-progress"
+                            data-progress="92"
+                        ></div>
+
+                    </div>
+
+                    <small>
+                        92%
+                    </small>
+
+                </div>
+
+
+
+                <!-- PUNCTUALITY -->
+
+                <div class="behaviour-item">
+
+                    <div class="behaviour-top">
+
+                        <div class="behaviour-icon">
+                            T
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Punctuality
+                            </strong>
+
+                            <span>
+                                Timely attendance
+                            </span>
+
+                        </div>
+
+                        <strong class="behaviour-score">
+                            Good
+                        </strong>
+
+                    </div>
+
+
+                    <div class="behaviour-track">
+
+                        <div
+                            class="behaviour-progress"
+                            data-progress="84"
+                        ></div>
+
+                    </div>
+
+                    <small>
+                        84%
+                    </small>
+
+                </div>
+
+
+
+                <!-- HOMEWORK -->
+
+                <div class="behaviour-item">
+
+                    <div class="behaviour-top">
+
+                        <div class="behaviour-icon">
+                            H
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Homework
+                            </strong>
+
+                            <span>
+                                Homework completion
+                            </span>
+
+                        </div>
+
+                        <strong class="behaviour-score">
+                            Very Good
+                        </strong>
+
+                    </div>
+
+
+                    <div class="behaviour-track">
+
+                        <div
+                            class="behaviour-progress"
+                            data-progress="88"
+                        ></div>
+
+                    </div>
+
+                    <small>
+                        88%
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             TEACHER SUMMARY
+        ================================================== -->
+
+        <div class="behaviour-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        TEACHER FEEDBACK
+                    </span>
+
+                    <h3>
+                        Behaviour Summary
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <div class="feedback-box">
+
+                <div class="quote-mark">
+                    “
+                </div>
+
+
+                <div>
+
+                    <p>
+                        Rahul maintains good discipline in class
+                        and actively participates in classroom
+                        activities. He generally completes assigned
+                        homework on time and interacts respectfully
+                        with teachers and classmates.
+                    </p>
+
+
+                    <div class="feedback-author">
+
+                        <div class="teacher-avatar">
+                            T
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Class Teacher
+                            </strong>
+
+                            <span>
+                                Last updated: 10 May 2026
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             BEHAVIOUR RECORD
+        ================================================== -->
+
+        <div class="behaviour-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        RECORD
+                    </span>
+
+                    <h3>
+                        Behaviour History
+                    </h3>
+
+                    <p>
+                        Recent behaviour observations recorded by the administration
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="record-list">
+
+
+                <div class="record-item">
+
+                    <div class="record-date">
+
+                        <strong>
+                            10
+                        </strong>
+
+                        <span>
+                            MAY
+                        </span>
+
+                    </div>
+
+
+                    <div class="record-content">
+
+                        <strong>
+                            Positive Classroom Participation
+                        </strong>
+
+                        <p>
+                            Actively participated in classroom discussion.
+                        </p>
+
+                    </div>
+
+
+                    <span class="record-positive">
+                        Positive
+                    </span>
+
+                </div>
+
+
+
+                <div class="record-item">
+
+                    <div class="record-date">
+
+                        <strong>
+                            02
+                        </strong>
+
+                        <span>
+                            MAY
+                        </span>
+
+                    </div>
+
+
+                    <div class="record-content">
+
+                        <strong>
+                            Homework Completed
+                        </strong>
+
+                        <p>
+                            Regularly completed the assigned homework.
+                        </p>
+
+                    </div>
+
+
+                    <span class="record-positive">
+                        Positive
+                    </span>
+
+                </div>
+
+
+
+                <div class="record-item">
+
+                    <div class="record-date">
+
+                        <strong>
+                            25
+                        </strong>
+
+                        <span>
+                            APR
+                        </span>
+
+                    </div>
+
+
+                    <div class="record-content">
+
+                        <strong>
+                            Good Classroom Discipline
+                        </strong>
+
+                        <p>
+                            Maintained appropriate classroom discipline.
+                        </p>
+
+                    </div>
+
+
+                    <span class="record-positive">
+                        Positive
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             INFORMATION NOTE
+        ================================================== -->
+
+        <div class="behaviour-note">
+
+            <div class="note-icon">
+                i
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Behaviour Information
+                </strong>
+
+                <p>
+                    Behaviour records are maintained by PJT Classes.
+                    The information displayed on this page is based
+                    on observations recorded by teachers or the
+                    administration.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     MOBILE BOTTOM NAV
+===================================================== -->
+
+<nav class="mobile-bottom-nav">
+
+    <a href="dashboard.html">
+
+        <span>⌂</span>
+
+        <small>
+            Home
+        </small>
+
+    </a>
+
+
+    <a href="profile.html">
+
+        <span>◉</span>
+
+        <small>
+            Profile
+        </small>
+
+    </a>
+
+
+    <a href="performance.html">
+
+        <span>▥</span>
+
+        <small>
+            Performance
+        </small>
+
+    </a>
+
+
+    <a href="fees.html">
+
+        <span>₹</span>
+
+        <small>
+            Fees
+        </small>
+
+    </a>
+
+
+    <a
+        href="notifications.html"
+        class="active"
+    >
+
+        <span>♢</span>
+
+        <small>
+            Alerts
+        </small>
+
+    </a>
+
+</nav>
+
+
+
+<script src="../js/behaviour.js"></script>
+
+</body>
+</html>

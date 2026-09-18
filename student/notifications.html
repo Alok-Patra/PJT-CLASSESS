@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications | PJT Classes</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/notifications.css">
+</head>
+
+<body>
+
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-logo">
+            <img src="../assets/images/logo/logo.png" alt="PJT Classes">
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-item">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="profile.html" class="nav-item">
+                <span class="nav-icon">♙</span>
+                <span>Profile</span>
+            </a>
+
+            <a href="performance.html" class="nav-item">
+                <span class="nav-icon">◈</span>
+                <span>Performance</span>
+            </a>
+
+            <a href="behaviour.html" class="nav-item">
+                <span class="nav-icon">◉</span>
+                <span>Behaviour</span>
+            </a>
+
+            <a href="fees.html" class="nav-item">
+                <span class="nav-icon">₹</span>
+                <span>Fees</span>
+            </a>
+
+            <a href="notifications.html" class="nav-item active">
+                <span class="nav-icon">♢</span>
+                <span>Notifications</span>
+                <span class="nav-badge">2</span>
+            </a>
+
+            <a href="settings.html" class="nav-item">
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="student-mini-profile">
+                <div class="mini-avatar">RK</div>
+
+                <div class="mini-info">
+                    <strong>Rahul Kumar</strong>
+                    <span>STU-2026-001</span>
+                </div>
+            </div>
+
+            <button class="logout-btn" id="logoutBtn">
+                <span>↪</span>
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Topbar -->
+        <header class="topbar">
+
+            <button class="menu-btn" id="menuBtn">
+                ☰
+            </button>
+
+            <div class="topbar-search">
+                <input
+                    type="text"
+                    id="notificationSearch"
+                    placeholder="Search notifications..."
+                >
+            </div>
+
+            <div class="topbar-right">
+
+                <button class="notification-top-btn active">
+                    ♢
+                    <span>2</span>
+                </button>
+
+                <div class="topbar-user">
+                    <div class="top-avatar">RK</div>
+
+                    <div class="top-user-info">
+                        <strong>Rahul Kumar</strong>
+                        <span>Class 10</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Page -->
+        <section class="notifications-page">
+
+            <!-- Page Header -->
+            <div class="page-header">
+
+                <div>
+                    <span class="page-label">STUDENT PORTAL</span>
+
+                    <h1>Notifications</h1>
+
+                    <p>
+                        Stay updated with fee reminders and important
+                        announcements from PJT Classes.
+                    </p>
+                </div>
+
+                <button class="mark-all-btn" id="markAllBtn">
+                    ✓ Mark all as read
+                </button>
+
+            </div>
+
+
+            <!-- Notification Summary -->
+            <div class="notification-summary">
+
+                <div class="summary-card">
+
+                    <div class="summary-icon unread-icon">
+                        ♢
+                    </div>
+
+                    <div>
+                        <span>Unread</span>
+                        <strong id="unreadCount">2</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon fee-icon">
+                        ₹
+                    </div>
+
+                    <div>
+                        <span>Fee Reminder</span>
+                        <strong>1</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="summary-card">
+
+                    <div class="summary-icon notice-icon">
+                        !
+                    </div>
+
+                    <div>
+                        <span>Announcements</span>
+                        <strong>1</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Notifications List -->
+            <div class="notifications-card">
+
+                <div class="notifications-card-header">
+
+                    <div>
+                        <h2>Recent Notifications</h2>
+                        <p>Your latest updates and reminders</p>
+                    </div>
+
+                    <select id="notificationFilter">
+                        <option value="all">All</option>
+                        <option value="unread">Unread</option>
+                        <option value="fee">Fee</option>
+                        <option value="announcement">Announcements</option>
+                    </select>
+
+                </div>
+
+
+                <div class="notifications-list" id="notificationsList">
+
+                    <!-- Notifications inserted by JavaScript -->
+
+                </div>
+
+                <div class="no-results" id="noResults">
+                    <div class="no-results-icon">⌕</div>
+
+                    <h3>No notifications found</h3>
+
+                    <p>
+                        Try another search or filter.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+
+        <a href="dashboard.html">
+            <span>⌂</span>
+            <small>Home</small>
+        </a>
+
+        <a href="profile.html">
+            <span>♙</span>
+            <small>Profile</small>
+        </a>
+
+        <a href="performance.html">
+            <span>◈</span>
+            <small>Performance</small>
+        </a>
+
+        <a href="fees.html">
+            <span>₹</span>
+            <small>Fees</small>
+        </a>
+
+        <a href="notifications.html" class="active">
+            <span>♢</span>
+            <small>Alerts</small>
+        </a>
+
+    </nav>
+
+
+    <script src="../js/notifications.js"></script>
+
+</body>
+</html>

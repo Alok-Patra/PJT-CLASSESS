@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | PJT Classes</title>
+
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+        <img src="../assets/images/logo/logo.png" alt="PJT Classes Logo">
+
+        <button class="sidebar-close" id="sidebarClose">
+            ×
+        </button>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="profile.html" class="nav-item active">
+            <span class="nav-icon">◉</span>
+            <span>My Profile</span>
+        </a>
+
+        <a href="performance.html" class="nav-item">
+            <span class="nav-icon">▥</span>
+            <span>Performance</span>
+        </a>
+
+        <a href="behaviour.html" class="nav-item">
+            <span class="nav-icon">✓</span>
+            <span>Behaviour</span>
+        </a>
+
+        <a href="fees.html" class="nav-item">
+            <span class="nav-icon">₹</span>
+            <span>Fees</span>
+        </a>
+
+        <a href="notifications.html" class="nav-item">
+            <span class="nav-icon">♢</span>
+            <span>Notifications</span>
+            <span class="notification-badge">2</span>
+        </a>
+
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="sidebar-student">
+            <div class="student-avatar">RK</div>
+
+            <div>
+                <strong>Rahul Kumar</strong>
+                <small>STU-2026-001</small>
+            </div>
+        </div>
+    </div>
+
+</aside>
+
+
+<!-- ================= MOBILE OVERLAY ================= -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+<!-- ================= MAIN ================= -->
+<main class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button class="mobile-menu" id="mobileMenu">
+                ☰
+            </button>
+
+            <div>
+                <h1>My Profile</h1>
+                <p>View your personal information</p>
+            </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <button class="notification-button"
+                    onclick="window.location.href='notifications.html'">
+                ♢
+                <span>2</span>
+            </button>
+
+            <div class="topbar-user">
+
+                <div class="user-avatar">
+                    RK
+                </div>
+
+                <div class="user-info">
+                    <strong>Rahul Kumar</strong>
+                    <small>Class 10</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= PAGE ================= -->
+    <section class="profile-page">
+
+        <!-- PROFILE HERO -->
+        <div class="profile-hero">
+
+            <div class="profile-main">
+
+                <div class="large-avatar">
+                    RK
+                </div>
+
+                <div class="profile-heading">
+                    <span class="profile-label">STUDENT PROFILE</span>
+
+                    <h2>Rahul Kumar</h2>
+
+                    <p>
+                        Student ID:
+                        <strong>STU-2026-001</strong>
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="profile-status">
+                <span class="status-dot"></span>
+                Active Student
+            </div>
+
+        </div>
+
+
+        <!-- ================= PERSONAL INFORMATION ================= -->
+        <div class="profile-card">
+
+            <div class="card-header">
+
+                <div>
+                    <span class="section-label">PERSONAL INFORMATION</span>
+                    <h3>Basic Details</h3>
+                </div>
+
+            </div>
+
+
+            <div class="information-grid">
+
+                <div class="info-item">
+                    <span class="info-label">Full Name</span>
+                    <strong>Rahul Kumar</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Student ID</span>
+                    <strong>STU-2026-001</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Date of Birth</span>
+                    <strong>15 March 2010</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Gender</span>
+                    <strong>Male</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Class</span>
+                    <strong>Class 10</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Section</span>
+                    <strong>A</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Academic Session</span>
+                    <strong>2026 – 27</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Registration Date</span>
+                    <strong>01 March 2026</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= CONTACT INFORMATION ================= -->
+        <div class="profile-card">
+
+            <div class="card-header">
+
+                <div>
+                    <span class="section-label">CONTACT INFORMATION</span>
+                    <h3>Communication Details</h3>
+                </div>
+
+            </div>
+
+
+            <div class="information-grid">
+
+                <div class="info-item">
+                    <span class="info-label">Mobile Number</span>
+                    <strong>+91 98765 43210</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Email Address</span>
+                    <strong>rahul@example.com</strong>
+                </div>
+
+                <div class="info-item info-wide">
+                    <span class="info-label">Address</span>
+                    <strong>
+                        Gamharia, Jamshedpur, Jharkhand – 832108
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= PARENT / GUARDIAN ================= -->
+        <div class="profile-card">
+
+            <div class="card-header">
+
+                <div>
+                    <span class="section-label">FAMILY INFORMATION</span>
+                    <h3>Parent / Guardian Details</h3>
+                </div>
+
+            </div>
+
+
+            <div class="information-grid">
+
+                <div class="info-item">
+                    <span class="info-label">Father's Name</span>
+                    <strong>Ramesh Kumar</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Mother's Name</span>
+                    <strong>Sunita Kumar</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Guardian Contact</span>
+                    <strong>+91 98765 12345</strong>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label">Relationship</span>
+                    <strong>Father</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= MEMBERS ================= -->
+        <div class="profile-card">
+
+            <div class="card-header members-header">
+
+                <div>
+                    <span class="section-label">ADDED MEMBERS</span>
+                    <h3>Your Members</h3>
+                    <p>You can add up to 3 members.</p>
+                </div>
+
+                <button class="add-member-btn" id="addMemberBtn">
+                    + Add Member
+                </button>
+
+            </div>
+
+
+            <div class="members-list" id="membersList">
+
+                <div class="member-item">
+
+                    <div class="member-avatar">
+                        AM
+                    </div>
+
+                    <div class="member-details">
+                        <strong>Aman Kumar</strong>
+                        <span>Brother · Class 8</span>
+                    </div>
+
+                    <span class="member-status">
+                        Active
+                    </span>
+
+                </div>
+
+
+                <div class="member-item">
+
+                    <div class="member-avatar">
+                        RK
+                    </div>
+
+                    <div class="member-details">
+                        <strong>Riya Kumar</strong>
+                        <span>Sister · Class 6</span>
+                    </div>
+
+                    <span class="member-status">
+                        Active
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="member-limit">
+                <span>2 of 3 members added</span>
+
+                <div class="limit-bar">
+                    <div class="limit-progress"></div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- ================= IMPORTANT NOTE ================= -->
+        <div class="profile-note">
+
+            <div class="note-icon">i</div>
+
+            <div>
+                <strong>Profile Information</strong>
+
+                <p>
+                    Your profile information is managed by PJT Classes.
+                    If any information needs to be corrected, please
+                    contact the administration.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= MOBILE BOTTOM NAV ================= -->
+<nav class="mobile-bottom-nav">
+
+    <a href="dashboard.html">
+        <span>⌂</span>
+        <small>Home</small>
+    </a>
+
+    <a href="profile.html" class="active">
+        <span>◉</span>
+        <small>Profile</small>
+    </a>
+
+    <a href="performance.html">
+        <span>▥</span>
+        <small>Performance</small>
+    </a>
+
+    <a href="fees.html">
+        <span>₹</span>
+        <small>Fees</small>
+    </a>
+
+    <a href="notifications.html">
+        <span>♢</span>
+        <small>Alerts</small>
+    </a>
+
+</nav>
+
+
+<script src="../js/profile.js"></script>
+
+</body>
+</html>

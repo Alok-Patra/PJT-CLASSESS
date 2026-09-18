@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="PJT Classes Student Portal Dashboard"
+    >
+
+    <title>Dashboard | PJT Classes</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/dashboard.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     APP
+===================================================== -->
+
+<div class="dashboard-app">
+
+
+    <!-- =================================================
+         MOBILE OVERLAY
+    ================================================== -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    <!-- =================================================
+         SIDEBAR
+    ================================================== -->
+
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+
+        <!-- SIDEBAR HEADER -->
+
+        <div class="sidebar-header">
+
+            <a
+                href="dashboard.html"
+                class="sidebar-logo"
+            >
+
+                <img
+                    src="../assets/images/logo/logo.png"
+                    alt="PJT Classes"
+                >
+
+            </a>
+
+
+            <button
+                type="button"
+                class="sidebar-close"
+                id="sidebarClose"
+                aria-label="Close menu"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+
+            <a
+                href="dashboard.html"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <rect
+                            x="4"
+                            y="4"
+                            width="6"
+                            height="6"
+                            rx="1"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <rect
+                            x="14"
+                            y="4"
+                            width="6"
+                            height="6"
+                            rx="1"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <rect
+                            x="4"
+                            y="14"
+                            width="6"
+                            height="6"
+                            rx="1"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <rect
+                            x="14"
+                            y="14"
+                            width="6"
+                            height="6"
+                            rx="1"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                    </svg>
+                </span>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a
+                href="profile.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="3.2"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <path
+                            d="M5 20C5.8 16.3 8.1 14.4 12 14.4C15.9 14.4 18.2 16.3 19 20"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>My Profile</span>
+
+            </a>
+
+
+            <a
+                href="performance.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M5 19V11"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="M12 19V5"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="M19 19V8"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>Performance</span>
+
+            </a>
+
+
+            <a
+                href="behaviour.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="8"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <circle
+                            cx="9"
+                            cy="10"
+                            r=".8"
+                            fill="currentColor"
+                        />
+
+                        <circle
+                            cx="15"
+                            cy="10"
+                            r=".8"
+                            fill="currentColor"
+                        />
+
+                        <path
+                            d="M8.5 14C9.5 15.3 10.7 16 12 16C13.3 16 14.5 15.3 15.5 14"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>Behaviour</span>
+
+            </a>
+
+
+            <a
+                href="fees.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <rect
+                            x="4"
+                            y="6"
+                            width="16"
+                            height="13"
+                            rx="2"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <path
+                            d="M4 10H20"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <path
+                            d="M8 15H11"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>Fees</span>
+
+            </a>
+
+
+            <a
+                href="notifications.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon notification-nav-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M18 9C18 5.6 15.8 3.5 12 3.5C8.2 3.5 6 5.6 6 9V13L4 17H20L18 13V9Z"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linejoin="round"
+                        />
+
+                        <path
+                            d="M10 20H14"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                    <b>2</b>
+
+                </span>
+
+                <span>Notifications</span>
+
+            </a>
+
+
+            <a
+                href="settings.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="3"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <path
+                            d="M19 13.5L21 15L19 18L16.8 17.2C16.3 17.7 15.7 18 15 18.2L14.5 20.5H9.5L9 18.2C8.3 18 7.7 17.7 7.2 17.2L5 18L3 15L5 13.5C4.9 13 4.8 12.5 4.8 12C4.8 11.5 4.9 11 5 10.5L3 9L5 6L7.2 6.8C7.7 6.3 8.3 6 9 5.8L9.5 3.5H14.5L15 5.8C15.7 6 16.3 6.3 16.8 6.8L19 6L21 9L19 10.5C19.1 11 19.2 11.5 19.2 12C19.2 12.5 19.1 13 19 13.5Z"
+                            stroke="currentColor"
+                            stroke-width="1.2"
+                            stroke-linejoin="round"
+                        />
+
+                    </svg>
+
+                </span>
+
+                <span>Settings</span>
+
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR FOOTER -->
+
+        <div class="sidebar-footer">
+
+            <img
+                src="../assets/images/logo/logo.png"
+                alt="PJT Classes"
+            >
+
+            <span>
+                Student Portal
+            </span>
+
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =================================================
+         MAIN
+    ================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
+
+        <header class="topbar">
+
+
+            <!-- MOBILE MENU -->
+
+            <button
+                type="button"
+                class="mobile-menu"
+                id="mobileMenu"
+                aria-label="Open menu"
+                aria-expanded="false"
+            >
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
+
+
+            <!-- SEARCH -->
+
+            <div
+                class="search-container"
+                id="searchContainer"
+            >
+
+                <div class="search-box">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <circle
+                            cx="11"
+                            cy="11"
+                            r="6.5"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                        />
+
+                        <path
+                            d="M16 16L21 21"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+
+                    <input
+                        type="search"
+                        id="dashboardSearch"
+                        placeholder="Search anything..."
+                        autocomplete="off"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="search-clear"
+                        id="searchClear"
+                        aria-label="Clear search"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="search-results"
+                    id="searchResults"
+                ></div>
+
+            </div>
+
+
+
+            <!-- TOPBAR RIGHT -->
+
+            <div class="topbar-right">
+
+
+                <!-- NOTIFICATIONS -->
+
+                <button
+                    type="button"
+                    class="top-icon"
+                    id="notificationButton"
+                    aria-label="Notifications"
+                >
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M18 9C18 5.6 15.8 3.5 12 3.5C8.2 3.5 6 5.6 6 9V13L4 17H20L18 13V9Z"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linejoin="round"
+                        />
+
+                        <path
+                            d="M10 20H14"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                    <span>2</span>
+
+                </button>
+
+
+
+                <!-- STUDENT -->
+
+                <button
+                    type="button"
+                    class="user-menu"
+                    id="userMenu"
+                >
+
+                    <div class="avatar">
+                        RK
+                    </div>
+
+                    <div class="user-info">
+
+                        <strong>
+                            Rahul Kumar
+                        </strong>
+
+                        <small>
+                            Class 10 • STU-2026-001
+                        </small>
+
+                    </div>
+
+                    <svg
+                        class="chevron"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M6 9L12 15L18 9"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                    </svg>
+
+                </button>
+
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <div class="page-content">
+
+
+            <!-- =================================================
+                 WELCOME
+            ================================================== -->
+
+            <section
+                class="welcome-card"
+                data-search="welcome student rahul class"
+            >
+
+                <div class="welcome-content">
+
+                    <span class="welcome-label">
+                        CLASS 10
+                        <i></i>
+                        STUDENT ID: STU-2026-001
+                    </span>
+
+                    <h1>
+                        Good Morning,
+                        <strong>Rahul Kumar</strong>
+                        <span>👋</span>
+                    </h1>
+
+                    <p>
+                        Discipline today, success tomorrow.
+                    </p>
+
+                </div>
+
+
+                <div class="welcome-visual">
+
+                    <div class="building">
+
+                        <div class="building-top"></div>
+
+                        <div class="building-roof"></div>
+
+                        <div class="building-body">
+
+                            <div class="window"></div>
+                            <div class="window"></div>
+                            <div class="door"></div>
+                            <div class="window"></div>
+                            <div class="window"></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SUMMARY CARDS
+            ================================================== -->
+
+            <section class="summary-grid">
+
+
+                <article
+                    class="summary-card total-fee"
+                    data-search="total fee annual fees 24000"
+                >
+
+                    <div class="summary-icon">
+                        ₹
+                    </div>
+
+                    <div class="summary-info">
+
+                        <span>
+                            Total Fees (Annual)
+                        </span>
+
+                        <strong>
+                            ₹24,000
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+                <article
+                    class="summary-card paid-fee"
+                    data-search="paid amount fees payment 16000"
+                >
+
+                    <div class="summary-icon">
+                        ✓
+                    </div>
+
+                    <div class="summary-info">
+
+                        <span>
+                            Paid Amount
+                        </span>
+
+                        <strong>
+                            ₹16,000
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+                <article
+                    class="summary-card pending-fee"
+                    data-search="pending amount fee due 8000"
+                >
+
+                    <div class="summary-icon">
+                        !
+                    </div>
+
+                    <div class="summary-info">
+
+                        <span>
+                            Pending Amount
+                        </span>
+
+                        <strong>
+                            ₹8,000
+                        </strong>
+
+                    </div>
+
+                </article>
+
+
+                <article
+                    class="summary-card attendance-card"
+                    data-search="attendance present absent 18 24 75"
+                >
+
+                    <div class="summary-icon">
+                        ✓
+                    </div>
+
+                    <div class="summary-info">
+
+                        <span>
+                            Attendance This Month
+                        </span>
+
+                        <strong>
+                            18 / 24
+                        </strong>
+
+                        <small>
+                            75%
+                        </small>
+
+                    </div>
+
+                </article>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 MAIN GRID
+            ================================================== -->
+
+            <section class="dashboard-grid">
+
+
+                <!-- =================================================
+                     PERFORMANCE
+                ================================================== -->
+
+                <article
+                    class="dashboard-card performance-card"
+                    data-search="performance academic marks mathematics science english social science"
+                >
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="card-icon blue">
+                                Σ
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Academic Performance
+                                </h2>
+
+                                <p>
+                                    Subject-wise performance
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="performance.html"
+                            class="view-link"
+                        >
+                            View Details →
+                        </a>
+
+                    </div>
+
+
+                    <div class="subjects">
+
+
+                        <!-- Mathematics -->
+
+                        <div class="subject">
+
+                            <div class="subject-icon maths">
+                                ∑
+                            </div>
+
+                            <div class="subject-middle">
+
+                                <div class="subject-top">
+
+                                    <strong>
+                                        Mathematics
+                                    </strong>
+
+                                    <b>
+                                        88%
+                                    </b>
+
+                                </div>
+
+                                <div class="progress-bar">
+
+                                    <span
+                                        style="width: 88%"
+                                    ></span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Science -->
+
+                        <div class="subject">
+
+                            <div class="subject-icon science">
+                                S
+                            </div>
+
+                            <div class="subject-middle">
+
+                                <div class="subject-top">
+
+                                    <strong>
+                                        Science
+                                    </strong>
+
+                                    <b>
+                                        82%
+                                    </b>
+
+                                </div>
+
+                                <div class="progress-bar">
+
+                                    <span
+                                        style="width: 82%"
+                                    ></span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- English -->
+
+                        <div class="subject">
+
+                            <div class="subject-icon english">
+                                A
+                            </div>
+
+                            <div class="subject-middle">
+
+                                <div class="subject-top">
+
+                                    <strong>
+                                        English
+                                    </strong>
+
+                                    <b>
+                                        91%
+                                    </b>
+
+                                </div>
+
+                                <div class="progress-bar">
+
+                                    <span
+                                        style="width: 91%"
+                                    ></span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Social Science -->
+
+                        <div class="subject">
+
+                            <div class="subject-icon social">
+                                G
+                            </div>
+
+                            <div class="subject-middle">
+
+                                <div class="subject-top">
+
+                                    <strong>
+                                        Social Science
+                                    </strong>
+
+                                    <b>
+                                        78%
+                                    </b>
+
+                                </div>
+
+                                <div class="progress-bar">
+
+                                    <span
+                                        style="width: 78%"
+                                    ></span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- =================================================
+                     BEHAVIOUR
+                ================================================== -->
+
+                <article
+                    class="dashboard-card behaviour-card"
+                    data-search="behaviour conduct discipline participation punctuality homework"
+                >
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="card-icon green">
+                                ✓
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Behaviour & Conduct
+                                </h2>
+
+                                <p>
+                                    Classroom behaviour record
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="behaviour.html"
+                            class="view-link"
+                        >
+                            View →
+                        </a>
+
+                    </div>
+
+
+                    <div class="behaviour-content">
+
+
+                        <div class="rating">
+
+                            <div class="rating-inner">
+
+                                <strong>
+                                    85%
+                                </strong>
+
+                                <span>
+                                    Overall
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="behaviour-list">
+
+
+                            <div class="behaviour-row">
+
+                                <span class="dot green-dot">
+                                    ●
+                                </span>
+
+                                <span>
+                                    Discipline
+                                </span>
+
+                                <strong>
+                                    Good
+                                </strong>
+
+                            </div>
+
+
+                            <div class="behaviour-row">
+
+                                <span class="dot blue-dot">
+                                    ●
+                                </span>
+
+                                <span>
+                                    Participation
+                                </span>
+
+                                <strong>
+                                    Excellent
+                                </strong>
+
+                            </div>
+
+
+                            <div class="behaviour-row">
+
+                                <span class="dot orange-dot">
+                                    ●
+                                </span>
+
+                                <span>
+                                    Punctuality
+                                </span>
+
+                                <strong>
+                                    Good
+                                </strong>
+
+                            </div>
+
+
+                            <div class="behaviour-row">
+
+                                <span class="dot purple-dot">
+                                    ●
+                                </span>
+
+                                <span>
+                                    Homework
+                                </span>
+
+                                <strong>
+                                    Very Good
+                                </strong>
+
+                            </div>
+
+
+                            <div class="behaviour-row">
+
+                                <span class="dot green-dot">
+                                    ●
+                                </span>
+
+                                <span>
+                                    Overall Behaviour
+                                </span>
+
+                                <strong>
+                                    Excellent
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- =================================================
+                     FEES
+                ================================================== -->
+
+                <article
+                    class="dashboard-card fees-card"
+                    data-search="fees fee status march april may june july august september october november december january february payment"
+                >
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="card-icon orange">
+                                ₹
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Fee Status
+                                </h2>
+
+                                <p>
+                                    March 2026 – February 2027
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="fees.html"
+                            class="view-link"
+                        >
+                            View All →
+                        </a>
+
+                    </div>
+
+
+                    <div class="fee-table">
+
+
+                        <div class="fee-row fee-head">
+
+                            <span>
+                                Month
+                            </span>
+
+                            <span>
+                                Amount
+                            </span>
+
+                            <span>
+                                Status
+                            </span>
+
+                        </div>
+
+
+                        <div class="fee-row">
+
+                            <span>
+                                March
+                            </span>
+
+                            <span>
+                                ₹2,000
+                            </span>
+
+                            <b class="status paid">
+                                Paid
+                            </b>
+
+                        </div>
+
+
+                        <div class="fee-row">
+
+                            <span>
+                                April
+                            </span>
+
+                            <span>
+                                ₹2,000
+                            </span>
+
+                            <b class="status paid">
+                                Paid
+                            </b>
+
+                        </div>
+
+
+                        <div class="fee-row">
+
+                            <span>
+                                May
+                            </span>
+
+                            <span>
+                                ₹2,000
+                            </span>
+
+                            <b class="status pending">
+                                Pending
+                            </b>
+
+                        </div>
+
+
+                        <div class="fee-row">
+
+                            <span>
+                                June
+                            </span>
+
+                            <span>
+                                ₹2,000
+                            </span>
+
+                            <b class="status paid">
+                                Paid
+                            </b>
+
+                        </div>
+
+
+                        <div class="fee-row">
+
+                            <span>
+                                July
+                            </span>
+
+                            <span>
+                                ₹2,000
+                            </span>
+
+                            <b class="status paid">
+                                Paid
+                            </b>
+
+                        </div>
+
+
+                    </div>
+
+                </article>
+
+
+
+                <!-- =================================================
+                     NOTIFICATIONS
+                ================================================== -->
+
+                <article
+                    class="dashboard-card notifications-card"
+                    data-search="notifications alerts fee pending test study material"
+                >
+
+                    <div class="card-header">
+
+                        <div class="card-title">
+
+                            <div class="card-icon red">
+                                !
+                            </div>
+
+                            <div>
+
+                                <h2>
+                                    Recent Notifications
+                                </h2>
+
+                                <p>
+                                    Latest updates from PJT Classes
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <a
+                            href="notifications.html"
+                            class="view-link"
+                        >
+                            View All →
+                        </a>
+
+                    </div>
+
+
+                    <div class="notification-list">
+
+
+                        <a
+                            href="notifications.html"
+                            class="notification"
+                        >
+
+                            <span class="notification-icon red">
+                                ₹
+                            </span>
+
+                            <span class="notification-content">
+
+                                <strong>
+                                    Monthly Fee Pending
+                                </strong>
+
+                                <small>
+                                    May fee payment is pending.
+                                </small>
+
+                                <em>
+                                    Today
+                                </em>
+
+                            </span>
+
+                            <span class="notification-arrow">
+                                →
+                            </span>
+
+                        </a>
+
+
+                        <a
+                            href="notifications.html"
+                            class="notification"
+                        >
+
+                            <span class="notification-icon blue">
+                                ✓
+                            </span>
+
+                            <span class="notification-content">
+
+                                <strong>
+                                    Class Test Scheduled
+                                </strong>
+
+                                <small>
+                                    Mathematics test on 19 Sep.
+                                </small>
+
+                                <em>
+                                    Yesterday
+                                </em>
+
+                            </span>
+
+                            <span class="notification-arrow">
+                                →
+                            </span>
+
+                        </a>
+
+
+                        <a
+                            href="notifications.html"
+                            class="notification"
+                        >
+
+                            <span class="notification-icon orange">
+                                ★
+                            </span>
+
+                            <span class="notification-content">
+
+                                <strong>
+                                    New Study Material
+                                </strong>
+
+                                <small>
+                                    New material is available.
+                                </small>
+
+                                <em>
+                                    2 days ago
+                                </em>
+
+                            </span>
+
+                            <span class="notification-arrow">
+                                →
+                            </span>
+
+                        </a>
+
+
+                    </div>
+
+                </article>
+
+
+            </section>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =================================================
+         MOBILE BOTTOM NAV
+    ================================================== -->
+
+    <nav class="mobile-bottom-nav">
+
+
+        <a
+            href="dashboard.html"
+            class="mobile-nav active"
+        >
+
+            <span>⌂</span>
+
+            <small>
+                Home
+            </small>
+
+        </a>
+
+
+        <a
+            href="profile.html"
+            class="mobile-nav"
+        >
+
+            <span>○</span>
+
+            <small>
+                Profile
+            </small>
+
+        </a>
+
+
+        <a
+            href="performance.html"
+            class="mobile-nav"
+        >
+
+            <span>▥</span>
+
+            <small>
+                Performance
+            </small>
+
+        </a>
+
+
+        <a
+            href="fees.html"
+            class="mobile-nav"
+        >
+
+            <span>₹</span>
+
+            <small>
+                Fees
+            </small>
+
+        </a>
+
+
+        <a
+            href="notifications.html"
+            class="mobile-nav"
+        >
+
+            <span class="mobile-alert">
+                ♧
+                <b>2</b>
+            </span>
+
+            <small>
+                Alerts
+            </small>
+
+        </a>
+
+
+    </nav>
+
+
+</div>
+
+
+<script src="../js/dashboard.js"></script>
+
+</body>
+
+</html>

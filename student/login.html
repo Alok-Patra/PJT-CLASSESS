@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="PJT Classes Student Portal Login"
+    >
+
+    <title>Student Login | PJT Classes</title>
+
+    <link
+        rel="stylesheet"
+        href="../css/auth.css"
+    >
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <!-- ==================================================
+         DESKTOP BRAND SIDE
+    ================================================== -->
+
+    <section class="brand-side">
+
+        <div class="brand-content">
+
+            <!-- LOGO -->
+
+            <a
+                href="#"
+                class="brand-logo"
+            >
+
+                <img
+                    src="../assets/images/logo/logo.png"
+                    alt="PJT Classes"
+                >
+
+            </a>
+
+
+            <!-- TYPOGRAPHY -->
+
+            <div class="brand-message">
+
+                <span class="brand-badge">
+                    STUDENT PORTAL
+                </span>
+
+                <h1>
+                    Welcome
+                    <strong>Back!</strong>
+                </h1>
+
+                <p>
+                    Access your personal student portal
+                    and stay connected with your
+                    academic journey.
+                </p>
+
+            </div>
+
+
+            <!-- QUOTE -->
+
+            <div class="brand-quote">
+
+                <span class="quote-line"></span>
+
+                <p>
+                    "Discipline today,<br>
+                    success tomorrow."
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         FORM SIDE
+    ================================================== -->
+
+    <section class="form-side">
+
+        <!-- Mobile logo -->
+
+        <div class="mobile-logo">
+
+            <img
+                src="../assets/images/logo/logo.png"
+                alt="PJT Classes"
+            >
+
+        </div>
+
+
+        <!-- LOGIN CARD -->
+
+        <div class="auth-card">
+
+            <div class="auth-header">
+
+                <div class="auth-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="3.4"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                        />
+
+                        <path
+                            d="M5 20C5.8 16.5 8.1 14.5 12 14.5C15.9 14.5 18.2 16.5 19 20"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                </div>
+
+
+                <h2>
+                    Student Login
+                </h2>
+
+                <p>
+                    Enter your credentials to access your account
+                </p>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form
+                id="loginForm"
+                novalidate
+            >
+
+                <!-- STUDENT ID -->
+
+                <div class="form-group">
+
+                    <label for="studentId">
+                        Student ID
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+
+                                <rect
+                                    x="4"
+                                    y="6"
+                                    width="16"
+                                    height="12"
+                                    rx="2"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+
+                                <path
+                                    d="M8 10H16"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                />
+
+                                <path
+                                    d="M8 14H12"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                />
+
+                            </svg>
+
+                        </span>
+
+
+                        <input
+                            type="text"
+                            id="studentId"
+                            placeholder="Enter your student ID"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+                    <span
+                        class="error"
+                        id="studentIdError"
+                    ></span>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+
+                                <rect
+                                    x="5"
+                                    y="10"
+                                    width="14"
+                                    height="10"
+                                    rx="2"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+
+                                <path
+                                    d="M8 10V7.5C8 5.3 9.8 3.5 12 3.5C14.2 3.5 16 5.3 16 7.5V10"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+
+                            </svg>
+
+                        </span>
+
+
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="loginPasswordToggle"
+                            aria-label="Show password"
+                        >
+
+                            <svg
+                                class="eye-open"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+
+                                <path
+                                    d="M2.5 12C4.5 8.2 7.8 6 12 6C16.2 6 19.5 8.2 21.5 12C19.5 15.8 16.2 18 12 18C7.8 18 4.5 15.8 2.5 12Z"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                />
+
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="2.7"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                />
+
+                            </svg>
+
+
+                            <svg
+                                class="eye-closed"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+
+                                <path
+                                    d="M3 3L21 21"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                />
+
+                                <path
+                                    d="M10.6 6.2C11.05 6.07 11.51 6 12 6C16.2 6 19.5 8.2 21.5 12"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                />
+
+                                <path
+                                    d="M6.2 8.1C4.7 9 3.45 10.3 2.5 12C4.5 15.8 7.8 18 12 18C13.3 18 14.5 17.8 15.6 17.3"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                />
+
+                            </svg>
+
+                        </button>
+
+                    </div>
+
+                    <span
+                        class="error"
+                        id="loginPasswordError"
+                    ></span>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div class="form-options">
+
+                    <label class="remember">
+
+                        <input
+                            type="checkbox"
+                            id="rememberMe"
+                        >
+
+                        <span class="checkbox"></span>
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="#"
+                        class="forgot-link"
+                    >
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+
+                <div
+                    class="form-message"
+                    id="loginMessage"
+                ></div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="primary-button"
+                    id="loginButton"
+                >
+
+                    <span>
+                        Login
+                    </span>
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                    >
+
+                        <path
+                            d="M5 12H19"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="M13 6L19 12L13 18"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </form>
+
+
+            <!-- REGISTER -->
+
+            <div class="switch-auth">
+
+                <span>
+                    Don't have a student account?
+                </span>
+
+                <a href="register.html">
+                    Create Account
+                </a>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="auth-footer">
+
+                <span>
+                    PJT Classes Student Portal
+                </span>
+
+                <i></i>
+
+                <span>
+                    Secure Access
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script src="../js/auth.js"></script>
+
+</body>
+
+</html>

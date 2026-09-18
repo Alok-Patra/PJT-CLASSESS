@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Performance | PJT Classes</title>
+
+    <link rel="stylesheet" href="../css/performance.css">
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+
+        <img
+            src="../assets/images/logo/logo.png"
+            alt="PJT Classes Logo"
+        >
+
+        <button
+            class="sidebar-close"
+            id="sidebarClose"
+            aria-label="Close menu"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <a href="dashboard.html" class="nav-item">
+            <span class="nav-icon">⌂</span>
+            <span>Dashboard</span>
+        </a>
+
+
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">◉</span>
+            <span>My Profile</span>
+        </a>
+
+
+        <a href="performance.html" class="nav-item active">
+            <span class="nav-icon">▥</span>
+            <span>Performance</span>
+        </a>
+
+
+        <a href="behaviour.html" class="nav-item">
+            <span class="nav-icon">✓</span>
+            <span>Behaviour</span>
+        </a>
+
+
+        <a href="fees.html" class="nav-item">
+            <span class="nav-icon">₹</span>
+            <span>Fees</span>
+        </a>
+
+
+        <a href="notifications.html" class="nav-item">
+
+            <span class="nav-icon">♢</span>
+
+            <span>Notifications</span>
+
+            <span class="notification-badge">
+                2
+            </span>
+
+        </a>
+
+
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="sidebar-student">
+
+            <div class="student-avatar">
+                RK
+            </div>
+
+            <div>
+
+                <strong>Rahul Kumar</strong>
+
+                <small>
+                    STU-2026-001
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MOBILE OVERLAY
+===================================================== -->
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+></div>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="main-content">
+
+
+    <!-- =================================================
+         TOPBAR
+    ================================================== -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button
+                class="mobile-menu"
+                id="mobileMenu"
+                aria-label="Open menu"
+            >
+                ☰
+            </button>
+
+
+            <div>
+
+                <h1>
+                    Performance
+                </h1>
+
+                <p>
+                    Track your academic progress
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <button
+                class="notification-button"
+                id="notificationButton"
+                aria-label="Notifications"
+            >
+
+                ♢
+
+                <span>
+                    2
+                </span>
+
+            </button>
+
+
+            <div class="topbar-user">
+
+                <div class="user-avatar">
+                    RK
+                </div>
+
+
+                <div class="user-info">
+
+                    <strong>
+                        Rahul Kumar
+                    </strong>
+
+                    <small>
+                        Class 10
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =================================================
+         PERFORMANCE PAGE
+    ================================================== -->
+
+    <section class="performance-page">
+
+
+        <!-- =================================================
+             PAGE INTRO
+        ================================================== -->
+
+        <div class="page-intro">
+
+            <div>
+
+                <span class="page-label">
+                    ACADEMIC PERFORMANCE
+                </span>
+
+                <h2>
+                    Your Academic Progress
+                </h2>
+
+                <p>
+                    View your subject-wise performance and recent test results.
+                </p>
+
+            </div>
+
+
+            <div class="academic-session">
+
+                <span>
+                    Academic Session
+                </span>
+
+                <strong>
+                    2026 – 27
+                </strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             SUMMARY CARDS
+        ================================================== -->
+
+        <div class="summary-grid">
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    %
+                </div>
+
+                <div>
+
+                    <span>
+                        Overall Percentage
+                    </span>
+
+                    <strong>
+                        84.8%
+                    </strong>
+
+                    <small class="positive">
+                        Good performance
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    #
+                </div>
+
+                <div>
+
+                    <span>
+                        Tests Completed
+                    </span>
+
+                    <strong>
+                        12
+                    </strong>
+
+                    <small>
+                        This session
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    ★
+                </div>
+
+                <div>
+
+                    <span>
+                        Highest Subject
+                    </span>
+
+                    <strong>
+                        English
+                    </strong>
+
+                    <small>
+                        91%
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="summary-card">
+
+                <div class="summary-icon">
+                    ↑
+                </div>
+
+                <div>
+
+                    <span>
+                        Recent Progress
+                    </span>
+
+                    <strong>
+                        +4.2%
+                    </strong>
+
+                    <small class="positive">
+                        Compared to last test
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             SUBJECT PERFORMANCE
+        ================================================== -->
+
+        <div class="performance-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        SUBJECT PERFORMANCE
+                    </span>
+
+                    <h3>
+                        Subject-wise Results
+                    </h3>
+
+                    <p>
+                        Current academic performance by subject
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="subject-list">
+
+
+                <!-- MATHEMATICS -->
+
+                <div class="subject-row">
+
+                    <div class="subject-info">
+
+                        <div class="subject-symbol">
+                            M
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Mathematics
+                            </strong>
+
+                            <span>
+                                88 out of 100
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-bar"
+                                data-progress="88"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-score">
+                        88%
+                    </div>
+
+                </div>
+
+
+
+                <!-- SCIENCE -->
+
+                <div class="subject-row">
+
+                    <div class="subject-info">
+
+                        <div class="subject-symbol">
+                            S
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Science
+                            </strong>
+
+                            <span>
+                                82 out of 100
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-bar"
+                                data-progress="82"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-score">
+                        82%
+                    </div>
+
+                </div>
+
+
+
+                <!-- ENGLISH -->
+
+                <div class="subject-row">
+
+                    <div class="subject-info">
+
+                        <div class="subject-symbol">
+                            E
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                English
+                            </strong>
+
+                            <span>
+                                91 out of 100
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-bar"
+                                data-progress="91"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-score">
+                        91%
+                    </div>
+
+                </div>
+
+
+
+                <!-- SOCIAL SCIENCE -->
+
+                <div class="subject-row">
+
+                    <div class="subject-info">
+
+                        <div class="subject-symbol">
+                            SS
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Social Science
+                            </strong>
+
+                            <span>
+                                78 out of 100
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-bar"
+                                data-progress="78"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="subject-score">
+                        78%
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RECENT TEST RESULTS
+        ================================================== -->
+
+        <div class="performance-card">
+
+            <div class="card-header">
+
+                <div>
+
+                    <span class="section-label">
+                        RECENT RESULTS
+                    </span>
+
+                    <h3>
+                        Recent Test Performance
+                    </h3>
+
+                    <p>
+                        Your latest academic assessments
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Test
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Marks
+                            </th>
+
+                            <th>
+                                Percentage
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td>
+                                Unit Test 1
+                            </td>
+
+                            <td>
+                                Mathematics
+                            </td>
+
+                            <td>
+                                12 Apr 2026
+                            </td>
+
+                            <td>
+                                44 / 50
+                            </td>
+
+                            <td>
+                                88%
+                            </td>
+
+                            <td>
+                                <span class="result-good">
+                                    Good
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Unit Test 1
+                            </td>
+
+                            <td>
+                                Science
+                            </td>
+
+                            <td>
+                                16 Apr 2026
+                            </td>
+
+                            <td>
+                                41 / 50
+                            </td>
+
+                            <td>
+                                82%
+                            </td>
+
+                            <td>
+                                <span class="result-good">
+                                    Good
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Class Test
+                            </td>
+
+                            <td>
+                                English
+                            </td>
+
+                            <td>
+                                23 Apr 2026
+                            </td>
+
+                            <td>
+                                46 / 50
+                            </td>
+
+                            <td>
+                                92%
+                            </td>
+
+                            <td>
+                                <span class="result-excellent">
+                                    Excellent
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Unit Test 2
+                            </td>
+
+                            <td>
+                                Social Science
+                            </td>
+
+                            <td>
+                                02 May 2026
+                            </td>
+
+                            <td>
+                                39 / 50
+                            </td>
+
+                            <td>
+                                78%
+                            </td>
+
+                            <td>
+                                <span class="result-average">
+                                    Average
+                                </span>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PERFORMANCE NOTE
+        ================================================== -->
+
+        <div class="performance-note">
+
+            <div class="note-icon">
+                i
+            </div>
+
+            <div>
+
+                <strong>
+                    Performance Information
+                </strong>
+
+                <p>
+                    Performance records are maintained by PJT Classes.
+                    Marks and results shown here are based on assessments
+                    recorded by the administration.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =====================================================
+     MOBILE BOTTOM NAVIGATION
+===================================================== -->
+
+<nav class="mobile-bottom-nav">
+
+    <a href="dashboard.html">
+
+        <span>⌂</span>
+
+        <small>
+            Home
+        </small>
+
+    </a>
+
+
+    <a href="profile.html">
+
+        <span>◉</span>
+
+        <small>
+            Profile
+        </small>
+
+    </a>
+
+
+    <a
+        href="performance.html"
+        class="active"
+    >
+
+        <span>▥</span>
+
+        <small>
+            Performance
+        </small>
+
+    </a>
+
+
+    <a href="fees.html">
+
+        <span>₹</span>
+
+        <small>
+            Fees
+        </small>
+
+    </a>
+
+
+    <a href="notifications.html">
+
+        <span>♢</span>
+
+        <small>
+            Alerts
+        </small>
+
+    </a>
+
+</nav>
+
+
+
+<script src="../js/performance.js"></script>
+
+</body>
+</html>

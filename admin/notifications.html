@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | PJT Classes Admin</title>
+
+    <link rel="stylesheet" href="../css/admin-notifications.css">
+</head>
+
+<body>
+
+<div class="admin-app">
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="sidebar-logo">
+            <img src="../assets/images/logo/logo.png" alt="PJT Classes">
+            <div>
+                <h2>PJT CLASSES</h2>
+                <span>ADMIN PANEL</span>
+            </div>
+        </div>
+
+        <nav class="admin-nav">
+
+            <a href="dashboard.html">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="students.html">
+                <span class="nav-icon">👥</span>
+                <span>Students</span>
+            </a>
+
+            <a href="performance.html">
+                <span class="nav-icon">▣</span>
+                <span>Performance</span>
+            </a>
+
+            <a href="behaviour.html">
+                <span class="nav-icon">◉</span>
+                <span>Behaviour</span>
+            </a>
+
+            <a href="fees.html">
+                <span class="nav-icon">₹</span>
+                <span>Fees</span>
+            </a>
+
+            <a href="notifications.html" class="active">
+                <span class="nav-icon">🔔</span>
+                <span>Notifications</span>
+                <span class="nav-badge">2</span>
+            </a>
+
+            <a href="settings.html">
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button class="logout-btn" id="logoutButton">
+                <span>↪</span>
+                Logout
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+        <!-- TOPBAR -->
+        <header class="admin-topbar">
+
+            <button class="menu-button" id="menuButton">
+                ☰
+            </button>
+
+            <div class="topbar-title">
+                <h1>Notifications</h1>
+                <p>Send and manage student notifications</p>
+            </div>
+
+            <div class="topbar-right">
+
+                <button class="notification-button">
+                    🔔
+                    <span>2</span>
+                </button>
+
+                <div class="admin-profile">
+                    <div class="admin-avatar">A</div>
+
+                    <div>
+                        <strong>Administrator</strong>
+                        <small>Admin</small>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- CONTENT -->
+        <section class="notifications-content">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+
+                <div>
+                    <h2>Notification Center</h2>
+                    <p>Create announcements and send updates to students.</p>
+                </div>
+
+                <div class="header-status">
+                    <span class="status-dot"></span>
+                    System Active
+                </div>
+
+            </div>
+
+            <!-- CREATE NOTIFICATION -->
+            <div class="notification-grid">
+
+                <div class="card compose-card">
+
+                    <div class="card-header">
+                        <div>
+                            <h3>Create Notification</h3>
+                            <p>Send a message to one or more students.</p>
+                        </div>
+
+                        <div class="header-icon">✦</div>
+                    </div>
+
+                    <form id="notificationForm">
+
+                        <div class="form-group">
+
+                            <label for="notificationType">
+                                Notification Type
+                            </label>
+
+                            <select id="notificationType">
+                                <option value="announcement">Announcement</option>
+                                <option value="fee">Fee Reminder</option>
+                                <option value="performance">Performance Update</option>
+                                <option value="behaviour">Behaviour Update</option>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="recipient">
+                                Send To
+                            </label>
+
+                            <select id="recipient">
+
+                                <option value="all">
+                                    All Students
+                                </option>
+
+                                <option value="STU-2026-001">
+                                    Rahul Kumar — STU-2026-001
+                                </option>
+
+                                <option value="STU-2026-002">
+                                    Aman Singh — STU-2026-002
+                                </option>
+
+                                <option value="STU-2026-003">
+                                    Priya Sharma — STU-2026-003
+                                </option>
+
+                                <option value="STU-2026-004">
+                                    Rohit Verma — STU-2026-004
+                                </option>
+
+                                <option value="STU-2026-005">
+                                    Neha Kumari — STU-2026-005
+                                </option>
+
+                                <option value="STU-2026-006">
+                                    Vikas Kumar — STU-2026-006
+                                </option>
+
+                                <option value="STU-2026-007">
+                                    Anjali Singh — STU-2026-007
+                                </option>
+
+                                <option value="STU-2026-008">
+                                    Deepak Das — STU-2026-008
+                                </option>
+
+                                <option value="STU-2026-009">
+                                    Sneha Kumari — STU-2026-009
+                                </option>
+
+                                <option value="STU-2026-010">
+                                    Amit Raj — STU-2026-010
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="notificationTitle">
+                                Notification Title
+                            </label>
+
+                            <input
+                                type="text"
+                                id="notificationTitle"
+                                placeholder="Enter notification title"
+                                maxlength="100"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label for="notificationMessage">
+                                Message
+                            </label>
+
+                            <textarea
+                                id="notificationMessage"
+                                rows="6"
+                                maxlength="500"
+                                placeholder="Write your notification message..."
+                                required
+                            ></textarea>
+
+                            <div class="character-count">
+                                <span id="characterCount">0</span>/500
+                            </div>
+
+                        </div>
+
+                        <div class="form-actions">
+
+                            <button
+                                type="button"
+                                class="clear-button"
+                                id="clearButton"
+                            >
+                                Clear
+                            </button>
+
+                            <button
+                                type="submit"
+                                class="send-button"
+                                id="sendButton"
+                            >
+                                <span>➤</span>
+                                Send Notification
+                            </button>
+
+                        </div>
+
+                        <div
+                            class="form-message"
+                            id="formMessage"
+                        ></div>
+
+                    </form>
+
+                </div>
+
+                <!-- QUICK INFO -->
+                <div class="card info-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h3>Notification Summary</h3>
+                            <p>Current notification activity</p>
+                        </div>
+
+                    </div>
+
+                    <div class="summary-list">
+
+                        <div class="summary-item">
+
+                            <div class="summary-icon blue">
+                                🔔
+                            </div>
+
+                            <div>
+                                <strong id="totalNotifications">12</strong>
+                                <span>Total Notifications</span>
+                            </div>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <div class="summary-icon green">
+                                ✓
+                            </div>
+
+                            <div>
+                                <strong id="sentNotifications">10</strong>
+                                <span>Sent Notifications</span>
+                            </div>
+
+                        </div>
+
+                        <div class="summary-item">
+
+                            <div class="summary-icon orange">
+                                ◷
+                            </div>
+
+                            <div>
+                                <strong id="unreadNotifications">2</strong>
+                                <span>Unread Alerts</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="notification-rule">
+
+                        <strong>Important</strong>
+
+                        <p>
+                            Student-specific notifications are visible
+                            only to the selected student.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RECENT NOTIFICATIONS -->
+            <div class="card recent-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h3>Recent Notifications</h3>
+                        <p>Recently created notifications</p>
+                    </div>
+
+                    <div class="notification-count">
+                        <span id="recentCount">5</span> Recent
+                    </div>
+
+                </div>
+
+                <div class="notifications-table-wrapper">
+
+                    <table class="notifications-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Notification</th>
+                                <th>Type</th>
+                                <th>Recipient</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="notificationsTableBody">
+
+                            <tr>
+
+                                <td>
+                                    <div class="notification-cell">
+
+                                        <div class="table-icon">₹</div>
+
+                                        <div>
+                                            <strong>Monthly Fee Reminder</strong>
+                                            <span>
+                                                Please clear your pending fee.
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="type-badge fee-type">
+                                        Fee
+                                    </span>
+                                </td>
+
+                                <td>
+                                    Rahul Kumar
+                                    <small>STU-2026-001</small>
+                                </td>
+
+                                <td>
+                                    18 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="status-badge sent">
+                                        Sent
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>
+                                    <div class="notification-cell">
+
+                                        <div class="table-icon">📢</div>
+
+                                        <div>
+                                            <strong>Important Announcement</strong>
+                                            <span>
+                                                Regular classes will continue.
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="type-badge announcement-type">
+                                        Announcement
+                                    </span>
+                                </td>
+
+                                <td>
+                                    All Students
+                                </td>
+
+                                <td>
+                                    17 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="status-badge sent">
+                                        Sent
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>
+                                    <div class="notification-cell">
+
+                                        <div class="table-icon">📊</div>
+
+                                        <div>
+                                            <strong>Performance Updated</strong>
+                                            <span>
+                                                Your performance record was updated.
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="type-badge performance-type">
+                                        Performance
+                                    </span>
+                                </td>
+
+                                <td>
+                                    Priya Sharma
+                                    <small>STU-2026-003</small>
+                                </td>
+
+                                <td>
+                                    16 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="status-badge sent">
+                                        Sent
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>
+                                    <div class="notification-cell">
+
+                                        <div class="table-icon">₹</div>
+
+                                        <div>
+                                            <strong>Fee Pending</strong>
+                                            <span>
+                                                Monthly fee payment is pending.
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="type-badge fee-type">
+                                        Fee
+                                    </span>
+                                </td>
+
+                                <td>
+                                    Rohit Verma
+                                    <small>STU-2026-004</small>
+                                </td>
+
+                                <td>
+                                    15 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="status-badge sent">
+                                        Sent
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td>
+                                    <div class="notification-cell">
+
+                                        <div class="table-icon">📢</div>
+
+                                        <div>
+                                            <strong>Class Update</strong>
+                                            <span>
+                                                Students are requested to attend class regularly.
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="type-badge announcement-type">
+                                        Announcement
+                                    </span>
+                                </td>
+
+                                <td>
+                                    All Students
+                                </td>
+
+                                <td>
+                                    14 Sep 2026
+                                </td>
+
+                                <td>
+                                    <span class="status-badge sent">
+                                        Sent
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <footer class="admin-footer">
+            © 2026 PJT Classes. Admin Panel.
+        </footer>
+
+    </main>
+
+</div>
+
+<script src="../js/admin-notifications.js"></script>
+
+</body>
+</html>

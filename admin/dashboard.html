@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | PJT CLASSES</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin-dashboard.css">
+</head>
+
+<body>
+
+<div class="admin-app">
+
+    <!-- MOBILE OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="sidebar-header">
+
+            <a href="dashboard.html" class="sidebar-logo">
+                <img src="../assets/images/logo/logo.png" alt="PJT Classes">
+                <div>
+                    <strong>PJT CLASSES</strong>
+                    <span>ADMIN PANEL</span>
+                </div>
+            </a>
+
+            <button class="sidebar-close" id="sidebarClose">
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+        <nav class="admin-nav">
+
+            <div class="nav-section-title">
+                MAIN
+            </div>
+
+            <a href="dashboard.html" class="admin-nav-link active">
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="students.html" class="admin-nav-link">
+                <span class="nav-icon">♙</span>
+                <span>Students</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                STUDENT MANAGEMENT
+            </div>
+
+            <a href="performance.html" class="admin-nav-link">
+                <span class="nav-icon">▥</span>
+                <span>Performance</span>
+            </a>
+
+            <a href="behaviour.html" class="admin-nav-link">
+                <span class="nav-icon">✓</span>
+                <span>Behaviour</span>
+            </a>
+
+            <a href="fees.html" class="admin-nav-link">
+                <span class="nav-icon">₹</span>
+                <span>Fees</span>
+            </a>
+
+            <div class="nav-section-title">
+                COMMUNICATION
+            </div>
+
+            <a href="notifications.html" class="admin-nav-link">
+                <span class="nav-icon">♢</span>
+                <span>Notifications</span>
+                <span class="nav-count">2</span>
+            </a>
+
+
+            <div class="nav-section-title">
+                SYSTEM
+            </div>
+
+            <a href="settings.html" class="admin-nav-link">
+                <span class="nav-icon">⚙</span>
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+        <div class="sidebar-bottom">
+
+            <div class="admin-profile-mini">
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+                <div class="admin-profile-info">
+                    <strong>Administrator</strong>
+                    <span>ADMIN-001</span>
+                </div>
+
+            </div>
+
+            <button class="sidebar-logout" id="logoutButton">
+                <span>↪</span>
+                Logout
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="admin-main">
+
+        <!-- TOPBAR -->
+        <header class="admin-topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    class="menu-button"
+                    id="menuButton"
+                    aria-label="Open menu">
+                    ☰
+                </button>
+
+                <div>
+                    <span class="page-label">ADMINISTRATION</span>
+                    <h1>Dashboard</h1>
+                </div>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <a
+                    href="notifications.html"
+                    class="notification-button"
+                    aria-label="Notifications">
+
+                    ♢
+
+                    <span class="notification-badge">
+                        2
+                    </span>
+
+                </a>
+
+                <div class="topbar-admin">
+
+                    <div class="topbar-avatar">
+                        A
+                    </div>
+
+                    <div class="topbar-admin-info">
+                        <strong>Administrator</strong>
+                        <span>Admin</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+        <div class="admin-content">
+
+            <!-- WELCOME -->
+            <section class="welcome-section">
+
+                <div>
+                    <span class="welcome-label">
+                        PJT CLASSES
+                    </span>
+
+                    <h2>
+                        Welcome back, Administrator
+                    </h2>
+
+                    <p>
+                        Here's an overview of your coaching center.
+                    </p>
+                </div>
+
+                <div class="session-badge">
+                    <span></span>
+                    Session 2026–27
+                </div>
+
+            </section>
+
+
+            <!-- STAT CARDS -->
+            <section class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+                        <div class="stat-icon students-icon">
+                            ♙
+                        </div>
+
+                        <span class="stat-label">
+                            TOTAL
+                        </span>
+                    </div>
+
+                    <div class="stat-value">
+                        50
+                    </div>
+
+                    <div class="stat-description">
+                        Registered students
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+                        <div class="stat-icon performance-icon">
+                            ▥
+                        </div>
+
+                        <span class="stat-label">
+                            PERFORMANCE
+                        </span>
+                    </div>
+
+                    <div class="stat-value">
+                        42
+                    </div>
+
+                    <div class="stat-description">
+                        Students with records
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+                        <div class="stat-icon fees-icon">
+                            ₹
+                        </div>
+
+                        <span class="stat-label">
+                            FEES
+                        </span>
+                    </div>
+
+                    <div class="stat-value">
+                        ₹21,600
+                    </div>
+
+                    <div class="stat-description">
+                        Pending this session
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+                        <div class="stat-icon alert-icon">
+                            !
+                        </div>
+
+                        <span class="stat-label">
+                            ALERTS
+                        </span>
+                    </div>
+
+                    <div class="stat-value">
+                        12
+                    </div>
+
+                    <div class="stat-description">
+                        Pending fee records
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- TWO COLUMN -->
+            <section class="dashboard-grid">
+
+
+                <!-- RECENT STUDENTS -->
+                <div class="dashboard-card students-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <span class="card-kicker">
+                                STUDENTS
+                            </span>
+
+                            <h3>Recent Students</h3>
+                        </div>
+
+                        <a href="students.html" class="view-link">
+                            View all →
+                        </a>
+
+                    </div>
+
+
+                    <div class="student-list">
+
+                        <div class="student-row">
+
+                            <div class="student-avatar">
+                                RK
+                            </div>
+
+                            <div class="student-info">
+                                <strong>Rahul Kumar</strong>
+                                <span>STU-2026-001 · Class 10</span>
+                            </div>
+
+                            <span class="student-status active">
+                                Active
+                            </span>
+
+                        </div>
+
+
+                        <div class="student-row">
+
+                            <div class="student-avatar">
+                                AS
+                            </div>
+
+                            <div class="student-info">
+                                <strong>Aman Singh</strong>
+                                <span>STU-2026-002 · Class 9</span>
+                            </div>
+
+                            <span class="student-status active">
+                                Active
+                            </span>
+
+                        </div>
+
+
+                        <div class="student-row">
+
+                            <div class="student-avatar">
+                                PS
+                            </div>
+
+                            <div class="student-info">
+                                <strong>Priya Sharma</strong>
+                                <span>STU-2026-003 · Class 10</span>
+                            </div>
+
+                            <span class="student-status active">
+                                Active
+                            </span>
+
+                        </div>
+
+
+                        <div class="student-row">
+
+                            <div class="student-avatar">
+                                RV
+                            </div>
+
+                            <div class="student-info">
+                                <strong>Rohit Verma</strong>
+                                <span>STU-2026-004 · Class 8</span>
+                            </div>
+
+                            <span class="student-status active">
+                                Active
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FEE OVERVIEW -->
+                <div class="dashboard-card fee-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <span class="card-kicker">
+                                FEES
+                            </span>
+
+                            <h3>Fee Overview</h3>
+                        </div>
+
+                        <a href="fees.html" class="view-link">
+                            Manage →
+                        </a>
+
+                    </div>
+
+
+                    <div class="fee-summary">
+
+                        <div class="fee-total">
+                            <span>Total pending</span>
+                            <strong>₹21,600</strong>
+                        </div>
+
+                        <div class="fee-progress">
+
+                            <div class="progress-header">
+                                <span>Collection</span>
+                                <strong>83%</strong>
+                            </div>
+
+                            <div class="progress-track">
+                                <div
+                                    class="progress-fill"
+                                    style="width: 83%;">
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="fee-breakdown">
+
+                            <div>
+                                <span class="breakdown-dot paid"></span>
+                                <p>
+                                    Paid
+                                    <strong>₹1,29,600</strong>
+                                </p>
+                            </div>
+
+                            <div>
+                                <span class="breakdown-dot pending"></span>
+                                <p>
+                                    Pending
+                                    <strong>₹21,600</strong>
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- BOTTOM GRID -->
+            <section class="bottom-grid">
+
+
+                <!-- QUICK MANAGEMENT -->
+                <div class="dashboard-card quick-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <span class="card-kicker">
+                                MANAGEMENT
+                            </span>
+
+                            <h3>Quick Access</h3>
+                        </div>
+
+                    </div>
+
+
+                    <div class="quick-grid">
+
+                        <a href="students.html" class="quick-item">
+                            <span class="quick-icon">♙</span>
+                            <div>
+                                <strong>Students</strong>
+                                <small>Manage students</small>
+                            </div>
+                        </a>
+
+                        <a href="performance.html" class="quick-item">
+                            <span class="quick-icon">▥</span>
+                            <div>
+                                <strong>Performance</strong>
+                                <small>Update records</small>
+                            </div>
+                        </a>
+
+                        <a href="behaviour.html" class="quick-item">
+                            <span class="quick-icon">✓</span>
+                            <div>
+                                <strong>Behaviour</strong>
+                                <small>Update behaviour</small>
+                            </div>
+                        </a>
+
+                        <a href="fees.html" class="quick-item">
+                            <span class="quick-icon">₹</span>
+                            <div>
+                                <strong>Fees</strong>
+                                <small>Track payments</small>
+                            </div>
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NOTIFICATIONS -->
+                <div class="dashboard-card notification-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <span class="card-kicker">
+                                COMMUNICATION
+                            </span>
+
+                            <h3>Recent Notifications</h3>
+                        </div>
+
+                        <a href="notifications.html" class="view-link">
+                            View all →
+                        </a>
+
+                    </div>
+
+
+                    <div class="notification-list">
+
+                        <div class="notification-row">
+
+                            <div class="notification-symbol fee">
+                                ₹
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Fee reminder pending
+                                </strong>
+
+                                <span>
+                                    12 students have pending fees
+                                </span>
+
+                                <small>
+                                    Today
+                                </small>
+                            </div>
+
+                        </div>
+
+
+                        <div class="notification-row">
+
+                            <div class="notification-symbol announcement">
+                                !
+                            </div>
+
+                            <div>
+                                <strong>
+                                    Announcement
+                                </strong>
+
+                                <span>
+                                    Monthly test schedule needs updating
+                                </span>
+
+                                <small>
+                                    Yesterday
+                                </small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- FOOTER -->
+            <footer class="admin-footer">
+                <span>
+                    © 2026 PJT CLASSES
+                </span>
+
+                <span>
+                    Administration Panel
+                </span>
+            </footer>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="../js/admin.js"></script>
+<script src="../js/admin-dashboard.js"></script>
+
+</body>
+</html>

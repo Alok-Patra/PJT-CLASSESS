@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Performance | PJT CLASSES</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/admin.css">
+<link rel="stylesheet" href="../css/admin-performance.css">
+
+</head>
+
+
+<body>
+
+<div class="admin-app">
+
+
+    <!-- =====================================================
+         SIDEBAR OVERLAY
+    ====================================================== -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay">
+    </div>
+
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside
+        class="admin-sidebar"
+        id="adminSidebar">
+
+
+        <div class="sidebar-header">
+
+            <a
+                href="dashboard.html"
+                class="sidebar-logo"
+            >
+
+                <img
+                    src="../assets/images/logo/logo.png"
+                    alt="PJT Classes"
+                >
+
+                <div>
+
+                    <strong>
+                        PJT CLASSES
+                    </strong>
+
+                    <span>
+                        ADMIN PANEL
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <button
+                type="button"
+                class="sidebar-close"
+                id="sidebarClose"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <nav class="admin-nav">
+
+
+            <div class="nav-section-title">
+                MAIN
+            </div>
+
+
+            <a
+                href="dashboard.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a
+                href="students.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">
+                    ♙
+                </span>
+
+                <span>
+                    Students
+                </span>
+
+            </a>
+
+
+
+            <div class="nav-section-title">
+                STUDENT MANAGEMENT
+            </div>
+
+
+            <a
+                href="performance.html"
+                class="admin-nav-link active"
+            >
+
+                <span class="nav-icon">
+                    ▥
+                </span>
+
+                <span>
+                    Performance
+                </span>
+
+            </a>
+
+
+            <a
+                href="behaviour.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">
+                    ✓
+                </span>
+
+                <span>
+                    Behaviour
+                </span>
+
+            </a>
+
+
+            <a
+                href="fees.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">
+                    ₹
+                </span>
+
+                <span>
+                    Fees
+                </span>
+
+            </a>
+
+
+
+            <div class="nav-section-title">
+                COMMUNICATION
+            </div>
+
+
+            <a
+                href="notifications.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">
+                    ♢
+                </span>
+
+                <span>
+                    Notifications
+                </span>
+
+                <span class="nav-count">
+                    2
+                </span>
+
+            </a>
+
+
+
+            <div class="nav-section-title">
+                SYSTEM
+            </div>
+
+
+            <a
+                href="settings.html"
+                class="admin-nav-link"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+        </nav>
+
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+
+            <div class="admin-profile-mini">
+
+                <div class="admin-avatar">
+                    A
+                </div>
+
+                <div class="admin-profile-info">
+
+                    <strong>
+                        Administrator
+                    </strong>
+
+                    <span>
+                        ADMIN-001
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="sidebar-logout"
+                id="logoutButton"
+            >
+
+                <span>
+                    ↪
+                </span>
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- TOPBAR -->
+
+        <header class="admin-topbar">
+
+
+            <div class="topbar-left">
+
+                <button
+                    type="button"
+                    class="menu-button"
+                    id="menuButton"
+                >
+                    ☰
+                </button>
+
+
+                <div>
+
+                    <span class="page-label">
+                        STUDENT MANAGEMENT
+                    </span>
+
+                    <h1>
+                        Performance
+                    </h1>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="topbar-right">
+
+
+                <a
+                    href="notifications.html"
+                    class="notification-button"
+                >
+
+                    ♢
+
+                    <span class="notification-badge">
+                        2
+                    </span>
+
+                </a>
+
+
+                <div class="topbar-admin">
+
+                    <div class="topbar-avatar">
+                        A
+                    </div>
+
+                    <div class="topbar-admin-info">
+
+                        <strong>
+                            Administrator
+                        </strong>
+
+                        <span>
+                            Admin
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <div class="admin-content">
+
+
+            <!-- PAGE INTRO -->
+
+            <div class="page-intro">
+
+                <div>
+
+                    <span class="content-kicker">
+                        ACADEMIC RECORDS
+                    </span>
+
+                    <h2>
+                        Student Performance
+                    </h2>
+
+                    <p>
+                        View and update academic performance
+                        records for students.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 STUDENT SELECTOR
+            ================================================== -->
+
+            <section class="performance-card selector-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-kicker">
+                            SELECT STUDENT
+                        </span>
+
+                        <h3>
+                            Student Performance Record
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="selector-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="studentSelect">
+                            Student
+                        </label>
+
+                        <select
+                            id="studentSelect"
+                        >
+
+                            <option value="">
+                                Select a student
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="student-preview">
+
+                        <div
+                            class="preview-avatar"
+                            id="previewAvatar"
+                        >
+                            --
+                        </div>
+
+                        <div>
+
+                            <strong id="previewName">
+                                Select Student
+                            </strong>
+
+                            <span id="previewInfo">
+                                Student ID · Class
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PERFORMANCE FORM
+            ================================================== -->
+
+            <section
+                class="performance-card"
+                id="performanceSection"
+            >
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-kicker">
+                            ACADEMIC PERFORMANCE
+                        </span>
+
+                        <h3>
+                            Performance Details
+                        </h3>
+
+                    </div>
+
+                    <span
+                        class="record-status"
+                        id="recordStatus"
+                    >
+                        Current Record
+                    </span>
+
+                </div>
+
+
+
+                <!-- OVERALL -->
+
+                <div class="overall-performance">
+
+
+                    <div class="overall-left">
+
+                        <span>
+                            Overall Performance
+                        </span>
+
+                        <div class="overall-score-row">
+
+                            <strong id="overallDisplay">
+                                0%
+                            </strong>
+
+                            <span>
+                                Overall
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="overall-progress">
+
+                        <div class="progress-track">
+
+                            <div
+                                class="progress-fill"
+                                id="overallProgress"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SUBJECTS -->
+
+                <div class="subjects-section">
+
+                    <div class="section-heading">
+
+                        <div>
+
+                            <span class="card-kicker">
+                                SUBJECTS
+                            </span>
+
+                            <h4>
+                                Subject-wise Performance
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="subjects-grid">
+
+
+                        <!-- MATHEMATICS -->
+
+                        <div class="subject-card">
+
+                            <div class="subject-card-top">
+
+                                <div>
+
+                                    <span class="subject-name">
+                                        Mathematics
+                                    </span>
+
+                                    <span class="subject-max">
+                                        Marks / 100
+                                    </span>
+
+                                </div>
+
+                                <strong
+                                    id="mathDisplay"
+                                >
+                                    0%
+                                </strong>
+
+                            </div>
+
+
+                            <div class="subject-progress">
+
+                                <div
+                                    class="subject-progress-fill"
+                                    id="mathProgress"
+                                ></div>
+
+                            </div>
+
+
+                            <div class="mark-input">
+
+                                <label for="mathMarks">
+                                    Marks
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="mathMarks"
+                                    min="0"
+                                    max="100"
+                                    placeholder="Enter marks"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- SCIENCE -->
+
+                        <div class="subject-card">
+
+                            <div class="subject-card-top">
+
+                                <div>
+
+                                    <span class="subject-name">
+                                        Science
+                                    </span>
+
+                                    <span class="subject-max">
+                                        Marks / 100
+                                    </span>
+
+                                </div>
+
+                                <strong
+                                    id="scienceDisplay"
+                                >
+                                    0%
+                                </strong>
+
+                            </div>
+
+
+                            <div class="subject-progress">
+
+                                <div
+                                    class="subject-progress-fill"
+                                    id="scienceProgress"
+                                ></div>
+
+                            </div>
+
+
+                            <div class="mark-input">
+
+                                <label for="scienceMarks">
+                                    Marks
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="scienceMarks"
+                                    min="0"
+                                    max="100"
+                                    placeholder="Enter marks"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- ENGLISH -->
+
+                        <div class="subject-card">
+
+                            <div class="subject-card-top">
+
+                                <div>
+
+                                    <span class="subject-name">
+                                        English
+                                    </span>
+
+                                    <span class="subject-max">
+                                        Marks / 100
+                                    </span>
+
+                                </div>
+
+                                <strong
+                                    id="englishDisplay"
+                                >
+                                    0%
+                                </strong>
+
+                            </div>
+
+
+                            <div class="subject-progress">
+
+                                <div
+                                    class="subject-progress-fill"
+                                    id="englishProgress"
+                                ></div>
+
+                            </div>
+
+
+                            <div class="mark-input">
+
+                                <label for="englishMarks">
+                                    Marks
+                                </label>
+
+                                <input
+                                    type="number"
+                                    id="englishMarks"
+                                    min="0"
+                                    max="100"
+                                    placeholder="Enter marks"
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- SAVE -->
+
+                <div class="form-actions">
+
+                    <div
+                        class="form-message"
+                        id="formMessage"
+                    ></div>
+
+
+                    <button
+                        type="button"
+                        class="save-button"
+                        id="savePerformance"
+                    >
+
+                        <span>
+                            Save Performance
+                        </span>
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 CURRENT RECORD
+            ================================================== -->
+
+            <section class="performance-card current-record-card">
+
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-kicker">
+                            CURRENT RECORD
+                        </span>
+
+                        <h3>
+                            Performance Overview
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="record-grid">
+
+
+                    <div class="record-item">
+
+                        <span>
+                            Student
+                        </span>
+
+                        <strong id="recordName">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="record-item">
+
+                        <span>
+                            Student ID
+                        </span>
+
+                        <strong id="recordId">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="record-item">
+
+                        <span>
+                            Class
+                        </span>
+
+                        <strong id="recordClass">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="record-item">
+
+                        <span>
+                            Overall
+                        </span>
+
+                        <strong id="recordOverall">
+                            -
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- FOOTER -->
+
+            <footer class="admin-footer">
+
+                <span>
+                    © 2026 PJT CLASSES
+                </span>
+
+                <span>
+                    Administration Panel
+                </span>
+
+            </footer>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+
+
+<script src="../js/admin.js"></script>
+
+<script src="../js/admin-performance.js"></script>
+
+
+</body>
+
+</html>
