@@ -556,21 +556,14 @@
                     id="userMenu"
                 >
 
-                    <div class="avatar">
-                        RK
-                    </div>
+                 
+<div class="avatar" id="studentAvatar">ST</div>
 
-                    <div class="user-info">
+<div class="user-info">
+    <strong id="studentName">Loading...</strong>
+    <small id="studentDetails">Loading student details...</small>
+</div>
 
-                        <strong>
-                            Rahul Kumar
-                        </strong>
-
-                        <small>
-                            Class 10 • STU-2026-001
-                        </small>
-
-                    </div>
 
                     <svg
                         class="chevron"
@@ -616,15 +609,17 @@
 
                 <div class="welcome-content">
 
-                    <span class="welcome-label">
-                        CLASS 10
-                        <i></i>
-                        STUDENT ID: STU-2026-001
-                    </span>
+                 
+<span class="welcome-label">
+    <span id="welcomeStudentClass">Loading...</span>
+    <i>•</i>
+    STUDENT ID: <span id="welcomeStudentId">Loading...</span>
+</span>
+
 
                     <h1>
                         Good Morning,
-                        <strong>Rahul Kumar</strong>
+                       <strong id="welcomeStudentName">Loading...</strong>
                         <span>👋</span>
                     </h1>
 
@@ -1523,7 +1518,11 @@
 </div>
 
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
 <script src="../js/dashboard.js"></script>
+    
 
 </body>
 

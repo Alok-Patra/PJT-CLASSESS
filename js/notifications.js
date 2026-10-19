@@ -1,411 +1,651 @@
+
 /* =========================================
    PJT CLASSES
-   NOTIFICATIONS
+   STUDENT NOTIFICATIONS
+   Supabase-connected version
 ========================================= */
 
+document.addEventListener("DOMContentLoaded", async () => {
 
-/* =========================================
-   SAMPLE NOTIFICATION DATA
-   Backend will replace this later
-========================================= */
+    /* =====================================
+       ELEMENTS
+    ===================================== */
 
-const notifications = [
+    const notificationsList =
+        document.getElementById("notificationsList");
 
-    {
-        id: 1,
-        type: "fee",
-        title: "Fee Payment Reminder",
-        message:
-            "Your fee for September is still pending. Please complete the payment for this month.",
-        date: "18 September 2026, 10:30 AM",
-        unread: true
-    },
+    const noResults =
+        document.getElementById("noResults");
 
-    {
-        id: 2,
-        type: "announcement",
-        title: "Important Announcement",
-        message:
-            "Students are requested to maintain regular attendance and follow the class schedule.",
-        date: "17 September 2026, 06:15 PM",
-        unread: true
-    },
+    const notificationSearch =
+        document.getElementById("notificationSearch");
 
-    {
-        id: 3,
-        type: "fee",
-        title: "Fee Status Updated",
-        message:
-            "Your October fee payment has been successfully recorded in the student portal.",
-        date: "05 September 2026, 04:20 PM",
-        unread: false
-    },
+    const notificationFilter =
+        document.getElementById("notificationFilter");
 
-    {
-        id: 4,
-        type: "announcement",
-        title: "Class Update",
-        message:
-            "Your latest academic performance information has been updated in the student portal.",
-        date: "02 September 2026, 05:10 PM",
-        unread: false
-    },
+    const unreadCount =
+        document.getElementById("unreadCount");
 
-    {
-        id: 5,
-        type: "fee",
-        title: "Fee Record",
-        message:
-            "Your July fee payment has been recorded successfully.",
-        date: "08 August 2026, 03:45 PM",
-        unread: false
+    const markAllBtn =
+        document.getElementById("markAllBtn");
+
+    const menuBtn =
+        document.getElementById("menuBtn");
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const sidebarOverlay =
+        document.getElementById("sidebarOverlay");
+
+    const logoutBtn =
+        document.getElementById("logoutBtn");
+
+    const client = window.supabaseClient;
+
+    let notifications = [];
+    let studentId = null;
+
+    /* =====================================
+       HELPERS
+    ===================================== */
+
+    function escapeHTML(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 
-];
+    function formatDate(value) {
+        if (!value) return "";
 
+        return new Date(value).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
 
-/* =========================================
-   ELEMENTS
-========================================= */
+    function showLoadError(message) {
+        console.error("Notification error:", message);
 
-const notificationsList =
-    document.getElementById("notificationsList");
+        if (notificationsList) {
+            notificationsList.innerHTML = "";
+        }
 
-const noResults =
-    document.getElementById("noResults");
+        if (noResults) {
+            noResults.textContent = message;
+            noResults.classList.add("show");
+        }
+    }
 
-const notificationSearch =
-    document.getElementById("notificationSearch");
+    /* =====================================
+       LOAD AUTHENTICATED STUDENT
+    ===================================== */
 
-const notificationFilter =
-    document.getElementById("notificationFilter");
+    async function loadStudent() {
+        if (!client) {
+            throw new Error(
+                "Supabase is not initialized. Check the scripts in notifications.html."
+            );
+        }
 
-const unreadCount =
-    document.getElementById("unreadCount");
+        const {
+            data: sessionData,
+            error: sessionError
+        } = await client.auth.getSession();
 
-const markAllBtn =
-    document.getElementById("markAllBtn");
+        if (sessionError) {
+            throw sessionError;
+        }
 
-const menuBtn =
-    document.getElementById("menuBtn");
+        if (!sessionData.session) {
+            window.location.href = "login.html";
+            return false;
+        }
 
-const sidebar =
-    document.getElementById("sidebar");
+        studentId = sessionData.session.user.id;
 
-const sidebarOverlay =
-    document.getElementById("sidebarOverlay");
+        const {
+            data: profile,
+            error: profileError
+        } = await client
+            .from("profiles")
+            .select("id, role")
+            .eq("id", studentId)
+            .maybeSingle();
 
-const logoutBtn =
-    document.getElementById("logoutBtn");
+        if (profileError) {
+            throw new Error(
+                "Unable to check student profile: " +
+                profileError.message
+            );
+        }
 
+        if (!profile) {
+            throw new Error(
+                "Your profile was not found. Please contact your administrator."
+            );
+        }
 
-/* =========================================
-   RENDER NOTIFICATIONS
-========================================= */
-
-function renderNotifications() {
-
-    const searchValue =
-        notificationSearch.value
+        const role = String(profile.role || "")
             .trim()
             .toLowerCase();
 
-    const filterValue =
-        notificationFilter.value;
+        if (role !== "student") {
+            throw new Error(
+                "This account is not registered as a student. Current role: " +
+                (role || "not assigned")
+            );
+        }
 
+        console.log("Student account verified successfully.");
 
-    const filteredNotifications =
-        notifications.filter(notification => {
-
-            const matchesSearch =
-                notification.title
-                    .toLowerCase()
-                    .includes(searchValue) ||
-
-                notification.message
-                    .toLowerCase()
-                    .includes(searchValue);
-
-
-            let matchesFilter = true;
-
-
-            if (filterValue === "unread") {
-                matchesFilter = notification.unread === true;
-            }
-
-            if (filterValue === "fee") {
-                matchesFilter = notification.type === "fee";
-            }
-
-            if (filterValue === "announcement") {
-                matchesFilter =
-                    notification.type === "announcement";
-            }
-
-
-            return matchesSearch && matchesFilter;
-
-        });
-
-
-    notificationsList.innerHTML = "";
-
-
-    if (filteredNotifications.length === 0) {
-
-        noResults.classList.add("show");
-
-        return;
-
+        return true;
     }
 
+    /* =====================================
+       LOAD NOTIFICATIONS AND READ STATUS
+    ===================================== */
 
-    noResults.classList.remove("show");
+    async function loadNotifications() {
+        const { data: rows, error } = await client
+            .from("notifications")
+            .select(
+                "id, student_id, target_student_id, title, body, notification_type, created_at"
+            )
+            .or(
+                `student_id.is.null,student_id.eq.${studentId},target_student_id.is.null,target_student_id.eq.${studentId}`
+            )
+            .order("created_at", { ascending: false });
 
+        if (error) {
+            throw new Error(
+                "Unable to load notifications: " + error.message
+            );
+        }
 
-    filteredNotifications.forEach(notification => {
+        const {
+            data: readRows,
+            error: readError
+        } = await client
+            .from("notification_reads")
+            .select("notification_id, read_at")
+            .eq("student_id", studentId);
 
-        const item =
-            document.createElement("div");
+        if (readError) {
+            throw new Error(
+                "Unable to load notification read status: " +
+                readError.message
+            );
+        }
 
-        item.className =
-            `notification-item ${
-                notification.unread ? "unread" : ""
-            }`;
+        const readIds = new Set(
+            (readRows || []).map(row =>
+                String(row.notification_id)
+            )
+        );
 
+        notifications = (rows || []).map(row => ({
+            id: row.id,
+            type: String(
+                row.notification_type || "general"
+            ).toLowerCase(),
+            title: row.title || "Notification",
+            message: row.body || "",
+            date: formatDate(row.created_at),
+            unread: !readIds.has(String(row.id))
+        }));
 
-        const icon =
-            notification.type === "fee"
-                ? "₹"
-                : "!";
+        updateUnreadCount();
+        renderNotifications();
 
+        console.log(
+            "Notifications loaded:",
+            notifications.length
+        );
+    }
 
-        item.innerHTML = `
+    /* =====================================
+       RENDER NOTIFICATIONS
+    ===================================== */
 
-            <div class="notification-icon ${notification.type}">
-                ${icon}
-            </div>
+    function renderNotifications() {
+        if (
+            !notificationsList ||
+            !noResults ||
+            !notificationSearch ||
+            !notificationFilter
+        ) {
+            console.error(
+                "Required notification HTML elements are missing."
+            );
+            return;
+        }
 
-            <div class="notification-content">
+        const searchValue =
+            notificationSearch.value.trim().toLowerCase();
 
-                <div class="notification-top">
+        const filterValue = notificationFilter.value;
 
-                    <span class="notification-title">
-                        ${notification.title}
-                    </span>
+        const filteredNotifications =
+            notifications.filter(notification => {
 
-                    ${
-                        notification.unread
-                            ? `<span class="unread-dot"></span>`
-                            : ""
-                    }
+                const matchesSearch =
+                    notification.title.toLowerCase()
+                        .includes(searchValue) ||
+                    notification.message.toLowerCase()
+                        .includes(searchValue);
 
-                </div>
+                let matchesFilter = true;
 
-                <p class="notification-message">
-                    ${notification.message}
-                </p>
-
-                <span class="notification-date">
-                    ${notification.date}
-                </span>
-
-            </div>
-
-            <div class="notification-actions">
-
-                ${
-                    notification.unread
-                        ? `
-                            <button
-                                class="read-btn"
-                                onclick="markAsRead(${notification.id})"
-                            >
-                                Mark read
-                            </button>
-                          `
-                        : ""
+                if (filterValue === "unread") {
+                    matchesFilter = notification.unread;
                 }
 
-            </div>
+                if (filterValue === "fee") {
+                    matchesFilter =
+                        notification.type === "fee";
+                }
 
-        `;
+                if (filterValue === "announcement") {
+                    matchesFilter =
+                        notification.type === "announcement";
+                }
 
+                return matchesSearch && matchesFilter;
+            });
 
-        notificationsList.appendChild(item);
+        notificationsList.innerHTML = "";
 
-    });
+        if (filteredNotifications.length === 0) {
+            noResults.textContent =
+                notifications.length === 0
+                    ? "You have no notifications yet."
+                    : "No notifications match your search or filter.";
 
-}
+            noResults.classList.add("show");
+            return;
+        }
 
+        noResults.classList.remove("show");
 
-/* =========================================
-   MARK SINGLE NOTIFICATION AS READ
-========================================= */
+        filteredNotifications.forEach(notification => {
+            const item = document.createElement("div");
 
-function markAsRead(id) {
+            item.className =
+                `notification-item ${
+                    notification.unread ? "unread" : ""
+                }`;
 
-    const notification =
-        notifications.find(item => item.id === id);
+            const icon =
+                notification.type === "fee" ? "₹" :
+                notification.type === "performance" ? "📊" :
+                notification.type === "behaviour" ? "◉" :
+                notification.type === "announcement" ? "!" :
+                "🔔";
 
-    if (!notification) return;
+            const iconClass =
+                [
+                    "fee",
+                    "announcement",
+                    "performance",
+                    "behaviour"
+                ].includes(notification.type)
+                    ? notification.type
+                    : "announcement";
 
+            item.innerHTML = `
+                <div class="notification-icon ${iconClass}">
+                    ${icon}
+                </div>
 
-    notification.unread = false;
+                <div class="notification-content">
+                    <div class="notification-top">
+                        <span class="notification-title">
+                            ${escapeHTML(notification.title)}
+                        </span>
 
-    updateUnreadCount();
+                        ${
+                            notification.unread
+                                ? '<span class="unread-dot"></span>'
+                                : ""
+                        }
+                    </div>
 
-    renderNotifications();
+                    <p class="notification-message">
+                        ${escapeHTML(notification.message)}
+                    </p>
 
-}
+                    <span class="notification-date">
+                        ${escapeHTML(notification.date)}
+                    </span>
+                </div>
 
+                <div class="notification-actions">
+                    ${
+                        notification.unread
+                            ? `<button
+                                type="button"
+                                class="read-btn"
+                                data-notification-id="${escapeHTML(notification.id)}">
+                                Mark read
+                               </button>`
+                            : ""
+                    }
+                </div>
+            `;
 
-/* =========================================
-   MARK ALL AS READ
-========================================= */
+            const readButton =
+                item.querySelector(".read-btn");
 
-markAllBtn.addEventListener("click", () => {
+            if (readButton) {
+                readButton.addEventListener("click", () => {
+                    markAsRead(notification.id);
+                });
+            }
 
-    notifications.forEach(notification => {
-        notification.unread = false;
-    });
+            notificationsList.appendChild(item);
+        });
+    }
 
-    updateUnreadCount();
+    /* =====================================
+       SAVE ONE NOTIFICATION AS READ
+    ===================================== */
 
-    renderNotifications();
+    async function markAsRead(id) {
+        const notification = notifications.find(
+            item => String(item.id) === String(id)
+        );
 
-});
+        if (!notification || !notification.unread) {
+            return;
+        }
 
+        try {
+            const {
+                data: existing,
+                error: lookupError
+            } = await client
+                .from("notification_reads")
+                .select("notification_id")
+                .eq("student_id", studentId)
+                .eq("notification_id", id)
+                .maybeSingle();
 
-/* =========================================
-   UPDATE UNREAD COUNT
-========================================= */
+            if (lookupError) {
+                throw lookupError;
+            }
 
-function updateUnreadCount() {
+            if (existing) {
+                const { error } = await client
+                    .from("notification_reads")
+                    .update({
+                        read_at: new Date().toISOString()
+                    })
+                    .eq("student_id", studentId)
+                    .eq("notification_id", id);
 
-    const count =
-        notifications.filter(
+                if (error) throw error;
+
+            } else {
+                const { error } = await client
+                    .from("notification_reads")
+                    .insert({
+                        student_id: studentId,
+                        notification_id: id,
+                        read_at: new Date().toISOString()
+                    });
+
+                if (error) throw error;
+            }
+
+            notification.unread = false;
+
+            updateUnreadCount();
+            renderNotifications();
+
+        } catch (error) {
+            console.error(
+                "Unable to mark notification as read:",
+                error
+            );
+
+            alert(
+                "Could not save read status: " + error.message
+            );
+        }
+    }
+
+    /* =====================================
+       MARK ALL AS READ
+    ===================================== */
+
+    if (markAllBtn) {
+        markAllBtn.addEventListener("click", async () => {
+            const unreadItems = notifications.filter(
+                item => item.unread
+            );
+
+            if (unreadItems.length === 0) {
+                return;
+            }
+
+            markAllBtn.disabled = true;
+
+            try {
+                for (const notification of unreadItems) {
+                    const {
+                        data: existing,
+                        error: lookupError
+                    } = await client
+                        .from("notification_reads")
+                        .select("notification_id")
+                        .eq("student_id", studentId)
+                        .eq(
+                            "notification_id",
+                            notification.id
+                        )
+                        .maybeSingle();
+
+                    if (lookupError) {
+                        throw lookupError;
+                    }
+
+                    if (existing) {
+                        const { error } = await client
+                            .from("notification_reads")
+                            .update({
+                                read_at: new Date().toISOString()
+                            })
+                            .eq("student_id", studentId)
+                            .eq(
+                                "notification_id",
+                                notification.id
+                            );
+
+                        if (error) throw error;
+
+                    } else {
+                        const { error } = await client
+                            .from("notification_reads")
+                            .insert({
+                                student_id: studentId,
+                                notification_id: notification.id,
+                                read_at: new Date().toISOString()
+                            });
+
+                        if (error) throw error;
+                    }
+
+                    notification.unread = false;
+                }
+
+                updateUnreadCount();
+                renderNotifications();
+
+            } catch (error) {
+                console.error(
+                    "Unable to mark all as read:",
+                    error
+                );
+
+                alert(
+                    "Unable to save read status: " +
+                    error.message
+                );
+
+                try {
+                    await loadNotifications();
+                } catch (reloadError) {
+                    showLoadError(reloadError.message);
+                }
+
+            } finally {
+                markAllBtn.disabled = false;
+            }
+        });
+    }
+
+    /* =====================================
+       UPDATE UNREAD COUNTS
+    ===================================== */
+
+    function updateUnreadCount() {
+        const count = notifications.filter(
             notification => notification.unread
         ).length;
 
+        if (unreadCount) {
+            unreadCount.textContent = count;
+        }
 
-    unreadCount.textContent = count;
-
-
-    const topBadge =
-        document.querySelector(
+        const topBadge = document.querySelector(
             ".notification-top-btn span"
         );
 
+        if (topBadge) {
+            topBadge.textContent = count;
+            topBadge.style.display =
+                count > 0 ? "flex" : "none";
+        }
 
-    if (topBadge) {
+        const sidebarBadge =
+            document.querySelector(".nav-badge");
 
-        topBadge.textContent = count;
-
-        topBadge.style.display =
-            count > 0 ? "flex" : "none";
-
+        if (sidebarBadge) {
+            sidebarBadge.textContent = count;
+            sidebarBadge.style.display =
+                count > 0 ? "inline-flex" : "none";
+        }
     }
 
+    /* =====================================
+       SEARCH AND FILTER
+    ===================================== */
 
-    const sidebarBadge =
-        document.querySelector(".nav-badge");
-
-
-    if (sidebarBadge) {
-
-        sidebarBadge.textContent = count;
-
-        sidebarBadge.style.display =
-            count > 0 ? "inline-flex" : "none";
-
+    if (notificationSearch) {
+        notificationSearch.addEventListener(
+            "input",
+            renderNotifications
+        );
     }
 
-}
+    if (notificationFilter) {
+        notificationFilter.addEventListener(
+            "change",
+            renderNotifications
+        );
+    }
 
+    /* =====================================
+       MOBILE SIDEBAR
+    ===================================== */
 
-/* =========================================
-   SEARCH
-========================================= */
+    if (menuBtn && sidebar && sidebarOverlay) {
+        menuBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+            sidebarOverlay.classList.toggle("show");
+        });
 
-notificationSearch.addEventListener(
-    "input",
-    renderNotifications
-);
+        sidebarOverlay.addEventListener("click", () => {
+            sidebar.classList.remove("open");
+            sidebarOverlay.classList.remove("show");
+        });
+    }
 
+    /* =====================================
+       LOGOUT
+    ===================================== */
 
-/* =========================================
-   FILTER
-========================================= */
+    if (logoutBtn) {
+        logoutBtn.addEventListener(
+            "click",
+            async () => {
+                const confirmLogout = confirm(
+                    "Are you sure you want to logout?"
+                );
 
-notificationFilter.addEventListener(
-    "change",
-    renderNotifications
-);
+                if (!confirmLogout) return;
 
+                try {
+                    if (client) {
+                        const { error } =
+                            await client.auth.signOut();
 
-/* =========================================
-   MOBILE SIDEBAR
-========================================= */
+                        if (error) throw error;
+                    }
 
-if (menuBtn) {
+                    sessionStorage.removeItem(
+                        "pjtStudentLoggedIn"
+                    );
 
-    menuBtn.addEventListener("click", () => {
+                    sessionStorage.removeItem(
+                        "pjtStudentId"
+                    );
 
-        sidebar.classList.toggle("open");
+                    window.location.href = "login.html";
 
-        sidebarOverlay.classList.toggle("show");
+                } catch (error) {
+                    console.error("Logout error:", error);
 
-    });
+                    alert(
+                        "Unable to log out: " + error.message
+                    );
+                }
+            }
+        );
+    }
 
-}
+    /* =====================================
+       INITIAL LOAD
+    ===================================== */
 
+    try {
+        if (!notificationsList || !noResults) {
+            throw new Error(
+                "Notification HTML elements were not found. Check notifications.html."
+            );
+        }
 
-if (sidebarOverlay) {
+        const authenticated = await loadStudent();
 
-    sidebarOverlay.addEventListener("click", () => {
+        if (authenticated) {
+            await loadNotifications();
+        }
 
-        sidebar.classList.remove("open");
+    } catch (error) {
+        console.error(
+            "Notification page failed to load:",
+            error
+        );
 
-        sidebarOverlay.classList.remove("show");
+        showLoadError(error.message);
+    }
 
-    });
-
-}
-
-
-/* =========================================
-   LOGOUT
-========================================= */
-
-if (logoutBtn) {
-
-    logoutBtn.addEventListener("click", () => {
-
-        const confirmLogout =
-            confirm("Are you sure you want to logout?");
-
-        if (!confirmLogout) return;
-
-
-        /*
-         * Backend integration later:
-         * localStorage/session will be cleared
-         * and user will be redirected to login.
-         */
-
-        window.location.href = "login.html";
-
-    });
-
-}
-
-
-/* =========================================
-   INITIAL LOAD
-========================================= */
-
-updateUnreadCount();
-
-renderNotifications();
+});

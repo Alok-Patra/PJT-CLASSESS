@@ -1,3 +1,4 @@
+
 /* =========================================
    PJT CLASSES
    AUTHENTICATION JAVASCRIPT
@@ -9,172 +10,116 @@ document.addEventListener("DOMContentLoaded", () => {
     const registerForm = document.getElementById("registerForm");
 
     /* =========================================
-       STUDENT LOGIN
+       STUDENT LOGIN - SUPABASE
     ========================================== */
 
     if (loginForm) {
-
-        loginForm.addEventListener("submit", function (event) {
-
+        loginForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            const studentId =
-                document.getElementById("studentId").value.trim();
-
-            const password =
-                document.getElementById("loginPassword").value.trim();
-
-            const message =
-                document.getElementById("loginMessage");
-
-            const studentIdError =
-                document.getElementById("studentIdError");
-
-            const passwordError =
-                document.getElementById("loginPasswordError");
-
-
-            /* Clear previous errors */
+            const email = document.getElementById("studentId").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const message = document.getElementById("loginMessage");
+            const studentIdError = document.getElementById("studentIdError");
+            const passwordError = document.getElementById("loginPasswordError");
 
             studentIdError.textContent = "";
             passwordError.textContent = "";
             message.textContent = "";
             message.className = "form-message";
 
-
-            /* =================================
-               VALIDATION
-            ================================= */
-
-            if (!studentId) {
-
-                studentIdError.textContent =
-                    "Please enter your Student ID.";
-
+            if (!email) {
+                studentIdError.textContent = "Please enter your registered email.";
                 return;
             }
-
 
             if (!password) {
-
-                passwordError.textContent =
-                    "Please enter your password.";
-
+                passwordError.textContent = "Please enter your password.";
                 return;
             }
 
+            const button = loginForm.querySelector('button[type="submit"]');
 
-            /* =================================
-               DEMO LOGIN
-            ================================= */
-
-            const demoStudentId = "STU-2026-001";
-            const demoPassword = "123456";
-
-
-            if (
-                studentId === demoStudentId &&
-                password === demoPassword
-            ) {
-
-                /* Save temporary login state */
-
-                sessionStorage.setItem(
-                    "studentLoggedIn",
-                    "true"
-                );
-
-                sessionStorage.setItem(
-                    "studentId",
-                    studentId
-                );
-
-
-                /* Success message */
-
-                message.textContent =
-                    "Login successful. Redirecting...";
-
-                message.classList.add("success");
-
-
-                /* Redirect */
-
-                setTimeout(() => {
-
-                    window.location.href =
-                        "dashboard.html";
-
-                }, 500);
-
-
-            } else {
-
-                message.textContent =
-                    "Invalid Student ID or Password.";
-
-                message.classList.add("error");
-
+            if (button) {
+                button.disabled = true;
+                button.textContent = "Logging in...";
             }
 
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                const { data: profile, error: profileError } = await supabaseClient
+                    .from("profiles")
+                    .select("role, student_id")
+                    .eq("id", data.user.id)
+                    .maybeSingle();
+
+                if (profileError) throw profileError;
+
+                if (!profile) {
+                    await supabaseClient.auth.signOut();
+                    throw new Error("Profile not found. Please contact your administrator.");
+                }
+
+                if (profile.role !== "student") {
+                    await supabaseClient.auth.signOut();
+                    throw new Error("This page is only for student accounts.");
+                }
+
+                sessionStorage.setItem("studentLoggedIn", "true");
+                sessionStorage.setItem(
+                    "studentId",
+                    profile.student_id || data.user.id
+                );
+
+                message.textContent = "Login successful. Redirecting...";
+                message.classList.add("success");
+
+                window.location.href = "dashboard.html";
+
+            } catch (error) {
+                console.error("PJT login error:", error);
+                message.textContent = error.message || "Login failed. Please try again.";
+                message.classList.add("error");
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = "Login";
+                }
+            }
         });
-
     }
-
 
     /* =========================================
        PASSWORD SHOW / HIDE
     ========================================== */
 
-    const passwordInput =
-        document.getElementById("loginPassword");
-
-    const passwordToggle =
-        document.getElementById("loginPasswordToggle");
-
+    const passwordInput = document.getElementById("loginPassword");
+    const passwordToggle = document.getElementById("loginPasswordToggle");
 
     if (passwordInput && passwordToggle) {
-
         passwordToggle.addEventListener("click", () => {
-
             if (passwordInput.type === "password") {
-
                 passwordInput.type = "text";
-
-                passwordToggle.setAttribute(
-                    "aria-label",
-                    "Hide password"
-                );
-
+                passwordToggle.setAttribute("aria-label", "Hide password");
             } else {
-
                 passwordInput.type = "password";
-
-                passwordToggle.setAttribute(
-                    "aria-label",
-                    "Show password"
-                );
-
+                passwordToggle.setAttribute("aria-label", "Show password");
             }
-
         });
-
     }
 
-
     /* =========================================
-       STUDENT REGISTRATION
-    ========================================== */
-
-
-    /* =========================================
-       STUDENT REGISTRATION
+       STUDENT REGISTRATION - SUPABASE
     ========================================== */
 
     if (registerForm) {
-
         registerForm.addEventListener("submit", async (event) => {
-
             event.preventDefault();
 
             const fullName = document.getElementById("fullName").value.trim();
@@ -217,6 +162,8 @@ document.addEventListener("DOMContentLoaded", () => {
             button.textContent = "Creating Account...";
 
             try {
+                console.log("PJT registration: starting signup for", email);
+
                 const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password,
@@ -233,21 +180,38 @@ document.addEventListener("DOMContentLoaded", () => {
                     throw error;
                 }
 
-                message.textContent = "Account created! Please check your email to confirm your account before logging in.";
+                console.log("PJT registration: signup response received", {
+                    userCreated: Boolean(data?.user),
+                    userId: data?.user?.id ?? null,
+                    sessionCreated: Boolean(data?.session)
+                });
+
+                if (!data?.user) {
+                    throw new Error("Supabase did not return a user. Please try again.");
+                }
+
+                message.textContent =
+                    "Account created successfully! Please check your email to confirm your account before logging in.";
                 message.classList.add("success");
                 registerForm.reset();
 
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 2500);
+
             } catch (error) {
-                message.textContent = error.message || "Registration failed. Please try again.";
+                // DEBUGGING LINE: shows the real registration error in Console
+                console.error("PJT registration error:", error);
+
+                message.textContent =
+                    error.message || "Registration failed. Please try again.";
                 message.classList.add("error");
+
             } finally {
                 button.disabled = false;
                 button.textContent = "Create Account";
             }
-
         });
-
     }
-
 
 });

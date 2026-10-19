@@ -7,6 +7,112 @@
 document.addEventListener(
     "DOMContentLoaded",
     () => {
+        
+        
+        /* =========================================
+           LOAD LOGGED-IN STUDENT PROFILE
+        ========================================= */
+
+        async function loadStudentProfile() {
+            const nameElement =
+                document.getElementById("studentName");
+
+            const detailsElement =
+                document.getElementById("studentDetails");
+
+            const avatarElement =
+                document.getElementById("studentAvatar");
+
+            try {
+                // Check the current login session
+                const { data: sessionData, error: sessionError } =
+                    await supabaseClient.auth.getSession();
+
+                if (sessionError) throw sessionError;
+
+                const session = sessionData.session;
+
+                if (!session) {
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                // Fetch only this user's profile
+                const { data: profile, error: profileError } =
+                    await supabaseClient
+                        .from("profiles")
+                        .select("full_name, student_id, student_class, role")
+                        .eq("id", session.user.id)
+                        .single();
+
+                if (profileError) throw profileError;
+
+                // Ensure a student account is using the student dashboard
+                if (profile.role !== "student") {
+                    throw new Error(
+                        "This account is not registered as a student."
+                    );
+                }
+
+                // Display real profile details
+                const fullName = profile.full_name || "Student";
+                
+                const studentId = profile.student_id || "ID not assigned";
+                const studentClass = profile.student_class || "Class not assigned";
+                
+const welcomeClass = document.getElementById("welcomeStudentClass");
+const welcomeId = document.getElementById("welcomeStudentId");
+
+if (welcomeClass) {
+    welcomeClass.textContent = studentClass;
+}
+
+if (welcomeId) {
+    welcomeId.textContent = studentId;
+}
+
+                const welcomeName = document.getElementById("welcomeStudentName");
+
+if (welcomeName) {
+    welcomeName.textContent = fullName;
+}
+
+                if (nameElement) {
+                    nameElement.textContent = fullName;
+                }
+
+                if (detailsElement) {
+                    detailsElement.textContent =
+                        `${studentClass} • ${studentId}`;
+                }
+
+                if (avatarElement) {
+                    avatarElement.textContent =
+                        fullName
+                            .split(/\s+/)
+                            .filter(Boolean)
+                            .slice(0, 2)
+                            .map(word => word[0].toUpperCase())
+                            .join("");
+                }
+
+                console.log("Student profile loaded successfully.");
+
+            } catch (error) {
+                console.error("Profile loading error:", error);
+
+                if (nameElement) {
+                    nameElement.textContent = "Profile unavailable";
+                }
+
+                if (detailsElement) {
+                    detailsElement.textContent =
+                        "Please contact your administrator.";
+                }
+            }
+        }
+
+        loadStudentProfile();
 
 
         /* =================================================
@@ -1170,3 +1276,82 @@ document.addEventListener(
 
     }
 );
+
+/* ==========================================
+   LOAD REAL STUDENT DATA FROM SUPABASE
+========================================== */
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const client = window.supabaseClient;
+
+    if (!client) {
+        console.error("Supabase client is not initialized.");
+        return;
+    }
+
+    const totalElement = document.getElementById("totalStudentsValue");
+    const recentList = document.getElementById("recentStudentsList");
+
+    try {
+        // Load actual student profiles
+        const { data: students, error } = await client
+            .from("profiles")
+            .select("id, full_name, student_id, student_class, role, created_at")
+            .eq("role", "student")
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        // Update student count
+        if (totalElement) {
+            totalElement.textContent = students.length;
+        }
+
+        // Update recent students list
+        if (recentList) {
+            recentList.replaceChildren();
+
+            if (students.length === 0) {
+                recentList.textContent = "No student records found.";
+            } else {
+                students.slice(0, 4).forEach(student => {
+                    const row = document.createElement("div");
+                    row.className = "student-row";
+
+                    const avatar = document.createElement("div");
+                    avatar.className = "student-avatar";
+                    avatar.textContent = (student.full_name || "S")
+                        .trim()
+                        .split(/\s+/)
+                        .slice(0, 2)
+                        .map(word => word[0])
+                        .join("")
+                        .toUpperCase();
+
+                    const info = document.createElement("div");
+                    info.className = "student-info";
+
+                    const name = document.createElement("strong");
+                    name.textContent = student.full_name || "Unnamed student";
+
+                    const details = document.createElement("span");
+                    details.textContent =
+                        `${student.student_id || "No student ID"} · Class ${student.student_class || "N/A"}`;
+
+                    const status = document.createElement("span");
+                    status.className = "student-status active";
+                    status.textContent = "Registered";
+
+                    info.append(name, details);
+                    row.append(avatar, info, status);
+                    recentList.appendChild(row);
+                });
+            }
+        }
+    } catch (error) {
+        console.error("Unable to load student data:", error);
+        if (recentList) {
+            recentList.textContent = "Unable to load students. Check the browser console.";
+        }
+    }
+});

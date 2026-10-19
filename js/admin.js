@@ -1,196 +1,150 @@
+
 /* =========================================================
-   PJT CLASSES
-   ADMIN AUTHENTICATION
+   PJT CLASSES — SUPABASE ADMIN AUTHENTICATION
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-
     const form = document.getElementById("adminLoginForm");
-
     const adminId = document.getElementById("adminId");
     const password = document.getElementById("adminPassword");
 
     const adminIdError = document.getElementById("adminIdError");
     const passwordError = document.getElementById("adminPasswordError");
-
     const loginMessage = document.getElementById("adminLoginMessage");
-
     const loginButton = document.getElementById("adminLoginButton");
+    const passwordToggle = document.getElementById("adminPasswordToggle");
 
-    const passwordToggle =
-        document.getElementById("adminPasswordToggle");
-
-
-    /* =====================================================
-       DEMO ADMIN CREDENTIALS
-       Replace with backend authentication later
-    ===================================================== */
-
-    const DEMO_ADMIN_ID = "ADMIN-001";
-    const DEMO_PASSWORD = "123456";
-
-
-    /* =====================================================
-       PASSWORD SHOW / HIDE
-    ===================================================== */
-
-    if (passwordToggle) {
-
-        passwordToggle.addEventListener("click", () => {
-
-            if (password.type === "password") {
-
-                password.type = "text";
-
-                passwordToggle.textContent = "Hide";
-
-                passwordToggle.setAttribute(
-                    "aria-label",
-                    "Hide password"
-                );
-
-            } else {
-
-                password.type = "password";
-
-                passwordToggle.textContent = "Show";
-
-                passwordToggle.setAttribute(
-                    "aria-label",
-                    "Show password"
-                );
-            }
-
-        });
-
+    if (!form || !adminId || !password) {
+        console.error("Admin login form elements are missing.");
+        return;
     }
-
-
-    /* =====================================================
-       CLEAR ERRORS
-    ===================================================== */
 
     function clearErrors() {
+        if (adminIdError) adminIdError.textContent = "";
+        if (passwordError) passwordError.textContent = "";
 
-        adminIdError.textContent = "";
-        passwordError.textContent = "";
-
-        loginMessage.textContent = "";
-
-        loginMessage.className = "login-message";
+        if (loginMessage) {
+            loginMessage.textContent = "";
+            loginMessage.className = "login-message";
+        }
     }
 
-
-    /* =====================================================
-       SHOW MESSAGE
-    ===================================================== */
-
-    function showMessage(message, type) {
-
-        loginMessage.textContent = message;
-
-        loginMessage.className =
-            `login-message show ${type}`;
-    }
-
-
-    /* =====================================================
-       FORM SUBMIT
-    ===================================================== */
-
-    form.addEventListener("submit", (event) => {
-
-        event.preventDefault();
-
-        clearErrors();
-
-        const enteredId = adminId.value.trim();
-        const enteredPassword = password.value.trim();
-
-        let valid = true;
-
-
-        /* ADMIN ID VALIDATION */
-
-        if (!enteredId) {
-
-            adminIdError.textContent =
-                "Please enter your Admin ID.";
-
-            valid = false;
-        }
-
-
-        /* PASSWORD VALIDATION */
-
-        if (!enteredPassword) {
-
-            passwordError.textContent =
-                "Please enter your password.";
-
-            valid = false;
-
-        } else if (enteredPassword.length < 6) {
-
-            passwordError.textContent =
-                "Password must contain at least 6 characters.";
-
-            valid = false;
-        }
-
-
-        if (!valid) {
+    function showMessage(message, type = "error") {
+        if (!loginMessage) {
+            alert(message);
             return;
         }
 
+        loginMessage.textContent = message;
+        loginMessage.className = `login-message show ${type}`;
+    }
 
-        /* =================================================
-           DEMO LOGIN
-        ================================================= */
+    // Show or hide password
+    if (passwordToggle) {
+        passwordToggle.addEventListener("click", () => {
+            const show = password.type === "password";
+            password.type = show ? "text" : "password";
+            passwordToggle.textContent = show ? "Hide" : "Show";
 
-        if (
-            enteredId === DEMO_ADMIN_ID &&
-            enteredPassword === DEMO_PASSWORD
-        ) {
-
-            loginButton.classList.add("loading");
-
-            showMessage(
-                "Login successful. Opening admin panel...",
-                "success"
+            passwordToggle.setAttribute(
+                "aria-label",
+                show ? "Hide password" : "Show password"
             );
+        });
+    }
 
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        clearErrors();
 
-            /* Demo session */
+        const email = adminId.value.trim();
+        const enteredPassword = password.value;
 
-            sessionStorage.setItem(
-                "pjtAdminLoggedIn",
-                "true"
-            );
-
-            sessionStorage.setItem(
-                "pjtAdminId",
-                enteredId
-            );
-
-
-            setTimeout(() => {
-
-                window.location.href =
-                    "dashboard.html";
-
-            }, 700);
-
-
-        } else {
-
-            showMessage(
-                "Invalid Admin ID or password.",
-                "error"
-            );
-
+        if (!email) {
+            if (adminIdError) {
+                adminIdError.textContent = "Enter your registered admin email.";
+            }
+            return;
         }
 
-    });
+        if (!enteredPassword) {
+            if (passwordError) {
+                passwordError.textContent = "Enter your password.";
+            }
+            return;
+        }
 
+        // Verify Supabase client is loaded
+        const client = window.supabaseClient;
+
+        if (!client) {
+            showMessage(
+                "Supabase is not initialized. Check the script order in login.html."
+            );
+            console.error("window.supabaseClient is missing.");
+            return;
+        }
+
+        if (loginButton) {
+            loginButton.disabled = true;
+            loginButton.classList.add("loading");
+        }
+
+        try {
+            // Authenticate with the real Supabase account
+            const { data, error } = await client.auth.signInWithPassword({
+                email,
+                password: enteredPassword
+            });
+
+            if (error) throw error;
+
+            // Verify this account has the admin role
+            const { data: profile, error: profileError } = await client
+                .from("profiles")
+                .select("id, full_name, role")
+                .eq("id", data.user.id)
+                .maybeSingle();
+
+            if (profileError) {
+                throw new Error(
+                    "Login succeeded, but admin role verification failed: " +
+                    profileError.message
+                );
+            }
+
+            if (!profile || profile.role !== "admin") {
+                await client.auth.signOut();
+
+                showMessage(
+                    "This account does not have the admin role in public.profiles."
+                );
+                return;
+            }
+
+            // Supabase stores the actual authentication session.
+            sessionStorage.setItem("pjtAdminLoggedIn", "true");
+            sessionStorage.setItem("pjtAdminId", data.user.id);
+
+            showMessage("Login successful. Opening admin panel...", "success");
+
+            window.location.href = "dashboard.html";
+
+        } catch (error) {
+            console.error("Admin login error:", error);
+
+            if (error.message === "Invalid login credentials") {
+                showMessage(
+                    "Incorrect email or password. Use the registered Supabase email and its password."
+                );
+            } else {
+                showMessage(error.message || "Unable to log in. Please try again.");
+            }
+        } finally {
+            if (loginButton) {
+                loginButton.disabled = false;
+                loginButton.classList.remove("loading");
+            }
+        }
+    });
 });

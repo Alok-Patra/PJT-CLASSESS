@@ -222,8 +222,8 @@
                         </span>
                     </div>
 
-                    <div class="stat-value">
-                        50
+                  <div class="stat-value" id="totalStudentsValue">
+                    0
                     </div>
 
                     <div class="stat-description">
@@ -245,9 +245,9 @@
                         </span>
                     </div>
 
-                    <div class="stat-value">
-                        42
-                    </div>
+                   <div class="stat-value" id="studentsWithRecordsValue">
+    0
+</div>
 
                     <div class="stat-description">
                         Students with records
@@ -268,8 +268,8 @@
                         </span>
                     </div>
 
-                    <div class="stat-value">
-                        ₹21,600
+                    <div class="stat-value" id="pendingFeesValue">
+                         ₹0
                     </div>
 
                     <div class="stat-description">
@@ -291,12 +291,12 @@
                         </span>
                     </div>
 
-                    <div class="stat-value">
-                        12
+                    <div class="stat-value" id="pendingFeeRecordsValue">
+                                   0
                     </div>
 
                     <div class="stat-description">
-                        Pending fee records
+                                 Pending fee records
                     </div>
 
                 </div>
@@ -328,7 +328,7 @@
                     </div>
 
 
-                    <div class="student-list">
+                    <div class="student-list" id="recentStudentsList">
 
                         <div class="student-row">
 
@@ -428,47 +428,55 @@
 
                     <div class="fee-summary">
 
-                        <div class="fee-total">
-                            <span>Total pending</span>
-                            <strong>₹21,600</strong>
-                        </div>
+                        
+<div class="fee-total">
+    <span>Total pending</span>
+    <strong id="feeOverviewPendingValue">₹0</strong>
+</div>
+
 
                         <div class="fee-progress">
 
-                            <div class="progress-header">
-                                <span>Collection</span>
-                                <strong>83%</strong>
-                            </div>
-
-                            <div class="progress-track">
-                                <div
-                                    class="progress-fill"
-                                    style="width: 83%;">
-                                </div>
-                            </div>
-
-                        </div>
+                            
+<div class="progress-header">
+    <span>Collection</span>
+    <strong id="feeCollectionPercentage">0%</strong>
+</div>
 
 
-                        <div class="fee-breakdown">
+                            
+<div class="progress-track">
+    <div
+        class="progress-fill"
+        id="feeCollectionProgress"
+        style="width: 0%;">
+    </div>
+</div>
 
-                            <div>
-                                <span class="breakdown-dot paid"></span>
-                                <p>
-                                    Paid
-                                    <strong>₹1,29,600</strong>
-                                </p>
-                            </div>
+</div>
 
-                            <div>
-                                <span class="breakdown-dot pending"></span>
-                                <p>
-                                    Pending
-                                    <strong>₹21,600</strong>
-                                </p>
-                            </div>
 
-                        </div>
+
+<div class="fee-breakdown">
+
+    <div>
+        <span class="breakdown-dot paid"></span>
+        <p>
+            Paid
+            <strong id="feesPaidValue">₹0</strong>
+        </p>
+    </div>
+
+    <div>
+        <span class="breakdown-dot pending"></span>
+        <p>
+            Pending
+            <strong id="feesPendingBreakdownValue">₹0</strong>
+        </p>
+    </div>
+
+</div>
+
 
                     </div>
 
@@ -628,8 +636,11 @@
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase.js"></script>
 <script src="../js/admin.js"></script>
 <script src="../js/admin-dashboard.js"></script>
+
 
 </body>
 </html>

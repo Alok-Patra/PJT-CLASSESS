@@ -1,1270 +1,395 @@
-/* =========================================================
-   PJT CLASSES
-   ADMIN STUDENT DETAILS
-========================================================= */
-
 
 /* =========================================================
-   STUDENT DATABASE - DEMO DATA
+   PJT CLASSES — ADMIN STUDENT DETAILS
+   Loads real student profile and fee records from Supabase
 ========================================================= */
 
-const students = {
-
-    "STU-2026-001": {
-        id: "STU-2026-001",
-        name: "Rahul Kumar",
-        className: "Class 10",
-        session: "2026–27",
-        phone: "9876543210",
-        guardian: "Rajesh Kumar",
-        guardianPhone: "9876543220",
-
-        paid: 3600,
-        pending: 3600,
-
-        performance: {
-            overall: 78,
-            Mathematics: 82,
-            Science: 76,
-            English: 80
-        },
-
-        behaviour: {
-            rating: "Good",
-            grade: "A",
-            note: "Regular attendance and participates well during class activities."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Pending",
-            "Paid",
-            "Paid",
-            "Pending",
-            "Pending",
-            "Paid",
-            "Pending",
-            "Pending",
-            "Paid",
-            "Pending"
-        ],
-
-        members: [
-            {
-                name: "Ankit Kumar",
-                relation: "Brother"
-            },
-            {
-                name: "Suman Kumar",
-                relation: "Sister"
-            }
-        ]
-    },
-
-
-    "STU-2026-002": {
-        id: "STU-2026-002",
-        name: "Aman Singh",
-        className: "Class 9",
-        session: "2026–27",
-        phone: "9876543211",
-        guardian: "Sanjay Singh",
-        guardianPhone: "9876543221",
-
-        paid: 7200,
-        pending: 0,
-
-        performance: {
-            overall: 84,
-            Mathematics: 88,
-            Science: 82,
-            English: 81
-        },
-
-        behaviour: {
-            rating: "Excellent",
-            grade: "A+",
-            note: "Very disciplined and consistently participates in class activities."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid"
-        ],
-
-        members: [
-            {
-                name: "Arun Singh",
-                relation: "Brother"
-            }
-        ]
-    },
-
-
-    "STU-2026-003": {
-        id: "STU-2026-003",
-        name: "Priya Sharma",
-        className: "Class 10",
-        session: "2026–27",
-        phone: "9876543212",
-        guardian: "Manoj Sharma",
-        guardianPhone: "9876543222",
-
-        paid: 6000,
-        pending: 1200,
-
-        performance: {
-            overall: 89,
-            Mathematics: 92,
-            Science: 88,
-            English: 87
-        },
-
-        behaviour: {
-            rating: "Excellent",
-            grade: "A+",
-            note: "Excellent classroom discipline and active participation."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Pending",
-            "Paid"
-        ],
-
-        members: [
-            {
-                name: "Pooja Sharma",
-                relation: "Sister"
-            },
-            {
-                name: "Neha Sharma",
-                relation: "Sister"
-            }
-        ]
-    },
-
-
-    "STU-2026-004": {
-        id: "STU-2026-004",
-        name: "Rohit Verma",
-        className: "Class 8",
-        session: "2026–27",
-        phone: "9876543213",
-        guardian: "Ramesh Verma",
-        guardianPhone: "9876543223",
-
-        paid: 3000,
-        pending: 4200,
-
-        performance: {
-            overall: 71,
-            Mathematics: 74,
-            Science: 70,
-            English: 69
-        },
-
-        behaviour: {
-            rating: "Good",
-            grade: "B+",
-            note: "Generally well behaved but needs improvement in regular attendance."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Paid",
-            "Pending"
-        ],
-
-        members: [
-            {
-                name: "Mohit Verma",
-                relation: "Brother"
-            }
-        ]
-    },
-
-
-    "STU-2026-005": {
-        id: "STU-2026-005",
-        name: "Neha Kumari",
-        className: "Class 12",
-        session: "2026–27",
-        phone: "9876543214",
-        guardian: "Mahesh Kumar",
-        guardianPhone: "9876543224",
-
-        paid: 7200,
-        pending: 0,
-
-        performance: {
-            overall: 91,
-            Mathematics: 94,
-            Science: 90,
-            English: 89
-        },
-
-        behaviour: {
-            rating: "Excellent",
-            grade: "A+",
-            note: "Highly disciplined, punctual and actively involved in class."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid"
-        ],
-
-        members: []
-    },
-
-
-    "STU-2026-006": {
-        id: "STU-2026-006",
-        name: "Vikas Kumar",
-        className: "Class 11",
-        session: "2026–27",
-        phone: "9876543215",
-        guardian: "Dinesh Kumar",
-        guardianPhone: "9876543225",
-
-        paid: 4200,
-        pending: 3000,
-
-        performance: {
-            overall: 74,
-            Mathematics: 78,
-            Science: 73,
-            English: 71
-        },
-
-        behaviour: {
-            rating: "Good",
-            grade: "B+",
-            note: "Good classroom behaviour with scope for more consistent participation."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Paid",
-            "Pending"
-        ],
-
-        members: [
-            {
-                name: "Vijay Kumar",
-                relation: "Brother"
-            }
-        ]
-    },
-
-
-    "STU-2026-007": {
-        id: "STU-2026-007",
-        name: "Anjali Singh",
-        className: "Class 9",
-        session: "2026–27",
-        phone: "9876543216",
-        guardian: "Rakesh Singh",
-        guardianPhone: "9876543226",
-
-        paid: 5400,
-        pending: 1800,
-
-        performance: {
-            overall: 86,
-            Mathematics: 89,
-            Science: 85,
-            English: 84
-        },
-
-        behaviour: {
-            rating: "Good",
-            grade: "A",
-            note: "Respectful and cooperative with teachers and classmates."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Pending",
-            "Pending",
-            "Paid"
-        ],
-
-        members: [
-            {
-                name: "Ankit Singh",
-                relation: "Brother"
-            }
-        ]
-    },
-
-
-    "STU-2026-008": {
-        id: "STU-2026-008",
-        name: "Deepak Das",
-        className: "Class 10",
-        session: "2026–27",
-        phone: "9876543217",
-        guardian: "Prakash Das",
-        guardianPhone: "9876543227",
-
-        paid: 7200,
-        pending: 0,
-
-        performance: {
-            overall: 88,
-            Mathematics: 91,
-            Science: 87,
-            English: 86
-        },
-
-        behaviour: {
-            rating: "Excellent",
-            grade: "A+",
-            note: "Consistently disciplined and maintains excellent classroom conduct."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid"
-        ],
-
-        members: []
-    },
-
-
-    "STU-2026-009": {
-        id: "STU-2026-009",
-        name: "Sneha Kumari",
-        className: "Class 8",
-        session: "2026–27",
-        phone: "9876543218",
-        guardian: "Sunil Kumar",
-        guardianPhone: "9876543228",
-
-        paid: 2400,
-        pending: 4800,
-
-        performance: {
-            overall: 69,
-            Mathematics: 70,
-            Science: 68,
-            English: 67
-        },
-
-        behaviour: {
-            rating: "Needs Attention",
-            grade: "B",
-            note: "Needs improvement in attendance, regularity and classroom participation."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Pending",
-            "Pending"
-        ],
-
-        members: [
-            {
-                name: "Riya Kumari",
-                relation: "Sister"
-            }
-        ]
-    },
-
-
-    "STU-2026-010": {
-        id: "STU-2026-010",
-        name: "Amit Raj",
-        className: "Class 12",
-        session: "2026–27",
-        phone: "9876543219",
-        guardian: "Ajay Raj",
-        guardianPhone: "9876543229",
-
-        paid: 6600,
-        pending: 600,
-
-        performance: {
-            overall: 93,
-            Mathematics: 95,
-            Science: 92,
-            English: 91
-        },
-
-        behaviour: {
-            rating: "Excellent",
-            grade: "A+",
-            note: "Excellent discipline, punctuality and classroom participation."
-        },
-
-        fees: [
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Paid",
-            "Pending",
-            "Paid"
-        ],
-
-        members: [
-            {
-                name: "Rahul Raj",
-                relation: "Brother"
-            }
-        ]
+document.addEventListener("DOMContentLoaded", async function () {
+    const client = window.supabaseClient;
+
+    if (!client) {
+        showError("Supabase is not connected. Please check js/supabase.js.");
+        return;
     }
 
-};
+    const params = new URLSearchParams(window.location.search);
+    const profileId = params.get("id");
 
+    if (!profileId) {
+        showError("No student was selected. Please return to Student Records.");
+        return;
+    }
 
-/* =========================================================
-   GET STUDENT ID FROM URL
-========================================================= */
+    try {
+        // 1. Load the selected student's real profile
+        const { data: student, error: profileError } = await client
+            .from("profiles")
+            .select("id, full_name, email, student_id, student_class, mobile_number, role, created_at")
+            .eq("id", profileId)
+            .eq("role", "student")
+            .maybeSingle();
 
-const urlParams = new URLSearchParams(
-    window.location.search
-);
+        if (profileError) throw profileError;
 
-const studentIdFromURL =
-    urlParams.get("id");
-
-
-/* =========================================================
-   FIND STUDENT
-========================================================= */
-
-const student =
-    students[studentIdFromURL];
-
-
-/* =========================================================
-   STUDENT NOT FOUND
-========================================================= */
-
-if (!student) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            const content =
-                document.querySelector(".admin-content");
-
-            if (!content) return;
-
-            content.innerHTML = `
-
-                <div style="
-                    background:#ffffff;
-                    border:1px solid #e7ebf2;
-                    border-radius:14px;
-                    padding:50px;
-                    text-align:center;
-                ">
-
-                    <div style="
-                        font-size:42px;
-                        margin-bottom:15px;
-                    ">
-                        🔍
-                    </div>
-
-                    <h2 style="
-                        margin:0 0 10px;
-                    ">
-                        Student Not Found
-                    </h2>
-
-                    <p style="
-                        color:#718096;
-                        margin-bottom:22px;
-                    ">
-                        No student record was found for
-                        <strong>
-                            ${studentIdFromURL || "this request"}
-                        </strong>.
-                    </p>
-
-                    <a
-                        href="students.html"
-                        style="
-                            display:inline-block;
-                            padding:11px 18px;
-                            border-radius:8px;
-                            background:#2563eb;
-                            color:#ffffff;
-                            text-decoration:none;
-                            font-size:12px;
-                            font-weight:700;
-                        "
-                    >
-                        ← Back to Students
-                    </a>
-
-                </div>
-
-            `;
-
+        if (!student) {
+            showError("No student record was found for this student.");
+            return;
         }
+
+        // 2. Load this student's fee records
+        const { data: fees, error: feeError } = await client
+            .from("fee_records")
+            .select("id, student_id, description, amount, paid_amount, due_date, status")
+            .eq("student_id", student.id);
+
+        if (feeError) throw feeError;
+
+        populateStudentDetails(student, fees || []);
+    } catch (error) {
+        console.error("Could not load student details:", error);
+        showError(
+            "Unable to load student details. Please refresh the page and try again."
+        );
+    }
+});
+
+/* =========================================================
+   DISPLAY STUDENT DETAILS
+========================================================= */
+
+function populateStudentDetails(student, fees) {
+    const name = student.full_name || "Name not provided";
+    const studentCode = student.student_id || "Not assigned";
+    const className = student.student_class
+        ? (/^class\s/i.test(student.student_class)
+            ? student.student_class
+            : `Class ${student.student_class}`)
+        : "Not assigned";
+    const phone = student.mobile_number || "Not provided";
+
+    setText("studentName", name);
+    setText("studentId", studentCode);
+    setText("studentClass", className);
+
+    setText("infoName", name);
+    setText("infoId", studentCode);
+    setText("infoClass", className);
+    setText("infoPhone", phone);
+    setText("infoGuardian", "Not provided");
+    setText("infoGuardianPhone", "Not provided");
+
+    const initials = name
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(part => part.charAt(0))
+        .join("")
+        .substring(0, 2)
+        .toUpperCase();
+
+    setText("studentAvatar", initials || "ST");
+
+    const createdDate = student.created_at
+        ? new Date(student.created_at).getFullYear()
+        : new Date().getFullYear();
+
+    const sessionElement = document.querySelector(".student-meta span:nth-of-type(5)");
+    if (sessionElement) {
+        sessionElement.textContent = `Registered ${createdDate}`;
+    }
+
+    // Real fee totals
+    const totalPaid = fees.reduce(
+        (sum, fee) => sum + (Number(fee.paid_amount) || 0),
+        0
     );
 
-} else {
+    const totalPending = fees.reduce((sum, fee) => {
+        const amount = Number(fee.amount) || 0;
+        const paid = Number(fee.paid_amount) || 0;
+        return sum + Math.max(0, amount - paid);
+    }, 0);
 
+    const annualFee = 7200;
 
-    /* =====================================================
-       WAIT FOR HTML
-    ===================================================== */
+    setText("paidAmount", formatRupees(totalPaid));
+    setText("pendingAmount", formatRupees(totalPending));
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            populateStudentDetails(student);
-
-        }
+    // Update the annual fee display without changing the HTML layout
+    const annualFeeValue = document.querySelector(
+        ".fee-summary-main .fee-amount-box:first-child strong"
     );
 
+    if (annualFeeValue) {
+        annualFeeValue.textContent = formatRupees(annualFee);
+    }
+
+    const percentage = annualFee > 0
+        ? Math.min(100, Math.round((totalPaid / annualFee) * 100))
+        : 0;
+
+    setText("paymentPercentage", `${percentage}%`);
+
+    const progress = document.getElementById("paymentProgress");
+    if (progress) {
+        progress.style.width = `${percentage}%`;
+    }
+
+    // Show real monthly statuses based on fee due dates
+    renderMonthlyFees(fees);
+
+    // No performance, behaviour, guardian or member tables have
+    // been connected here, so do not display invented records.
+    setText("studentPerformanceUnavailable", "");
+    showPerformanceUnavailable();
+    showBehaviourUnavailable();
+    renderMembers([]);
 }
 
-
 /* =========================================================
-   MAIN FUNCTION
+   MONTHLY FEES — BASED ON DUE DATE
 ========================================================= */
 
-function populateStudentDetails(student) {
+function renderMonthlyFees(fees) {
+    const months = [
+        "Mar", "Apr", "May", "Jun", "Jul", "Aug",
+        "Sep", "Oct", "Nov", "Dec", "Jan", "Feb"
+    ];
 
+    const container = document.querySelector(".monthly-fee-grid");
+    if (!container) return;
 
-    /* =====================================================
-       PROFILE HEADER
-    ===================================================== */
+    container.replaceChildren();
 
-    setText(
-        "studentName",
-        student.name
-    );
+    // Use the latest fee record for each calendar month.
+    const recordsByMonth = new Map();
 
-    setText(
-        "studentId",
-        student.id
-    );
+    fees.forEach(fee => {
+        if (!fee.due_date) return;
 
-    setText(
-        "studentClass",
-        student.className
-    );
+        const date = new Date(`${fee.due_date}T00:00:00`);
+        if (Number.isNaN(date.getTime())) return;
 
+        const month = date.getMonth();
+        const academicMonthIndex = month >= 2 ? month - 2 : month + 10;
 
-    const sessionElement =
-        document.querySelector(
-            ".student-meta span:nth-of-type(5)"
-        );
+        const previous = recordsByMonth.get(academicMonthIndex);
+        if (
+            !previous ||
+            String(fee.due_date) >= String(previous.due_date)
+        ) {
+            recordsByMonth.set(academicMonthIndex, fee);
+        }
+    });
 
-    if (sessionElement) {
+    months.forEach((month, index) => {
+        const fee = recordsByMonth.get(index);
+        let status = "No record";
+        let className = "unrecorded";
 
-        sessionElement.textContent =
-            `Session ${student.session}`;
+        if (fee) {
+            const amount = Number(fee.amount) || 0;
+            const paid = Number(fee.paid_amount) || 0;
 
-    }
+            if (amount > 0 && paid >= amount) {
+                status = "Paid";
+                className = "paid";
+            } else {
+                status = "Pending";
+                className = "pending";
+            }
+        }
 
+        const item = document.createElement("div");
+        item.className = `month-item ${className}`;
 
-    /* =====================================================
-       AVATAR
-    ===================================================== */
+        const monthLabel = document.createElement("span");
+        monthLabel.textContent = month;
 
-    const initials =
-        student.name
-            .split(" ")
-            .map(name => name.charAt(0))
+        const statusLabel = document.createElement("strong");
+        statusLabel.textContent = status;
+
+        item.append(monthLabel, statusLabel);
+        container.appendChild(item);
+    });
+}
+
+/* =========================================================
+   PERFORMANCE — NO CONNECTED DATA TABLE YET
+========================================================= */
+
+function showPerformanceUnavailable() {
+    const score = document.querySelector(".performance-score strong");
+    if (score) score.textContent = "—";
+
+    const scoreLabel = document.querySelector(".performance-score span");
+    if (scoreLabel) scoreLabel.textContent = "No performance record loaded";
+
+    document.querySelectorAll(".subject-row").forEach(row => {
+        const value = row.querySelector("strong");
+        const fill = row.querySelector(".subject-fill");
+
+        if (value) value.textContent = "—";
+        if (fill) fill.style.width = "0%";
+    });
+}
+
+/* =========================================================
+   BEHAVIOUR — NO CONNECTED DATA TABLE YET
+========================================================= */
+
+function showBehaviourUnavailable() {
+    const rating = document.querySelector(".behaviour-rating strong");
+    if (rating) rating.textContent = "No record";
+
+    const grade = document.querySelector(".rating-circle");
+    if (grade) grade.textContent = "—";
+
+    const note = document.querySelector(".behaviour-notes p");
+    if (note) note.textContent = "No behaviour record has been added yet.";
+}
+
+/* =========================================================
+   ADDED MEMBERS — NO CONNECTED MEMBERS TABLE YET
+========================================================= */
+
+function renderMembers(members) {
+    const container = document.querySelector(".members-list");
+    if (!container) return;
+
+    container.replaceChildren();
+
+    members.slice(0, 3).forEach(member => {
+        const item = document.createElement("div");
+        item.className = "member-item";
+
+        const avatar = document.createElement("div");
+        avatar.className = "member-avatar";
+        avatar.textContent = (member.name || "M")
+            .split(/\s+/)
+            .filter(Boolean)
+            .map(part => part.charAt(0))
             .join("")
             .substring(0, 2)
             .toUpperCase();
 
+        const info = document.createElement("div");
+        info.className = "member-info";
 
-    setText(
-        "studentAvatar",
-        initials
-    );
+        const name = document.createElement("strong");
+        name.textContent = member.name || "Name not provided";
 
+        const relation = document.createElement("span");
+        relation.textContent = `${member.relation || "Member"} · Added member`;
 
-    /* =====================================================
-       PERSONAL INFORMATION
-    ===================================================== */
+        info.append(name, relation);
+        item.append(avatar, info);
+        container.appendChild(item);
+    });
 
-    setText(
-        "infoName",
-        student.name
-    );
+    for (let i = members.length; i < 3; i++) {
+        const empty = document.createElement("div");
+        empty.className = "member-empty";
 
-    setText(
-        "infoId",
-        student.id
-    );
+        const plus = document.createElement("span");
+        plus.textContent = "+";
 
-    setText(
-        "infoClass",
-        student.className
-    );
+        const message = document.createElement("p");
+        message.textContent = "No member record";
 
-    setText(
-        "infoPhone",
-        student.phone
-    );
-
-    setText(
-        "infoGuardian",
-        student.guardian
-    );
-
-    setText(
-        "infoGuardianPhone",
-        student.guardianPhone
-    );
-
-
-    /* =====================================================
-       FEES
-    ===================================================== */
-
-    setText(
-        "paidAmount",
-        formatRupees(student.paid)
-    );
-
-    setText(
-        "pendingAmount",
-        formatRupees(student.pending)
-    );
-
-
-    const annualFee = 7200;
-
-    const percentage =
-        Math.round(
-            (student.paid / annualFee) * 100
-        );
-
-
-    setText(
-        "paymentPercentage",
-        `${percentage}%`
-    );
-
-
-    const progress =
-        document.getElementById(
-            "paymentProgress"
-        );
-
-    if (progress) {
-
-        progress.style.width =
-            `${percentage}%`;
-
-    }
-
-
-    /* =====================================================
-       PERFORMANCE
-    ===================================================== */
-
-    const performanceScore =
-        document.querySelector(
-            ".performance-score strong"
-        );
-
-    if (performanceScore) {
-
-        performanceScore.textContent =
-            `${student.performance.overall}%`;
-
-    }
-
-
-    const subjectRows =
-        document.querySelectorAll(
-            ".subject-row"
-        );
-
-
-    subjectRows.forEach(
-        function (row) {
-
-            const subjectName =
-                row.querySelector(
-                    "span"
-                );
-
-            const subjectValue =
-                row.querySelector(
-                    "strong"
-                );
-
-            const subjectFill =
-                row.querySelector(
-                    ".subject-fill"
-                );
-
-
-            if (!subjectName) return;
-
-
-            const subject =
-                subjectName.textContent.trim();
-
-
-            const value =
-                student.performance[subject];
-
-
-            if (
-                value !== undefined
-            ) {
-
-                if (subjectValue) {
-
-                    subjectValue.textContent =
-                        `${value}%`;
-
-                }
-
-                if (subjectFill) {
-
-                    subjectFill.style.width =
-                        `${value}%`;
-
-                }
-
-            }
-
-        }
-    );
-
-
-    /* =====================================================
-       BEHAVIOUR
-    ===================================================== */
-
-    const behaviourRating =
-        document.querySelector(
-            ".behaviour-rating strong"
-        );
-
-    if (behaviourRating) {
-
-        behaviourRating.textContent =
-            student.behaviour.rating;
-
-    }
-
-
-    const ratingCircle =
-        document.querySelector(
-            ".rating-circle"
-        );
-
-    if (ratingCircle) {
-
-        ratingCircle.textContent =
-            student.behaviour.grade;
-
-    }
-
-
-    const behaviourNote =
-        document.querySelector(
-            ".behaviour-notes p"
-        );
-
-    if (behaviourNote) {
-
-        behaviourNote.textContent =
-            student.behaviour.note;
-
-    }
-
-
-    /* =====================================================
-       MONTHLY FEES
-    ===================================================== */
-
-    renderMonthlyFees(
-        student.fees
-    );
-
-
-    /* =====================================================
-       MEMBERS
-    ===================================================== */
-
-    renderMembers(
-        student.members
-    );
-
-}
-
-
-/* =========================================================
-   MONTHLY FEES
-========================================================= */
-
-function renderMonthlyFees(
-    feeData
-) {
-
-    const months = [
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-        "Jan",
-        "Feb"
-    ];
-
-
-    const container =
-        document.querySelector(
-            ".monthly-fee-grid"
-        );
-
-
-    if (!container) return;
-
-
-    container.innerHTML = "";
-
-
-    months.forEach(
-        function (month, index) {
-
-            const status =
-                feeData[index];
-
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                `month-item ${
-                    status === "Paid"
-                        ? "paid"
-                        : "pending"
-                }`;
-
-
-            item.innerHTML = `
-
-                <span>
-                    ${month}
-                </span>
-
-                <strong>
-                    ${status}
-                </strong>
-
-            `;
-
-
-            container.appendChild(item);
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   MEMBERS
-========================================================= */
-
-function renderMembers(
-    members
-) {
-
-    const container =
-        document.querySelector(
-            ".members-list"
-        );
-
-
-    if (!container) return;
-
-
-    container.innerHTML = "";
-
-
-    members.forEach(
-        function (member) {
-
-            const initials =
-                member.name
-                    .split(" ")
-                    .map(word => word.charAt(0))
-                    .join("")
-                    .substring(0, 2)
-                    .toUpperCase();
-
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-
-            item.className =
-                "member-item";
-
-
-            item.innerHTML = `
-
-                <div class="member-avatar">
-                    ${initials}
-                </div>
-
-                <div class="member-info">
-
-                    <strong>
-                        ${member.name}
-                    </strong>
-
-                    <span>
-                        ${member.relation} · Added member
-                    </span>
-
-                </div>
-
-            `;
-
-
-            container.appendChild(item);
-
-        }
-    );
-
-
-    /* =====================================================
-       EMPTY SLOTS
-    ===================================================== */
-
-    const emptySlots =
-        3 - members.length;
-
-
-    for (
-        let i = 0;
-        i < emptySlots;
-        i++
-    ) {
-
-        const empty =
-            document.createElement(
-                "div"
-            );
-
-
-        empty.className =
-            "member-empty";
-
-
-        empty.innerHTML = `
-
-            <span>+</span>
-
-            <p>
-                No ${getOrdinal(i + members.length + 1)}
-                member added
-            </p>
-
-        `;
-
-
+        empty.append(plus, message);
         container.appendChild(empty);
+    }
+}
 
+/* =========================================================
+   ERROR DISPLAY
+========================================================= */
+
+function showError(message) {
+    const content = document.querySelector(".admin-content");
+    if (!content) {
+        alert(message);
+        return;
     }
 
+    content.replaceChildren();
+
+    const box = document.createElement("div");
+    box.style.cssText =
+        "background:#fff;border:1px solid #e7ebf2;border-radius:14px;padding:32px;text-align:center;";
+
+    const heading = document.createElement("h2");
+    heading.textContent = "Student Details";
+
+    const description = document.createElement("p");
+    description.textContent = message;
+
+    const back = document.createElement("a");
+    back.href = "students.html";
+    back.textContent = "← Back to Students";
+    back.style.cssText =
+        "display:inline-block;margin-top:12px;padding:11px 18px;border-radius:8px;background:#2563eb;color:#fff;text-decoration:none;";
+
+    box.append(heading, description, back);
+    content.appendChild(box);
 }
 
-
 /* =========================================================
-   ORDINAL
+   HELPERS
 ========================================================= */
 
-function getOrdinal(number) {
-
-    if (number === 1) return "first";
-    if (number === 2) return "second";
-    if (number === 3) return "third";
-
-    return `${number}th`;
-
-}
-
-
-/* =========================================================
-   SET TEXT HELPER
-========================================================= */
-
-function setText(
-    id,
-    value
-) {
-
-    const element =
-        document.getElementById(id);
-
-
+function setText(id, value) {
+    const element = document.getElementById(id);
     if (element) {
-
-        element.textContent =
-            value;
-
+        element.textContent = value == null || value === ""
+            ? "Not provided"
+            : String(value);
     }
-
 }
 
-
-/* =========================================================
-   RUPEE FORMAT
-========================================================= */
-
-function formatRupees(
-    amount
-) {
-
-    return "₹" +
-        Number(amount)
-            .toLocaleString("en-IN");
-
+function formatRupees(amount) {
+    return "₹" + (Number(amount) || 0).toLocaleString("en-IN");
 }
-
 
 /* =========================================================
    MOBILE SIDEBAR
 ========================================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
+    const menuButton = document.getElementById("menuButton");
+    const sidebar = document.getElementById("adminSidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const closeButton = document.getElementById("sidebarClose");
 
-        const menuButton =
-            document.getElementById(
-                "menuButton"
-            );
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove("open");
+        if (overlay) overlay.classList.remove("show");
+    }
 
-        const sidebar =
-            document.getElementById(
-                "adminSidebar"
-            );
+    if (menuButton && sidebar) {
+        menuButton.addEventListener("click", function () {
+            sidebar.classList.add("open");
+            if (overlay) overlay.classList.add("show");
+        });
+    }
 
-        const overlay =
-            document.getElementById(
-                "sidebarOverlay"
-            );
+    if (closeButton) closeButton.addEventListener("click", closeSidebar);
+    if (overlay) overlay.addEventListener("click", closeSidebar);
 
-        const closeButton =
-            document.getElementById(
-                "sidebarClose"
-            );
-
-
-        if (
-            menuButton &&
-            sidebar
-        ) {
-
-            menuButton.addEventListener(
-                "click",
-                function () {
-
-                    sidebar.classList.add(
-                        "open"
-                    );
-
-                    if (overlay) {
-
-                        overlay.classList.add(
-                            "show"
-                        );
-
-                    }
-
+    const logoutButton = document.getElementById("logoutButton");
+    if (logoutButton) {
+        logoutButton.addEventListener("click", async function () {
+            try {
+                if (window.supabaseClient) {
+                    await window.supabaseClient.auth.signOut();
                 }
-            );
-
-        }
-
-
-        if (closeButton) {
-
-            closeButton.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        }
-
-
-        if (overlay) {
-
-            overlay.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        }
-
-
-        function closeSidebar() {
-
-            if (sidebar) {
-
-                sidebar.classList.remove(
-                    "open"
-                );
-
+            } catch (error) {
+                console.error("Logout error:", error);
             }
 
-            if (overlay) {
-
-                overlay.classList.remove(
-                    "show"
-                );
-
-            }
-
-        }
-
+            sessionStorage.removeItem("pjtAdminLoggedIn");
+            sessionStorage.removeItem("pjtAdminId");
+            window.location.href = "login.html";
+        });
     }
-);
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        const logoutButton =
-            document.getElementById(
-                "logoutButton"
-            );
-
-
-        if (logoutButton) {
-
-            logoutButton.addEventListener(
-                "click",
-                function () {
-
-                    sessionStorage.removeItem(
-                        "pjtAdminLoggedIn"
-                    );
-
-                    sessionStorage.removeItem(
-                        "pjtAdminId"
-                    );
-
-
-                    window.location.href =
-                        "login.html";
-
-                }
-            );
-
-        }
-
-    }
-);
+});
