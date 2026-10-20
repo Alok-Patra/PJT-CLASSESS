@@ -46,12 +46,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
+               
+const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+});
 
-                if (error) throw error;
+if (error) {
+    const message = "Incorrect email or password. Please try again.";
+
+    alert(message);
+    return;
+}
+
 
                 const { data: profile, error: profileError } = await supabaseClient
                     .from("profiles")
