@@ -376,8 +376,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 mobile_number
             `)
             .eq("student_id", currentUser.id)
-            .order("created_at", { ascending: true })
-            .limit(1);
+            .order("updated_at", { ascending: false })
+.order("created_at", { ascending: false })
+.limit(1);
 
         if (guardianError) {
             console.error(
