@@ -1,226 +1,567 @@
 /* =====================================================
-   PJT CLASSES - PERFORMANCE JS
+   PJT CLASSES - STUDENT PERFORMANCE
+   Supabase integration
 ===================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
-
-
-    /* =================================================
-       SIDEBAR ELEMENTS
-    ================================================= */
-
-    const sidebar =
-        document.getElementById("sidebar");
-
-    const sidebarOverlay =
-        document.getElementById("sidebarOverlay");
-
-    const sidebarClose =
-        document.getElementById("sidebarClose");
-
-    const mobileMenu =
-        document.getElementById("mobileMenu");
-
+document.addEventListener("DOMContentLoaded", async () => {
+    const client = window.supabaseClient;
 
     /* =================================================
-       SIDEBAR OPEN
+       SIDEBAR
     ================================================= */
+
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const sidebarClose = document.getElementById("sidebarClose");
+    const mobileMenu = document.getElementById("mobileMenu");
 
     function openSidebar() {
-
-        if (!sidebar || !sidebarOverlay) {
-            return;
-        }
+        if (!sidebar || !sidebarOverlay) return;
 
         sidebar.classList.add("open");
-
         sidebarOverlay.classList.add("show");
-
         document.body.style.overflow = "hidden";
     }
 
-
-    /* =================================================
-       SIDEBAR CLOSE
-    ================================================= */
-
     function closeSidebar() {
-
-        if (!sidebar || !sidebarOverlay) {
-            return;
-        }
+        if (!sidebar || !sidebarOverlay) return;
 
         sidebar.classList.remove("open");
-
         sidebarOverlay.classList.remove("show");
-
         document.body.style.overflow = "";
     }
 
+    mobileMenu?.addEventListener("click", openSidebar);
+    sidebarClose?.addEventListener("click", closeSidebar);
+    sidebarOverlay?.addEventListener("click", closeSidebar);
+
+    document.querySelectorAll(".nav-item").forEach(item => {
+        item.addEventListener("click", () => {
+            if (window.innerWidth <= 768) closeSidebar();
+        });
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape" && window.innerWidth <= 768) {
+            closeSidebar();
+        }
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) closeSidebar();
+    });
+
+    document.getElementById("notificationButton")?.addEventListener(
+        "click",
+        () => {
+            window.location.href = "notifications.html";
+        }
+    );
 
     /* =================================================
-       MOBILE MENU
+       HELPERS
     ================================================= */
 
-    if (mobileMenu) {
+    const summaryCards = [
+        ...document.querySelectorAll(".summary-grid .summary-card")
+    ];
 
-        mobileMenu.addEventListener(
-            "click",
-            openSidebar
-        );
+    const subjectRows = [
+        ...document.querySelectorAll(".subject-list .subject-row")
+    ];
 
+    const resultsBody = document.querySelector(
+        ".table-wrapper tbody"
+    );
+
+    function setText(element, value) {
+        if (element) element.textContent = value;
     }
 
+    function showMessage(message) {
+        let notice = document.getElementById("performanceNotice");
 
-    /* =================================================
-       CLOSE BUTTON
-    ================================================= */
+        if (!notice) {
+            notice = document.createElement("p");
+            notice.id = "performanceNotice";
+            notice.setAttribute("role", "status");
 
-    if (sidebarClose) {
+            const intro = document.querySelector(".page-intro");
 
-        sidebarClose.addEventListener(
-            "click",
-            closeSidebar
-        );
+            if (intro) {
+                intro.insertAdjacentElement("afterend", notice);
+            } else {
+                document.querySelector(".performance-page")
+                    ?.prepend(notice);
+            }
+        }
 
+        notice.textContent = message;
     }
 
+    function formatDate(dateString) {
+        if (!dateString) return "—";
 
-    /* =================================================
-       OVERLAY
-    ================================================= */
+        const date = new Date(`${dateString}T00:00:00`);
 
-    if (sidebarOverlay) {
+        if (Number.isNaN(date.getTime())) return dateString;
 
-        sidebarOverlay.addEventListener(
-            "click",
-            closeSidebar
-        );
-
+        return date.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
     }
 
+    function percent(record) {
+        const obtained = Number(record.marks_obtained);
+        const maximum = Number(record.max_marks);
+
+        if (
+            !Number.isFinite(obtained) ||
+            !Number.isFinite(maximum) ||
+            maximum <= 0
+        ) {
+            return null;
+        }
+
+        return (obtained / maximum) * 100;
+    }
+
+    function rounded(value) {
+        return `${Math.round(value * 10) / 10}%`;
+    }
+
+    function statusFor(value) {
+        if (value >= 90) return { label: "Excellent", className: "result-excellent" };
+        if (value >= 75) return { label: "Good", className: "result-good" };
+        if (value >= 50) return { label: "Average", className: "result-average" };
+
+        return { label: "Needs Improvement", className: "result-average" };
+    }
+
+    function makeCell(value) {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        return cell;
+    }
+
+    function clearResults() {
+        if (resultsBody) resultsBody.replaceChildren();
+
+        subjectRows.forEach(row => {
+            const score = row.querySelector(".subject-score");
+            const detail = row.querySelector(".subject-info span");
+            const bar = row.querySelector(".progress-bar");
+
+            setText(score, "—");
+            setText(detail, "No records yet");
+
+            if (bar) {
+                bar.style.width = "0%";
+                bar.dataset.progress = "0";
+            }
+        });
+
+        summaryCards.forEach((card, index) => {
+            const strong = card.querySelector("strong");
+            const small = card.querySelector("small");
+
+            if (index === 0) {
+                setText(strong, "—");
+                setText(small, "No records yet");
+            } else if (index === 1) {
+                setText(strong, "0");
+                setText(small, "Assessments recorded");
+            } else if (index === 2) {
+                setText(strong, "—");
+                setText(small, "No records yet");
+            } else if (index === 3) {
+                setText(strong, "—");
+                setText(small, "Not enough results");
+            }
+        });
+    }
 
     /* =================================================
-       NAVIGATION
+       SUBJECT DISPLAY
     ================================================= */
 
-    document
-        .querySelectorAll(".nav-item")
-        .forEach(item => {
+    function updateSubjectRows(records) {
+        const bySubject = new Map();
 
-            item.addEventListener(
-                "click",
-                () => {
+        records.forEach(record => {
+            const value = percent(record);
 
-                    if (window.innerWidth <= 768) {
+            if (value === null) return;
 
-                        closeSidebar();
+            const name = (record.subject || "").trim();
 
-                    }
+            if (!name) return;
 
-                }
+            if (!bySubject.has(name)) {
+                bySubject.set(name, {
+                    obtained: 0,
+                    maximum: 0
+                });
+            }
+
+            const subject = bySubject.get(name);
+            subject.obtained += Number(record.marks_obtained);
+            subject.maximum += Number(record.max_marks);
+        });
+
+        const subjects = [...bySubject.entries()].map(([name, data]) => ({
+            name,
+            obtained: data.obtained,
+            maximum: data.maximum,
+            percentage: data.maximum > 0
+                ? (data.obtained / data.maximum) * 100
+                : 0
+        }));
+
+        subjectRows.forEach(row => {
+            const nameElement = row.querySelector(".subject-info strong");
+            const name = nameElement?.textContent.trim();
+
+            const detail = row.querySelector(".subject-info span");
+            const score = row.querySelector(".subject-score");
+            const bar = row.querySelector(".progress-bar");
+
+            const subject = subjects.find(item =>
+                item.name.toLowerCase() === (name || "").toLowerCase()
             );
 
-        });
+            if (!subject) {
+                setText(detail, "No records yet");
+                setText(score, "—");
 
+                if (bar) {
+                    bar.style.width = "0%";
+                    bar.dataset.progress = "0";
+                }
 
-    /* =================================================
-       PERFORMANCE PROGRESS ANIMATION
-    ================================================= */
-
-    const progressBars =
-        document.querySelectorAll(
-            ".progress-bar"
-        );
-
-
-    setTimeout(() => {
-
-        progressBars.forEach(bar => {
-
-            const progress =
-                Number(
-                    bar.dataset.progress
-                );
-
-
-            if (
-                !Number.isNaN(progress) &&
-                progress >= 0 &&
-                progress <= 100
-            ) {
-
-                bar.style.width =
-                    `${progress}%`;
-
+                return;
             }
 
+            setText(
+                detail,
+                `${subject.obtained} out of ${subject.maximum}`
+            );
+
+            setText(score, rounded(subject.percentage));
+
+            if (bar) {
+                bar.dataset.progress = subject.percentage;
+                bar.style.width = `${Math.min(100, subject.percentage)}%`;
+            }
         });
 
-    }, 250);
-
-
-    /* =================================================
-       NOTIFICATION BUTTON
-    ================================================= */
-
-    const notificationButton =
-        document.getElementById(
-            "notificationButton"
-        );
-
-
-    if (notificationButton) {
-
-        notificationButton.addEventListener(
-            "click",
-            () => {
-
-                window.location.href =
-                    "notifications.html";
-
-            }
-        );
-
+        return subjects;
     }
 
-
     /* =================================================
-       ESCAPE KEY
+       RECENT RESULTS TABLE
     ================================================= */
 
-    document.addEventListener(
-        "keydown",
-        event => {
+    function updateResultsTable(records) {
+        if (!resultsBody) return;
 
-            if (
-                event.key === "Escape" &&
-                window.innerWidth <= 768
-            ) {
+        resultsBody.replaceChildren();
 
-                closeSidebar();
+        const recent = [...records]
+            .filter(record => percent(record) !== null)
+            .sort((a, b) => {
+                return (b.exam_date || "").localeCompare(a.exam_date || "");
+            })
+            .slice(0, 10);
 
-            }
-
+        if (recent.length === 0) {
+            const row = document.createElement("tr");
+            const cell = makeCell("No performance records available yet.");
+            cell.colSpan = 6;
+            row.appendChild(cell);
+            resultsBody.appendChild(row);
+            return;
         }
-    );
 
+        recent.forEach(record => {
+            const percentage = percent(record);
+            const status = statusFor(percentage);
+
+            const row = document.createElement("tr");
+
+            row.appendChild(
+                makeCell(record.assessment_name || "Assessment")
+            );
+
+            row.appendChild(makeCell(record.subject || "—"));
+            row.appendChild(makeCell(formatDate(record.exam_date)));
+
+            row.appendChild(
+                makeCell(
+                    `${record.marks_obtained} / ${record.max_marks}`
+                )
+            );
+
+            row.appendChild(makeCell(rounded(percentage)));
+
+            const statusCell = document.createElement("td");
+            const badge = document.createElement("span");
+
+            badge.className = status.className;
+            badge.textContent = status.label;
+
+            statusCell.appendChild(badge);
+            row.appendChild(statusCell);
+
+            resultsBody.appendChild(row);
+        });
+    }
 
     /* =================================================
-       WINDOW RESIZE
+       SUMMARY CARDS
     ================================================= */
 
-    window.addEventListener(
-        "resize",
-        () => {
+    function updateSummary(records, subjects) {
+        const validRecords = records.filter(
+            record => percent(record) !== null
+        );
 
-            if (window.innerWidth > 768) {
+        const totalObtained = validRecords.reduce(
+            (sum, record) => sum + Number(record.marks_obtained),
+            0
+        );
 
-                closeSidebar();
+        const totalMaximum = validRecords.reduce(
+            (sum, record) => sum + Number(record.max_marks),
+            0
+        );
 
+        const overall = totalMaximum > 0
+            ? (totalObtained / totalMaximum) * 100
+            : null;
+
+        // Count distinct assessment names.
+        const assessmentNames = new Set(
+            validRecords.map(record => record.assessment_name)
+                .filter(Boolean)
+        );
+
+        const highest = [...subjects].sort(
+            (a, b) => b.percentage - a.percentage
+        )[0];
+
+        const cards = summaryCards;
+
+        if (cards[0]) {
+            setText(
+                cards[0].querySelector("strong"),
+                overall === null ? "—" : rounded(overall)
+            );
+
+            setText(
+                cards[0].querySelector("small"),
+                overall === null
+                    ? "No records yet"
+                    : statusFor(overall).label
+            );
+        }
+
+        if (cards[1]) {
+            setText(
+                cards[1].querySelector("strong"),
+                String(assessmentNames.size)
+            );
+
+            setText(
+                cards[1].querySelector("small"),
+                "Distinct assessments recorded"
+            );
+        }
+
+        if (cards[2]) {
+            setText(
+                cards[2].querySelector("strong"),
+                highest?.name || "—"
+            );
+
+            setText(
+                cards[2].querySelector("small"),
+                highest ? rounded(highest.percentage) : "No records yet"
+            );
+        }
+
+        if (cards[3]) {
+            // Compare the two most recent assessments by average percentage.
+            const grouped = new Map();
+
+            validRecords.forEach(record => {
+                const key = record.assessment_name || "Assessment";
+
+                if (!grouped.has(key)) {
+                    grouped.set(key, {
+                        date: record.exam_date || "",
+                        obtained: 0,
+                        maximum: 0
+                    });
+                }
+
+                const group = grouped.get(key);
+                group.obtained += Number(record.marks_obtained);
+                group.maximum += Number(record.max_marks);
+
+                if ((record.exam_date || "") > group.date) {
+                    group.date = record.exam_date;
+                }
+            });
+
+            const assessments = [...grouped.entries()]
+                .map(([name, data]) => ({
+                    name,
+                    date: data.date,
+                    percentage: data.maximum > 0
+                        ? data.obtained / data.maximum * 100
+                        : 0
+                }))
+                .sort((a, b) => b.date.localeCompare(a.date));
+
+            let progressText = "Not enough results";
+            let progressValue = "—";
+
+            if (assessments.length >= 2) {
+                const change =
+                    assessments[0].percentage - assessments[1].percentage;
+
+                progressValue = `${change > 0 ? "+" : ""}${rounded(change)}`;
+                progressText = "Compared with previous assessment";
             }
 
+            setText(cards[3].querySelector("strong"), progressValue);
+            setText(cards[3].querySelector("small"), progressText);
         }
-    );
+    }
 
+    /* =================================================
+       AUTHENTICATE AND LOAD ONLY THIS STUDENT'S RECORDS
+    ================================================= */
+
+    if (!client) {
+        clearResults();
+        showMessage(
+            "Supabase has not initialized. Please check the script loading order."
+        );
+        return;
+    }
+
+    try {
+        const { data: authData, error: authError } =
+            await client.auth.getUser();
+
+        if (authError || !authData?.user) {
+            window.location.href = "../login.html";
+            return;
+        }
+
+        const user = authData.user;
+
+        const { data: profile, error: profileError } = await client
+            .from("profiles")
+            .select("id, full_name, student_id, student_class, role")
+            .eq("id", user.id)
+            .single();
+
+        if (profileError) throw profileError;
+
+        if (profile.role !== "student") {
+            showMessage("This page is available to student accounts only.");
+            return;
+        }
+
+        // Update visible student details in the existing page.
+        const sidebarStudent = document.querySelector(".sidebar-student");
+        const topbarUser = document.querySelector(".topbar-user");
+
+        if (sidebarStudent) {
+            setText(
+                sidebarStudent.querySelector("strong"),
+                profile.full_name || "Student"
+            );
+
+            setText(
+                sidebarStudent.querySelector("small"),
+                profile.student_id || ""
+            );
+
+            setText(
+                sidebarStudent.querySelector(".student-avatar"),
+                (profile.full_name || "S")
+                    .split(/\s+/)
+                    .map(part => part[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase()
+            );
+        }
+
+        if (topbarUser) {
+            setText(
+                topbarUser.querySelector("strong"),
+                profile.full_name || "Student"
+            );
+
+            setText(
+                topbarUser.querySelector("small"),
+                profile.student_class
+                    ? `Class ${profile.student_class}`
+                    : "Student"
+            );
+
+            setText(
+                topbarUser.querySelector(".user-avatar"),
+                (profile.full_name || "S")
+                    .split(/\s+/)
+                    .map(part => part[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase()
+            );
+        }
+
+        const { data: records, error: recordsError } = await client
+            .from("performance_records")
+            .select(
+                "id, student_id, subject, assessment_name, marks_obtained, max_marks, exam_date, remarks"
+            )
+            .eq("student_id", user.id)
+            .order("exam_date", { ascending: false });
+
+        if (recordsError) throw recordsError;
+
+        const safeRecords = records || [];
+
+        if (safeRecords.length === 0) {
+            clearResults();
+            updateResultsTable([]);
+            showMessage(
+                "No performance records have been added for your account yet."
+            );
+            return;
+        }
+
+        const subjects = updateSubjectRows(safeRecords);
+
+        updateResultsTable(safeRecords);
+        updateSummary(safeRecords, subjects);
+
+        showMessage("Your performance records have been loaded.");
+
+    } catch (error) {
+        console.error("Student performance loading failed:", error);
+        clearResults();
+
+        showMessage(
+            "Could not load performance data. Please check your login and Supabase permissions."
+        );
+    }
 });

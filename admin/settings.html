@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings | PJT CLASSES</title>
+
+    <link rel="stylesheet" href="../css/admin-settings.css">
+
+   
+</head>
+
+<body>
+    <div class="admin-layout">
+
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <h2>PJT <span>CLASSES</span></h2>
+                <button type="button" id="closeSidebar"
+                    aria-label="Close menu">✕</button>
+            </div>
+
+            <nav class="admin-nav">
+                <div class="nav-section-title">MAIN</div>
+
+                <a href="dashboard.html" class="admin-nav-link">
+                    <span class="nav-icon">▦</span>
+                    <span>Dashboard</span>
+                </a>
+
+                <a href="students.html" class="admin-nav-link">
+                    <span class="nav-icon">♙</span>
+                    <span>Students</span>
+                </a>
+
+                <div class="nav-section-title">STUDENT MANAGEMENT</div>
+
+                <a href="profile-requests.html" class="admin-nav-link">
+                    <span class="nav-icon">◉</span>
+                    <span>Profile Requests</span>
+                </a>
+
+                <a href="performance.html" class="admin-nav-link">
+                    <span class="nav-icon">▤</span>
+                    <span>Performance</span>
+                </a>
+
+                <a href="behaviour.html" class="admin-nav-link">
+                    <span class="nav-icon">✓</span>
+                    <span>Behaviour</span>
+                </a>
+
+                <a href="fees.html" class="admin-nav-link">
+                    <span class="nav-icon">₹</span>
+                    <span>Fees</span>
+                </a>
+
+                <div class="nav-section-title">SYSTEM</div>
+
+                <a href="notifications.html" class="admin-nav-link">
+                    <span class="nav-icon">♧</span>
+                    <span>Notifications</span>
+                </a>
+
+                <a href="settings.html" class="admin-nav-link active">
+                    <span class="nav-icon">⚙</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button type="button" id="logoutButton"
+                    class="admin-nav-link">
+                    <span class="nav-icon">↪</span>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <button type="button" id="openSidebar"
+                    aria-label="Open menu">☰</button>
+                <h2>Admin Settings</h2>
+            </header>
+
+            <div class="settings-page">
+                <div class="settings-heading">
+                    <h1>Settings</h1>
+                    <p>Manage your administrator profile and account security.</p>
+                </div>
+
+                <section class="settings-card">
+                    <h2>Administrator Profile</h2>
+                    <p>View your account information and update your name.</p>
+
+                    <form id="adminProfileForm" class="settings-form">
+                        <div class="settings-field">
+                            <label for="adminName">Full Name</label>
+                            <input id="adminName" type="text"
+                                autocomplete="name" required>
+                        </div>
+
+                        <div class="settings-field">
+                            <label for="adminEmail">Email Address</label>
+                            <input id="adminEmail" type="email" readonly>
+                        </div>
+
+                        <div class="settings-field full-width">
+                            <div class="settings-actions">
+                                <button class="settings-button" type="submit">
+                                    Save Name
+                                </button>
+                                <button class="settings-button secondary"
+                                    type="button" id="refreshProfile">
+                                    Refresh Profile
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="profileStatus" class="settings-status"
+                        role="status" aria-live="polite"></div>
+                </section>
+
+                <section class="settings-card">
+                    <h2>Account Security</h2>
+                    <p>Change your administrator account password.</p>
+
+                    <form id="passwordForm" class="settings-form">
+                        <div class="settings-field">
+                            <label for="newPassword">New Password</label>
+                            <input id="newPassword" type="password"
+                                minlength="8" autocomplete="new-password"
+                                required>
+                        </div>
+
+                        <div class="settings-field">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input id="confirmPassword" type="password"
+                                minlength="8" autocomplete="new-password"
+                                required>
+                        </div>
+
+                        <div class="settings-field full-width">
+                            <button class="settings-button" type="submit">
+                                Update Password
+                            </button>
+                        </div>
+                    </form>
+
+                    <div id="passwordStatus" class="settings-status"
+                        role="status" aria-live="polite"></div>
+                </section>
+
+                <section class="settings-card">
+                    <h2>Coaching Information</h2>
+                    <p>Basic information displayed for your coaching centre.</p>
+
+                    <div class="settings-note">
+                        <strong>Coaching Name:</strong> PJT CLASSES<br>
+                        <strong>Student Fee Cycle:</strong> March to February<br>
+                        <strong>Admin Account:</strong>
+                        <span id="accountState">Checking...</span>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/admin-guard.js"></script>
+
+    <script>
+        (() => {
+            const client = window.supabaseClient;
+
+            const profileForm = document.getElementById("adminProfileForm");
+            const passwordForm = document.getElementById("passwordForm");
+            const profileStatus = document.getElementById("profileStatus");
+            const passwordStatus = document.getElementById("passwordStatus");
+
+            let currentUser = null;
+
+            function showStatus(element, message, isError = false) {
+                element.textContent = message;
+                element.className =
+                    "settings-status " + (isError ? "error" : "success");
+            }
+
+            async function loadProfile() {
+                if (!client) {
+                    showStatus(profileStatus,
+                        "Supabase is not initialized. Check js/supabase.js.",
+                        true);
+                    return;
+                }
+
+                const { data: sessionData, error: sessionError } =
+                    await client.auth.getSession();
+
+                if (sessionError || !sessionData.session) {
+                    showStatus(profileStatus,
+                        "Your session could not be verified. Please log in again.",
+                        true);
+                    return;
+                }
+
+                currentUser = sessionData.session.user;
+
+                const { data: profile, error } = await client
+                    .from("profiles")
+                    .select("id, full_name, email, role")
+                    .eq("id", currentUser.id)
+                    .maybeSingle();
+
+                if (error) {
+                    console.error("Profile loading error:", error);
+                    showStatus(profileStatus,
+                        "Could not load your profile: " + error.message,
+                        true);
+                    return;
+                }
+
+                if (!profile ||
+                    String(profile.role || "").trim().toLowerCase() !== "admin") {
+                    showStatus(profileStatus,
+                        "Administrator profile was not found or access was denied.",
+                        true);
+                    return;
+                }
+
+                document.getElementById("adminName").value =
+                    profile.full_name || "";
+
+                document.getElementById("adminEmail").value =
+                    currentUser.email || profile.email || "";
+
+                document.getElementById("accountState").textContent =
+                    "Authenticated administrator";
+            }
+
+            profileForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                if (!currentUser) {
+                    showStatus(profileStatus,
+                        "Load your profile before saving changes.", true);
+                    return;
+                }
+
+                const fullName =
+                    document.getElementById("adminName").value.trim();
+
+                if (!fullName) {
+                    showStatus(profileStatus,
+                        "Please enter your full name.", true);
+                    return;
+                }
+
+                const { data: verifiedProfile, error: verifyError } =
+                    await client
+                        .from("profiles")
+                        .select("id, role")
+                        .eq("id", currentUser.id)
+                        .maybeSingle();
+
+                if (verifyError || !verifiedProfile ||
+                    String(verifiedProfile.role || "").toLowerCase() !== "admin") {
+                    showStatus(profileStatus,
+                        "Admin verification failed. Nothing was changed.", true);
+                    return;
+                }
+
+                const { error } = await client
+                    .from("profiles")
+                    .update({ full_name: fullName })
+                    .eq("id", currentUser.id);
+
+                if (error) {
+                    console.error("Profile update error:", error);
+                    showStatus(profileStatus,
+                        "Could not save your name: " + error.message,
+                        true);
+                    return;
+                }
+
+                showStatus(profileStatus, "Name saved successfully.");
+            });
+
+            passwordForm.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                const newPassword =
+                    document.getElementById("newPassword").value;
+                const confirmPassword =
+                    document.getElementById("confirmPassword").value;
+
+                if (newPassword.length < 8) {
+                    showStatus(passwordStatus,
+                        "Use a password with at least 8 characters.", true);
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    showStatus(passwordStatus,
+                        "The passwords do not match.", true);
+                    return;
+                }
+
+                const { error } = await client.auth.updateUser({
+                    password: newPassword
+                });
+
+                if (error) {
+                    showStatus(passwordStatus,
+                        "Password update failed: " + error.message, true);
+                    return;
+                }
+
+                passwordForm.reset();
+                showStatus(passwordStatus,
+                    "Password updated successfully.");
+            });
+
+            document.getElementById("refreshProfile")
+                .addEventListener("click", loadProfile);
+
+            document.getElementById("openSidebar")
+                .addEventListener("click", () => {
+                    document.getElementById("adminSidebar")
+                        .classList.add("open");
+                    document.getElementById("sidebarOverlay")
+                        .classList.add("show");
+                });
+
+            document.getElementById("closeSidebar")
+                .addEventListener("click", closeSidebar);
+
+            document.getElementById("sidebarOverlay")
+                .addEventListener("click", closeSidebar);
+
+            function closeSidebar() {
+                document.getElementById("adminSidebar")
+                    .classList.remove("open");
+                document.getElementById("sidebarOverlay")
+                    .classList.remove("show");
+            }
+
+            document.getElementById("logoutButton")
+                .addEventListener("click", async () => {
+                    if (!confirm("Are you sure you want to log out?")) return;
+
+                    const { error } = await client.auth.signOut();
+
+                    if (error) {
+                        alert("Logout failed: " + error.message);
+                        return;
+                    }
+
+                    sessionStorage.clear();
+                    window.location.replace("login.html");
+                });
+
+            loadProfile().catch(error => {
+                console.error("Settings initialization error:", error);
+                showStatus(profileStatus,
+                    "An unexpected error occurred while loading settings.",
+                    true);
+            });
+        })();
+    </script>
+</body>
+</html>

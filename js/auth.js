@@ -125,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const fullName = document.getElementById("fullName").value.trim();
             const mobileNumber = document.getElementById("mobileNumber").value.trim();
             const email = document.getElementById("email").value.trim();
+            const studentClass = document.getElementById("studentClass")?.value.trim() || "";
             const password = document.getElementById("registerPassword").value;
             const confirmPassword = document.getElementById("confirmPassword").value;
             const terms = document.getElementById("terms").checked;
@@ -169,10 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     password: password,
                     options: {
                         emailRedirectTo: "https://alok-patra.github.io/PJT-CLASSESS/student/login.html",
-                        data: {
-                            full_name: fullName,
-                            mobile_number: mobileNumber
-                        }
+                       data: {
+    full_name: fullName,
+    mobile_number: mobileNumber,
+    student_class: studentClass
+}
                     }
                 });
 

@@ -1175,3 +1175,243 @@ body {
     }
 
 }
+
+/* =====================================================
+   PROFILE EDIT FORMS AND APPROVAL REQUESTS
+===================================================== */
+
+.profile-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--white);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+}
+
+.profile-action-btn:hover {
+    background: var(--primary-light);
+}
+
+.profile-action-btn.primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.profile-action-btn.primary:hover {
+    background: var(--primary-dark);
+}
+
+.profile-action-btn.secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.profile-action-btn:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+}
+
+.profile-edit-panel {
+    margin: 0 0 22px;
+    padding: 22px;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    background: #f8fbff;
+}
+
+.profile-edit-panel[hidden] {
+    display: none !important;
+}
+
+.profile-edit-panel h4 {
+    margin-bottom: 7px;
+    color: var(--text);
+    font-size: 16px;
+}
+
+.profile-form-description {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.profile-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.profile-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+.profile-form-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.profile-form-field label {
+    color: #475569;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.profile-form-field input {
+    width: 100%;
+    min-height: 43px;
+    padding: 11px 12px;
+    border: 1px solid #dbe1eb;
+    border-radius: 8px;
+    background: white;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    outline: none;
+}
+
+.profile-form-field input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+}
+
+.profile-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.profile-message {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.profile-message[hidden] {
+    display: none !important;
+}
+
+.profile-message.success {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.profile-message.error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.profile-message.info {
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.profile-request-history {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.profile-request-item {
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.request-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.request-item-top strong {
+    font-size: 13px;
+}
+
+.profile-request-item small {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.request-status {
+    flex-shrink: 0;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.request-status.pending {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.request-status.approved {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.request-status.rejected {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.request-admin-note {
+    margin-top: 10px;
+    color: #475569;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .profile-edit-panel {
+        padding: 15px;
+    }
+
+    .profile-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-form-field.full-width {
+        grid-column: auto;
+    }
+
+    .profile-action-btn {
+        min-height: 40px;
+    }
+
+    .profile-form-actions {
+        flex-direction: column;
+    }
+
+    .profile-form-actions .profile-action-btn {
+        width: 100%;
+    }
+
+    .request-item-top {
+        align-items: flex-start;
+    }
+}

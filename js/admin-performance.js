@@ -1,789 +1,484 @@
 /* =========================================================
-   PJT CLASSES
-   ADMIN PERFORMANCE
+   PJT CLASSES — ADMIN PERFORMANCE
+   Supabase-connected version
 ========================================================= */
 
+const client = window.supabaseClient;
+
+const $ = (id) => document.getElementById(id);
+
+const studentSelect = $("studentSelect");
+const previewAvatar = $("previewAvatar");
+const previewName = $("previewName");
+const previewInfo = $("previewInfo");
+
+const mathInput = $("mathMarks");
+const scienceInput = $("scienceMarks");
+const englishInput = $("englishMarks");
+
+const mathDisplay = $("mathDisplay");
+const scienceDisplay = $("scienceDisplay");
+const englishDisplay = $("englishDisplay");
+
+const mathProgress = $("mathProgress");
+const scienceProgress = $("scienceProgress");
+const englishProgress = $("englishProgress");
+
+const overallDisplay = $("overallDisplay");
+const overallProgress = $("overallProgress");
+
+const recordName = $("recordName");
+const recordId = $("recordId");
+const recordClass = $("recordClass");
+const recordOverall = $("recordOverall");
+const formMessage = $("formMessage");
+const saveButton = $("savePerformance");
+
+const ASSESSMENT_NAME = "Overall Performance";
+const SUBJECTS = [
+    { key: "mathematics", label: "Mathematics", input: mathInput },
+    { key: "science", label: "Science", input: scienceInput },
+    { key: "english", label: "English", input: englishInput }
+];
+
+let students = [];
+let currentStudent = null;
+let savedRecords = [];
+let isLoading = false;
 
 /* =========================================================
-   STUDENT DATA
+   HELPERS
 ========================================================= */
 
-const students = {
+function showMessage(message, success = false) {
+    if (!formMessage) return;
 
-    "STU-2026-001": {
-        name: "Rahul Kumar",
-        id: "STU-2026-001",
-        className: "Class 10",
-        mathematics: 82,
-        science: 76,
-        english: 80
-    },
+    formMessage.style.color = success ? "#16a34a" : "#dc2626";
+    formMessage.textContent = message;
+}
 
-    "STU-2026-002": {
-        name: "Aman Singh",
-        id: "STU-2026-002",
-        className: "Class 9",
-        mathematics: 88,
-        science: 82,
-        english: 81
-    },
+function getToday() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
 
-    "STU-2026-003": {
-        name: "Priya Sharma",
-        id: "STU-2026-003",
-        className: "Class 10",
-        mathematics: 92,
-        science: 88,
-        english: 87
-    },
+    return `${year}-${month}-${day}`;
+}
 
-    "STU-2026-004": {
-        name: "Rohit Verma",
-        id: "STU-2026-004",
-        className: "Class 8",
-        mathematics: 74,
-        science: 70,
-        english: 69
-    },
+function getInitials(name) {
+    return (name || "Student")
+        .trim()
+        .split(/\s+/)
+        .map(word => word.charAt(0))
+        .join("")
+        .substring(0, 2)
+        .toUpperCase();
+}
 
-    "STU-2026-005": {
-        name: "Neha Kumari",
-        id: "STU-2026-005",
-        className: "Class 12",
-        mathematics: 94,
-        science: 90,
-        english: 89
-    },
-
-    "STU-2026-006": {
-        name: "Vikas Kumar",
-        id: "STU-2026-006",
-        className: "Class 11",
-        mathematics: 78,
-        science: 73,
-        english: 71
-    },
-
-    "STU-2026-007": {
-        name: "Anjali Singh",
-        id: "STU-2026-007",
-        className: "Class 9",
-        mathematics: 89,
-        science: 85,
-        english: 84
-    },
-
-    "STU-2026-008": {
-        name: "Deepak Das",
-        id: "STU-2026-008",
-        className: "Class 10",
-        mathematics: 91,
-        science: 87,
-        english: 86
-    },
-
-    "STU-2026-009": {
-        name: "Sneha Kumari",
-        id: "STU-2026-009",
-        className: "Class 8",
-        mathematics: 70,
-        science: 68,
-        english: 67
-    },
-
-    "STU-2026-010": {
-        name: "Amit Raj",
-        id: "STU-2026-010",
-        className: "Class 12",
-        mathematics: 95,
-        science: 92,
-        english: 91
+function setProgress(element, percentage) {
+    if (element) {
+        element.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
     }
+}
 
-};
+function calculatePercentage(records) {
+    const totalMarks = records.reduce(
+        (sum, record) => sum + Number(record.marks_obtained || 0),
+        0
+    );
 
+    const totalMaximum = records.reduce(
+        (sum, record) => sum + Number(record.max_marks || 0),
+        0
+    );
+
+    return totalMaximum > 0
+        ? Math.round((totalMarks / totalMaximum) * 100)
+        : 0;
+}
+
+function getSubjectRecord(subject) {
+    return savedRecords.find(
+        record =>
+            record.subject.toLowerCase() === subject.toLowerCase() &&
+            record.assessment_name === ASSESSMENT_NAME
+    );
+}
 
 /* =========================================================
-   ELEMENTS
+   LOAD REAL STUDENTS FROM PROFILES
 ========================================================= */
 
-const studentSelect =
-    document.getElementById(
-        "studentSelect"
-    );
-
-const previewAvatar =
-    document.getElementById(
-        "previewAvatar"
-    );
-
-const previewName =
-    document.getElementById(
-        "previewName"
-    );
-
-const previewInfo =
-    document.getElementById(
-        "previewInfo"
-    );
-
-const mathInput =
-    document.getElementById(
-        "mathMarks"
-    );
-
-const scienceInput =
-    document.getElementById(
-        "scienceMarks"
-    );
-
-const englishInput =
-    document.getElementById(
-        "englishMarks"
-    );
-
-const mathDisplay =
-    document.getElementById(
-        "mathDisplay"
-    );
-
-const scienceDisplay =
-    document.getElementById(
-        "scienceDisplay"
-    );
-
-const englishDisplay =
-    document.getElementById(
-        "englishDisplay"
-    );
-
-const mathProgress =
-    document.getElementById(
-        "mathProgress"
-    );
-
-const scienceProgress =
-    document.getElementById(
-        "scienceProgress"
-    );
-
-const englishProgress =
-    document.getElementById(
-        "englishProgress"
-    );
-
-const overallDisplay =
-    document.getElementById(
-        "overallDisplay"
-    );
-
-const overallProgress =
-    document.getElementById(
-        "overallProgress"
-    );
-
-const recordName =
-    document.getElementById(
-        "recordName"
-    );
-
-const recordId =
-    document.getElementById(
-        "recordId"
-    );
-
-const recordClass =
-    document.getElementById(
-        "recordClass"
-    );
-
-const recordOverall =
-    document.getElementById(
-        "recordOverall"
-    );
-
-const formMessage =
-    document.getElementById(
-        "formMessage"
-    );
-
-
-/* =========================================================
-   INITIALIZE STUDENTS
-========================================================= */
-
-function loadStudentOptions() {
+async function loadStudentOptions() {
+    if (!supabaseClient) {
+        showMessage(
+            "Supabase client not found. Check your script loading order."
+        );
+        return;
+    }
 
     if (!studentSelect) return;
 
-    Object.values(students).forEach(
-        student => {
+    studentSelect.innerHTML =
+        '<option value="">Loading students...</option>';
 
-            const option =
-                document.createElement(
-                    "option"
-                );
+    const { data, error } = await supabaseClient
+        .from("profiles")
+        .select("id, full_name, email, student_id, student_class, role")
+        .eq("role", "student")
+        .order("full_name");
 
-            option.value =
-                student.id;
-
-            option.textContent =
-                `${student.name} — ${student.id}`;
-
-            studentSelect.appendChild(
-                option
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        loadStudentOptions();
-
+    if (error) {
+        console.error("Loading students failed:", error);
+        studentSelect.innerHTML =
+            '<option value="">Could not load students</option>';
+        showMessage("Could not load students: " + error.message);
+        return;
     }
-);
 
+    students = data || [];
+    studentSelect.innerHTML =
+        '<option value="">Select a student</option>';
 
-/* =========================================================
-   STUDENT SELECT CHANGE
-========================================================= */
+    students.forEach(student => {
+        const option = document.createElement("option");
 
-if (studentSelect) {
+        // This UUID is the value stored in performance_records.student_id.
+        option.value = student.id;
 
-    studentSelect.addEventListener(
-        "change",
-        function () {
+        option.textContent =
+            `${student.full_name || "Unnamed Student"} — ${student.student_id || "No Student ID"}`;
 
-            const id =
-                this.value;
+        studentSelect.appendChild(option);
+    });
 
-            if (!id) {
-
-                resetPerformance();
-
-                return;
-
-            }
-
-
-            const student =
-                students[id];
-
-
-            if (student) {
-
-                loadPerformance(
-                    student
-                );
-
-            }
-
-        }
+    showMessage(
+        students.length
+            ? "Student list loaded successfully."
+            : "No student profiles were found.",
+        students.length > 0
     );
-
 }
 
-
 /* =========================================================
-   LOAD PERFORMANCE
+   LOAD SAVED PERFORMANCE
 ========================================================= */
 
-function loadPerformance(
-    student
-) {
+async function loadPerformance(student) {
+    if (!student) {
+        resetPerformance();
+        return;
+    }
 
-    const initials =
-        student.name
-            .split(" ")
-            .map(word => word.charAt(0))
-            .join("")
-            .substring(0, 2)
-            .toUpperCase();
+    currentStudent = student;
+    savedRecords = [];
 
-
-    previewAvatar.textContent =
-        initials;
-
-    previewName.textContent =
-        student.name;
-
+    previewAvatar.textContent = getInitials(student.full_name);
+    previewName.textContent = student.full_name || "Student";
     previewInfo.textContent =
-        `${student.id} · ${student.className}`;
+        `${student.student_id || "No Student ID"} · ${student.student_class || "Class not set"}`;
 
+    if (saveButton) saveButton.disabled = true;
+    showMessage("Loading saved performance...", true);
 
-    mathInput.value =
-        student.mathematics;
+    const { data, error } = await supabaseClient
+        .from("performance_records")
+        .select(
+            "id, student_id, subject, assessment_name, marks_obtained, max_marks, exam_date, remarks, created_by"
+        )
+        .eq("student_id", student.id)
+        .eq("assessment_name", ASSESSMENT_NAME)
+        .order("exam_date", { ascending: false });
 
-    scienceInput.value =
-        student.science;
+    if (error) {
+        console.error("Loading performance failed:", error);
+        showMessage("Could not load performance: " + error.message);
 
-    englishInput.value =
-        student.english;
+        if (saveButton) saveButton.disabled = false;
+        return;
+    }
 
+    savedRecords = data || [];
 
-    updatePerformanceDisplay(
-        student
-    );
+    SUBJECTS.forEach(subject => {
+        const record = getSubjectRecord(subject.label);
+        if (subject.input) {
+            subject.input.value = record
+                ? Number(record.marks_obtained)
+                : "";
+        }
+    });
 
+    updatePerformanceDisplay();
+    showMessage("Saved performance loaded.", true);
 
-    formMessage.textContent =
-        "";
-
+    if (saveButton) saveButton.disabled = false;
 }
 
-
 /* =========================================================
-   UPDATE DISPLAY
+   UPDATE PERFORMANCE DISPLAY
 ========================================================= */
 
-function updatePerformanceDisplay(
-    student
-) {
+function updatePerformanceDisplay() {
+    if (!currentStudent) return;
 
-    const math =
-        Number(student.mathematics) || 0;
+    const values = SUBJECTS.map(subject => {
+        const value = Number(subject.input?.value);
+        return Number.isFinite(value) ? value : 0;
+    });
 
-    const science =
-        Number(student.science) || 0;
+    const [math, science, english] = values;
 
-    const english =
-        Number(student.english) || 0;
+    if (mathDisplay) mathDisplay.textContent = `${math}%`;
+    if (scienceDisplay) scienceDisplay.textContent = `${science}%`;
+    if (englishDisplay) englishDisplay.textContent = `${english}%`;
 
+    setProgress(mathProgress, math);
+    setProgress(scienceProgress, science);
+    setProgress(englishProgress, english);
 
-    const overall =
-        Math.round(
-            (math + science + english) / 3
-        );
+    const overall = Math.round((math + science + english) / 3);
 
+    if (overallDisplay) overallDisplay.textContent = `${overall}%`;
+    setProgress(overallProgress, overall);
 
-    mathDisplay.textContent =
-        `${math}%`;
-
-    scienceDisplay.textContent =
-        `${science}%`;
-
-    englishDisplay.textContent =
-        `${english}%`;
-
-
-    mathProgress.style.width =
-        `${math}%`;
-
-    scienceProgress.style.width =
-        `${science}%`;
-
-    englishProgress.style.width =
-        `${english}%`;
-
-
-    overallDisplay.textContent =
-        `${overall}%`;
-
-    overallProgress.style.width =
-        `${overall}%`;
-
-
-    recordName.textContent =
-        student.name;
-
-    recordId.textContent =
-        student.id;
-
-    recordClass.textContent =
-        student.className;
-
-    recordOverall.textContent =
-        `${overall}%`;
-
+    if (recordName) recordName.textContent = currentStudent.full_name || "-";
+    if (recordId) recordId.textContent = currentStudent.student_id || "-";
+    if (recordClass) {
+        recordClass.textContent = currentStudent.student_class || "-";
+    }
+    if (recordOverall) recordOverall.textContent = `${overall}%`;
 }
-
-
-/* =========================================================
-   LIVE INPUT UPDATE
-========================================================= */
 
 function liveUpdate() {
-
-    const math =
-        Number(mathInput.value) || 0;
-
-    const science =
-        Number(scienceInput.value) || 0;
-
-    const english =
-        Number(englishInput.value) || 0;
-
-
-    const overall =
-        Math.round(
-            (math + science + english) / 3
-        );
-
-
-    mathDisplay.textContent =
-        `${math}%`;
-
-    scienceDisplay.textContent =
-        `${science}%`;
-
-    englishDisplay.textContent =
-        `${english}%`;
-
-
-    mathProgress.style.width =
-        `${math}%`;
-
-    scienceProgress.style.width =
-        `${science}%`;
-
-    englishProgress.style.width =
-        `${english}%`;
-
-
-    overallDisplay.textContent =
-        `${overall}%`;
-
-    overallProgress.style.width =
-        `${overall}%`;
-
-
-    recordOverall.textContent =
-        `${overall}%`;
-
+    updatePerformanceDisplay();
 }
 
-
-if (mathInput) {
-
-    mathInput.addEventListener(
-        "input",
-        liveUpdate
-    );
-
-}
-
-
-if (scienceInput) {
-
-    scienceInput.addEventListener(
-        "input",
-        liveUpdate
-    );
-
-}
-
-
-if (englishInput) {
-
-    englishInput.addEventListener(
-        "input",
-        liveUpdate
-    );
-
-}
-
+[mathInput, scienceInput, englishInput].forEach(input => {
+    if (input) input.addEventListener("input", liveUpdate);
+});
 
 /* =========================================================
-   SAVE PERFORMANCE
+   SAVE PERFORMANCE TO SUPABASE
 ========================================================= */
 
-const saveButton =
-    document.getElementById(
-        "savePerformance"
+async function savePerformance() {
+    if (isLoading) return;
+
+    if (!currentStudent) {
+        showMessage("Please select a student.");
+        return;
+    }
+
+    const marks = SUBJECTS.map(subject => ({
+        subject: subject.label,
+        value: Number(subject.input?.value)
+    }));
+
+    const invalid = marks.some(
+        item =>
+            !Number.isFinite(item.value) ||
+            item.value < 0 ||
+            item.value > 100 ||
+            String(item.value).trim() === ""
     );
 
+    if (invalid) {
+        showMessage("Enter valid marks from 0 to 100 for all subjects.");
+        return;
+    }
 
-if (saveButton) {
+    isLoading = true;
+    if (saveButton) {
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+    }
 
-    saveButton.addEventListener(
-        "click",
-        function () {
+    try {
+        const { data: authData, error: authError } =
+            await supabaseClient.auth.getUser();
 
-            const selectedId =
-                studentSelect.value;
-
-
-            if (!selectedId) {
-
-                formMessage.style.color =
-                    "#dc2626";
-
-                formMessage.textContent =
-                    "Please select a student.";
-
-                return;
-
-            }
-
-
-            const math =
-                Number(mathInput.value);
-
-            const science =
-                Number(scienceInput.value);
-
-            const english =
-                Number(englishInput.value);
-
-
-            if (
-                Number.isNaN(math) ||
-                Number.isNaN(science) ||
-                Number.isNaN(english)
-            ) {
-
-                formMessage.style.color =
-                    "#dc2626";
-
-                formMessage.textContent =
-                    "Please enter marks for all subjects.";
-
-                return;
-
-            }
-
-
-            if (
-                math < 0 ||
-                math > 100 ||
-                science < 0 ||
-                science > 100 ||
-                english < 0 ||
-                english > 100
-            ) {
-
-                formMessage.style.color =
-                    "#dc2626";
-
-                formMessage.textContent =
-                    "Marks must be between 0 and 100.";
-
-                return;
-
-            }
-
-
-            students[selectedId].mathematics =
-                math;
-
-            students[selectedId].science =
-                science;
-
-            students[selectedId].english =
-                english;
-
-
-            updatePerformanceDisplay(
-                students[selectedId]
-            );
-
-
-            formMessage.style.color =
-                "#16a34a";
-
-            formMessage.textContent =
-                "Performance updated successfully.";
-
+        if (authError || !authData?.user) {
+            throw new Error("Your admin session has expired. Please log in again.");
         }
-    );
 
+        const adminId = authData.user.id;
+
+        for (const item of marks) {
+            const existingRecord = getSubjectRecord(item.subject);
+
+            const recordData = {
+                student_id: currentStudent.id,
+                subject: item.subject,
+                assessment_name: ASSESSMENT_NAME,
+                marks_obtained: item.value,
+                max_marks: 100,
+                exam_date: getToday(),
+                created_by: adminId,
+                updated_at: new Date().toISOString()
+            };
+
+            let result;
+
+            if (existingRecord) {
+                result = await supabaseClient
+                    .from("performance_records")
+                    .update({
+                        marks_obtained: recordData.marks_obtained,
+                        max_marks: recordData.max_marks,
+                        exam_date: recordData.exam_date,
+                        updated_at: recordData.updated_at
+                    })
+                    .eq("id", existingRecord.id)
+                    .eq("student_id", currentStudent.id);
+            } else {
+                result = await supabaseClient
+                    .from("performance_records")
+                    .insert(recordData);
+            }
+
+            if (result.error) {
+                throw result.error;
+            }
+        }
+
+        // Fetch again so the screen reflects what is actually stored.
+        await loadPerformance(currentStudent);
+        showMessage("Performance saved successfully to Supabase.", true);
+
+    } catch (error) {
+        console.error("Saving performance failed:", error);
+        showMessage(
+            "Could not save performance: " +
+            (error.message || "Unknown error")
+        );
+    } finally {
+        isLoading = false;
+
+        if (saveButton) {
+            saveButton.disabled = false;
+            saveButton.textContent = "Save Performance";
+        }
+    }
 }
 
+if (saveButton) {
+    saveButton.addEventListener("click", savePerformance);
+}
 
 /* =========================================================
    RESET
 ========================================================= */
 
 function resetPerformance() {
+    currentStudent = null;
+    savedRecords = [];
 
-    previewAvatar.textContent =
-        "--";
+    if (previewAvatar) previewAvatar.textContent = "--";
+    if (previewName) previewName.textContent = "Select Student";
+    if (previewInfo) previewInfo.textContent = "Student ID · Class";
 
-    previewName.textContent =
-        "Select Student";
+    [mathInput, scienceInput, englishInput].forEach(input => {
+        if (input) input.value = "";
+    });
 
-    previewInfo.textContent =
-        "Student ID · Class";
+    [mathDisplay, scienceDisplay, englishDisplay].forEach(element => {
+        if (element) element.textContent = "0%";
+    });
 
+    [mathProgress, scienceProgress, englishProgress].forEach(element => {
+        setProgress(element, 0);
+    });
 
-    mathInput.value = "";
-    scienceInput.value = "";
-    englishInput.value = "";
+    if (overallDisplay) overallDisplay.textContent = "0%";
+    setProgress(overallProgress, 0);
 
+    if (recordName) recordName.textContent = "-";
+    if (recordId) recordId.textContent = "-";
+    if (recordClass) recordClass.textContent = "-";
+    if (recordOverall) recordOverall.textContent = "-";
 
-    mathDisplay.textContent =
-        "0%";
-
-    scienceDisplay.textContent =
-        "0%";
-
-    englishDisplay.textContent =
-        "0%";
-
-
-    mathProgress.style.width =
-        "0%";
-
-    scienceProgress.style.width =
-        "0%";
-
-    englishProgress.style.width =
-        "0%";
-
-
-    overallDisplay.textContent =
-        "0%";
-
-    overallProgress.style.width =
-        "0%";
-
-
-    recordName.textContent =
-        "-";
-
-    recordId.textContent =
-        "-";
-
-    recordClass.textContent =
-        "-";
-
-    recordOverall.textContent =
-        "-";
-
+    if (saveButton) saveButton.disabled = false;
 }
 
+/* =========================================================
+   STUDENT SELECTION
+========================================================= */
+
+if (studentSelect) {
+    studentSelect.addEventListener("change", async function () {
+        const student = students.find(item => item.id === this.value);
+
+        if (!student) {
+            resetPerformance();
+            return;
+        }
+
+        await loadPerformance(student);
+    });
+}
 
 /* =========================================================
    MOBILE SIDEBAR
 ========================================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
+    const menuButton = $("menuButton");
+    const sidebar = $("adminSidebar");
+    const overlay = $("sidebarOverlay");
+    const closeButton = $("sidebarClose");
 
-        const menuButton =
-            document.getElementById(
-                "menuButton"
-            );
-
-        const sidebar =
-            document.getElementById(
-                "adminSidebar"
-            );
-
-        const overlay =
-            document.getElementById(
-                "sidebarOverlay"
-            );
-
-        const closeButton =
-            document.getElementById(
-                "sidebarClose"
-            );
-
-
-        function closeSidebar() {
-
-            sidebar.classList.remove(
-                "open"
-            );
-
-            overlay.classList.remove(
-                "show"
-            );
-
-        }
-
-
-        if (menuButton) {
-
-            menuButton.addEventListener(
-                "click",
-                function () {
-
-                    sidebar.classList.add(
-                        "open"
-                    );
-
-                    overlay.classList.add(
-                        "show"
-                    );
-
-                }
-            );
-
-        }
-
-
-        if (closeButton) {
-
-            closeButton.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        }
-
-
-        if (overlay) {
-
-            overlay.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        }
-
+    function closeSidebar() {
+        if (sidebar) sidebar.classList.remove("open");
+        if (overlay) overlay.classList.remove("show");
     }
-);
 
+    if (menuButton) {
+        menuButton.addEventListener("click", function () {
+            if (sidebar) sidebar.classList.add("open");
+            if (overlay) overlay.classList.add("show");
+        });
+    }
+
+    if (closeButton) {
+        closeButton.addEventListener("click", closeSidebar);
+    }
+
+    if (overlay) {
+        overlay.addEventListener("click", closeSidebar);
+    }
+});
 
 /* =========================================================
    LOGOUT
 ========================================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
+document.addEventListener("DOMContentLoaded", function () {
+    const logoutButton = $("logoutButton");
 
-        const logoutButton =
-            document.getElementById(
-                "logoutButton"
-            );
-
-
-        if (logoutButton) {
-
-            logoutButton.addEventListener(
-                "click",
-                function () {
-
-                    sessionStorage.removeItem(
-                        "pjtAdminLoggedIn"
-                    );
-
-                    sessionStorage.removeItem(
-                        "pjtAdminId"
-                    );
-
-
-                    window.location.href =
-                        "login.html";
-
+    if (logoutButton) {
+        logoutButton.addEventListener("click", async function () {
+            try {
+                if (supabaseClient) {
+                    await supabaseClient.auth.signOut();
                 }
-            );
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
 
-        }
+            sessionStorage.removeItem("pjtAdminLoggedIn");
+            sessionStorage.removeItem("pjtAdminId");
 
+            window.location.href = "login.html";
+        });
     }
-);
+});
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", async function () {
+    await loadStudentOptions();
+});
