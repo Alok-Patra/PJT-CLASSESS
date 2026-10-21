@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,7 +53,7 @@
             <a href="notifications.html" class="nav-item active">
                 <span class="nav-icon">♢</span>
                 <span>Notifications</span>
-               <span class="nav-badge" data-unread-count style="display:none">0</span>
+                <span class="nav-badge" data-unread-count style="display:none">0</span>
             </a>
 
             <a href="settings.html" class="nav-item">
@@ -62,14 +63,15 @@
 
         </nav>
 
+        <!-- Sidebar Student Profile -->
         <div class="sidebar-bottom">
 
             <div class="student-mini-profile">
-                <div class="mini-avatar">RK</div>
+                <div class="mini-avatar" data-student-initials></div>
 
                 <div class="mini-info">
-                    <strong>Rahul Kumar</strong>
-                    <span>STU-2026-001</span>
+                    <strong data-student-name>Loading...</strong>
+                    <span data-student-id></span>
                 </div>
             </div>
 
@@ -81,7 +83,6 @@
         </div>
 
     </aside>
-
 
     <!-- Main Content -->
     <main class="main-content">
@@ -108,19 +109,17 @@
                     <span data-unread-count style="display:none">0</span>
                 </button>
 
-                <div class="topbar-user">
-                    <div class="top-avatar">RK</div>
+                <!-- Dynamic Student Profile -->
+                <div class="top-avatar" data-student-initials></div>
 
-                    <div class="top-user-info">
-                        <strong>Rahul Kumar</strong>
-                        <span>Class 10</span>
-                    </div>
+                <div class="top-user-info">
+                    <strong data-student-name>Loading...</strong>
+                    <span data-student-class></span>
                 </div>
 
             </div>
 
         </header>
-
 
         <!-- Page -->
         <section class="notifications-page">
@@ -145,53 +144,37 @@
 
             </div>
 
-
             <!-- Notification Summary -->
             <div class="notification-summary">
 
                 <div class="summary-card">
-
-                    <div class="summary-icon unread-icon">
-                        ♢
-                    </div>
+                    <div class="summary-icon unread-icon">♢</div>
 
                     <div>
                         <span>Unread</span>
-                        <strong id="unreadCount">2</strong>
+                        <strong id="unreadCount">0</strong>
                     </div>
-
                 </div>
 
-
                 <div class="summary-card">
-
-                    <div class="summary-icon fee-icon">
-                        ₹
-                    </div>
+                    <div class="summary-icon fee-icon">₹</div>
 
                     <div>
                         <span>Fee Reminder</span>
-                        <strong>1</strong>
+                        <strong id="feeCount">0</strong>
                     </div>
-
                 </div>
 
-
                 <div class="summary-card">
-
-                    <div class="summary-icon notice-icon">
-                        !
-                    </div>
+                    <div class="summary-icon notice-icon">!</div>
 
                     <div>
                         <span>Announcements</span>
-                        <strong>1</strong>
+                        <strong id="announcementCount">0</strong>
                     </div>
-
                 </div>
 
             </div>
-
 
             <!-- Notifications List -->
             <div class="notifications-card">
@@ -212,11 +195,8 @@
 
                 </div>
 
-
                 <div class="notifications-list" id="notificationsList">
-
                     <!-- Notifications inserted by JavaScript -->
-
                 </div>
 
                 <div class="no-results" id="noResults">
@@ -224,9 +204,7 @@
 
                     <h3>No notifications found</h3>
 
-                    <p>
-                        Try another search or filter.
-                    </p>
+                    <p>Try another search or filter.</p>
                 </div>
 
             </div>
@@ -234,7 +212,6 @@
         </section>
 
     </main>
-
 
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-bottom-nav">
@@ -266,10 +243,10 @@
 
     </nav>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../js/supabase.js"></script>
-<script src="../js/notification-badge.js"></script>
-<script src="../js/notifications.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase.js"></script>
+    <script src="../js/notification-badge.js"></script>
+    <script src="../js/notifications.js"></script>
 
 </body>
 </html>
