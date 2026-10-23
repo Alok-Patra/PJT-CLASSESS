@@ -108,6 +108,7 @@ if (error) {
 
     const passwordInput = document.getElementById("loginPassword");
     const passwordToggle = document.getElementById("loginPasswordToggle");
+    
 
     if (passwordInput && passwordToggle) {
         passwordToggle.addEventListener("click", () => {
