@@ -2,9 +2,10 @@
    PJT CLASSES - STUDENT PROFILE
    Supabase Integration
    - Live student profile
-   - Direct editing: address, DOB, gender
-   - Admin approval: name, mobile, guardian details
-   - Request history
+   - Edit address, date of birth and gender
+   - Admin approval for name, mobile and guardian details
+   - Profile request history
+   - Live unread notification count
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -46,16 +47,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.querySelectorAll(".nav-item").forEach(item => {
         item.addEventListener("click", () => {
-            if (window.innerWidth <= 768) closeSidebar();
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
         });
     });
 
     window.addEventListener("resize", () => {
-        if (window.innerWidth > 768) closeSidebar();
+        if (window.innerWidth > 768) {
+            closeSidebar();
+        }
     });
 
     /* =====================================================
-       HELPERS
+       HELPER FUNCTIONS
     ===================================================== */
 
     function setText(element, value) {
@@ -76,7 +81,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     function formatDate(value) {
         if (!value) return "Not provided";
 
-        // Handle YYYY-MM-DD as a local calendar date.
         const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
 
         const date = match
@@ -140,6 +144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         button.type = "button";
         button.className = className;
         button.textContent = text;
+
         return button;
     }
 
@@ -192,7 +197,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function loadProfile() {
         if (!client) {
             throw new Error(
-                "Supabase client not found. Check script order in profile.html."
+                "Supabase client not found. Check the script order in profile.html."
             );
         }
 
@@ -255,7 +260,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const studentId = profile.student_id || "Not assigned";
         const studentClass = profile.student_class || "Not assigned";
 
-        // Sidebar student information.
+        // Sidebar details.
         setText(
             document.querySelector(".sidebar-student strong"),
             name
@@ -266,7 +271,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             studentId
         );
 
-        // Top bar.
+        // Top-bar details.
         setText(
             document.querySelector(".user-info strong"),
             name
@@ -290,7 +295,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             studentId
         );
 
-        // Existing profile fields.
+        // Basic profile fields.
         updateInformation("Full Name", name);
         updateInformation("Student ID", studentId);
         updateInformation("Class", studentClass);
@@ -301,7 +306,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             formatDate(profile.created_at)
         );
 
-        // Student-editable fields.
+        // Editable personal information.
         currentAddress = profile.address || "";
         currentDOB = profile.date_of_birth || "";
         currentGender = profile.gender || "";
@@ -323,7 +328,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         updateAvatars(name);
 
-        // Load mobile number using the confirmed column name.
+        // Load mobile number.
         const {
             data: mobileData,
             error: mobileError
@@ -350,7 +355,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
         }
 
-        // Load approved guardian details.
         await loadGuardianDetails();
 
         console.log("Student profile loaded successfully.");
@@ -377,8 +381,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             `)
             .eq("student_id", currentUser.id)
             .order("updated_at", { ascending: false })
-.order("created_at", { ascending: false })
-.limit(1);
+            .order("created_at", { ascending: false })
+            .limit(1);
 
         if (guardianError) {
             console.error(
@@ -418,7 +422,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* =====================================================
-       FORM CREATION
+       CREATE EDIT FORMS
     ===================================================== */
 
     function makeForm(title, description, buttonText) {
@@ -519,8 +523,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* =====================================================
-       DIRECT EDIT: ADDRESS, DOB AND GENDER
-       Saved immediately through the secure Supabase RPC.
+       EDIT ADDRESS, DOB AND GENDER
     ===================================================== */
 
     function setupDirectPersonalDetailsEdit() {
@@ -569,7 +572,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
         );
 
-        // Gender dropdown.
         const genderWrapper = document.createElement("div");
         genderWrapper.className = "profile-form-field";
 
@@ -656,7 +658,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     );
                 }
 
-                // Update local state after the database confirms success.
                 currentAddress = address;
                 currentDOB = dob || "";
                 currentGender = gender || "";
@@ -665,7 +666,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 currentProfile.date_of_birth = currentDOB || null;
                 currentProfile.gender = currentGender;
 
-                // Immediately update the displayed profile.
                 updateInformation(
                     "Address",
                     currentAddress || "Not provided"
@@ -708,7 +708,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* =====================================================
-       ADMIN APPROVAL: OFFICIAL NAME AND MOBILE
+       SUBMIT PROFILE CHANGE REQUEST
     ===================================================== */
 
     async function submitRequest(
@@ -759,6 +759,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             submitButton.textContent = "Submit for Approval";
         }
     }
+
+    /* =====================================================
+       EDIT NAME AND MOBILE NUMBER
+       Changes require administrator approval.
+    ===================================================== */
 
     function setupPersonalEdit() {
         const cards = [
@@ -843,7 +848,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* =====================================================
-       ADMIN APPROVAL: GUARDIAN DETAILS
+       EDIT GUARDIAN DETAILS
     ===================================================== */
 
     function setupGuardianEdit() {
@@ -890,14 +895,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "text",
                 false
             ),
-            createField(
-                "Guardian Name",
-                "guardian_name"
-            ),
-            createField(
-                "Relationship",
-                "relationship"
-            ),
+            createField("Guardian Name", "guardian_name"),
+            createField("Relationship", "relationship"),
             createField(
                 "Guardian Mobile Number",
                 "mobile_number",
@@ -927,14 +926,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 new FormData(form).entries()
             );
 
-            const guardianName =
-                values.guardian_name.trim();
-
-            const relationship =
-                values.relationship.trim();
-
-            const mobileNumber =
-                values.mobile_number.trim();
+            const guardianName = values.guardian_name.trim();
+            const relationship = values.relationship.trim();
+            const mobileNumber = values.mobile_number.trim();
 
             if (!guardianName || !relationship || !mobileNumber) {
                 showMessage(
@@ -972,7 +966,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* =====================================================
-       REQUEST HISTORY
+       CREATE PROFILE REQUEST HISTORY SECTION
     ===================================================== */
 
     function createRequestHistorySection() {
@@ -1019,6 +1013,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             page.appendChild(card);
         }
     }
+
+    /* =====================================================
+       LOAD PROFILE REQUEST HISTORY
+    ===================================================== */
 
     async function loadRequestHistory() {
         const history = document.getElementById(
@@ -1120,6 +1118,112 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* =====================================================
+       NOTIFICATION COUNT FIX
+       Update sidebar and top-bar badges from Supabase.
+    ===================================================== */
+
+    async function loadNotificationCount() {
+        const badges = document.querySelectorAll(
+            ".notification-badge, .notification-button span"
+        );
+
+        // Hide the hard-coded count while loading.
+        badges.forEach(badge => {
+            badge.textContent = "0";
+            badge.style.display = "none";
+        });
+
+        if (!client || !currentUser?.id) {
+            console.error(
+                "Notification count: Supabase client or student session is missing."
+            );
+            return;
+        }
+
+        try {
+            const {
+                data: notificationRows,
+                error: notificationsError
+            } = await client
+                .from("notifications")
+                .select("id, student_id, target_student_id");
+
+            if (notificationsError) {
+                throw notificationsError;
+            }
+
+            // Select direct messages for this student and broadcast messages.
+            const relevantNotifications = (
+                notificationRows || []
+            ).filter(notification => {
+                const studentId = notification.student_id || null;
+                const targetStudentId =
+                    notification.target_student_id || null;
+
+                return (
+                    studentId === currentUser.id ||
+                    targetStudentId === currentUser.id ||
+                    (!studentId && !targetStudentId)
+                );
+            });
+
+            if (relevantNotifications.length === 0) {
+                return;
+            }
+
+            const {
+                data: readRows,
+                error: readsError
+            } = await client
+                .from("notification_reads")
+                .select("notification_id")
+                .eq("student_id", currentUser.id);
+
+            if (readsError) {
+                throw readsError;
+            }
+
+            const readNotificationIds = new Set(
+                (readRows || []).map(row =>
+                    String(row.notification_id)
+                )
+            );
+
+            const unreadCount = relevantNotifications.filter(
+                notification =>
+                    !readNotificationIds.has(String(notification.id))
+            ).length;
+
+            badges.forEach(badge => {
+                badge.textContent = String(unreadCount);
+                badge.style.display =
+                    unreadCount > 0 ? "" : "none";
+
+                badge.setAttribute(
+                    "aria-label",
+                    `${unreadCount} unread notifications`
+                );
+            });
+
+            console.log(
+                "Unread notifications loaded:",
+                unreadCount
+            );
+        } catch (error) {
+            console.error(
+                "Could not load unread notification count:",
+                error
+            );
+
+            // Hide the badges instead of displaying a false count.
+            badges.forEach(badge => {
+                badge.textContent = "0";
+                badge.style.display = "none";
+            });
+        }
+    }
+
+    /* =====================================================
        EXISTING MEMBER BUTTON
     ===================================================== */
 
@@ -1140,7 +1244,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* =====================================================
-       INITIALIZE
+       INITIALIZE PROFILE PAGE
     ===================================================== */
 
     try {
@@ -1148,7 +1252,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (loaded === false) return;
 
-        // Both forms are separate and serve different purposes.
+        // Load the actual unread notification count.
+        await loadNotificationCount();
+
+        // Set up the existing profile features.
         setupPersonalEdit();
         setupDirectPersonalDetailsEdit();
         setupGuardianEdit();
@@ -1161,7 +1268,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             "Student profile and editing options initialized successfully."
         );
     } catch (error) {
-        console.error("Profile initialization failed:", error);
+        console.error(
+            "Profile initialization failed:",
+            error
+        );
 
         alert(
             error.message ||

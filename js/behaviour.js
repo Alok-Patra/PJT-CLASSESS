@@ -1,221 +1,221 @@
-/* =====================================================
-   PJT CLASSES - BEHAVIOUR JS
-===================================================== */
+// /* =====================================================
+//    PJT CLASSES - BEHAVIOUR JS
+// ===================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+// document.addEventListener("DOMContentLoaded", () => {
 
-    const sidebar =
-        document.getElementById("sidebar");
+//     const sidebar =
+//         document.getElementById("sidebar");
 
-    const sidebarOverlay =
-        document.getElementById("sidebarOverlay");
+//     const sidebarOverlay =
+//         document.getElementById("sidebarOverlay");
 
-    const sidebarClose =
-        document.getElementById("sidebarClose");
+//     const sidebarClose =
+//         document.getElementById("sidebarClose");
 
-    const mobileMenu =
-        document.getElementById("mobileMenu");
+//     const mobileMenu =
+//         document.getElementById("mobileMenu");
 
 
-    /* =================================================
-       OPEN SIDEBAR
-    ================================================= */
+//     /* =================================================
+//        OPEN SIDEBAR
+//     ================================================= */
 
-    function openSidebar() {
+//     function openSidebar() {
 
-        if (!sidebar || !sidebarOverlay) {
-            return;
-        }
+//         if (!sidebar || !sidebarOverlay) {
+//             return;
+//         }
 
-        sidebar.classList.add("open");
+//         sidebar.classList.add("open");
 
-        sidebarOverlay.classList.add("show");
+//         sidebarOverlay.classList.add("show");
 
-        document.body.style.overflow = "hidden";
-    }
+//         document.body.style.overflow = "hidden";
+//     }
 
 
-    /* =================================================
-       CLOSE SIDEBAR
-    ================================================= */
+//     /* =================================================
+//        CLOSE SIDEBAR
+//     ================================================= */
 
-    function closeSidebar() {
+//     function closeSidebar() {
 
-        if (!sidebar || !sidebarOverlay) {
-            return;
-        }
+//         if (!sidebar || !sidebarOverlay) {
+//             return;
+//         }
 
-        sidebar.classList.remove("open");
+//         sidebar.classList.remove("open");
 
-        sidebarOverlay.classList.remove("show");
+//         sidebarOverlay.classList.remove("show");
 
-        document.body.style.overflow = "";
-    }
+//         document.body.style.overflow = "";
+//     }
 
 
-    /* =================================================
-       MOBILE MENU
-    ================================================= */
+//     /* =================================================
+//        MOBILE MENU
+//     ================================================= */
 
-    if (mobileMenu) {
+//     if (mobileMenu) {
 
-        mobileMenu.addEventListener(
-            "click",
-            openSidebar
-        );
+//         mobileMenu.addEventListener(
+//             "click",
+//             openSidebar
+//         );
 
-    }
+//     }
 
 
-    /* =================================================
-       CLOSE BUTTON
-    ================================================= */
+//     /* =================================================
+//        CLOSE BUTTON
+//     ================================================= */
 
-    if (sidebarClose) {
+//     if (sidebarClose) {
 
-        sidebarClose.addEventListener(
-            "click",
-            closeSidebar
-        );
+//         sidebarClose.addEventListener(
+//             "click",
+//             closeSidebar
+//         );
 
-    }
+//     }
 
 
-    /* =================================================
-       OVERLAY
-    ================================================= */
+//     /* =================================================
+//        OVERLAY
+//     ================================================= */
 
-    if (sidebarOverlay) {
+//     if (sidebarOverlay) {
 
-        sidebarOverlay.addEventListener(
-            "click",
-            closeSidebar
-        );
+//         sidebarOverlay.addEventListener(
+//             "click",
+//             closeSidebar
+//         );
 
-    }
+//     }
 
 
-    /* =================================================
-       NAVIGATION
-    ================================================= */
+//     /* =================================================
+//        NAVIGATION
+//     ================================================= */
 
-    document
-        .querySelectorAll(".nav-item")
-        .forEach(item => {
+//     document
+//         .querySelectorAll(".nav-item")
+//         .forEach(item => {
 
-            item.addEventListener(
-                "click",
-                () => {
+//             item.addEventListener(
+//                 "click",
+//                 () => {
 
-                    if (window.innerWidth <= 768) {
+//                     if (window.innerWidth <= 768) {
 
-                        closeSidebar();
+//                         closeSidebar();
 
-                    }
+//                     }
 
-                }
-            );
+//                 }
+//             );
 
-        });
+//         });
 
 
-    /* =================================================
-       BEHAVIOUR PROGRESS
-    ================================================= */
+//     /* =================================================
+//        BEHAVIOUR PROGRESS
+//     ================================================= */
 
-    const progressBars =
-        document.querySelectorAll(
-            ".behaviour-progress"
-        );
+//     const progressBars =
+//         document.querySelectorAll(
+//             ".behaviour-progress"
+//         );
 
 
-    setTimeout(() => {
+//     setTimeout(() => {
 
-        progressBars.forEach(bar => {
+//         progressBars.forEach(bar => {
 
-            const progress =
-                Number(
-                    bar.dataset.progress
-                );
+//             const progress =
+//                 Number(
+//                     bar.dataset.progress
+//                 );
 
 
-            if (
-                !Number.isNaN(progress) &&
-                progress >= 0 &&
-                progress <= 100
-            ) {
+//             if (
+//                 !Number.isNaN(progress) &&
+//                 progress >= 0 &&
+//                 progress <= 100
+//             ) {
 
-                bar.style.width =
-                    `${progress}%`;
+//                 bar.style.width =
+//                     `${progress}%`;
 
-            }
+//             }
 
-        });
+//         });
 
-    }, 250);
+//     }, 250);
 
 
-    /* =================================================
-       NOTIFICATIONS
-    ================================================= */
+//     /* =================================================
+//        NOTIFICATIONS
+//     ================================================= */
 
-    const notificationButton =
-        document.getElementById(
-            "notificationButton"
-        );
+//     const notificationButton =
+//         document.getElementById(
+//             "notificationButton"
+//         );
 
 
-    if (notificationButton) {
+//     if (notificationButton) {
 
-        notificationButton.addEventListener(
-            "click",
-            () => {
+//         notificationButton.addEventListener(
+//             "click",
+//             () => {
 
-                window.location.href =
-                    "notifications.html";
+//                 window.location.href =
+//                     "notifications.html";
 
-            }
-        );
+//             }
+//         );
 
-    }
+//     }
 
 
-    /* =================================================
-       ESCAPE KEY
-    ================================================= */
+//     /* =================================================
+//        ESCAPE KEY
+//     ================================================= */
 
-    document.addEventListener(
-        "keydown",
-        event => {
+//     document.addEventListener(
+//         "keydown",
+//         event => {
 
-            if (
-                event.key === "Escape" &&
-                window.innerWidth <= 768
-            ) {
+//             if (
+//                 event.key === "Escape" &&
+//                 window.innerWidth <= 768
+//             ) {
 
-                closeSidebar();
+//                 closeSidebar();
 
-            }
+//             }
 
-        }
-    );
+//         }
+//     );
 
 
-    /* =================================================
-       WINDOW RESIZE
-    ================================================= */
+//     /* =================================================
+//        WINDOW RESIZE
+//     ================================================= */
 
-    window.addEventListener(
-        "resize",
-        () => {
+//     window.addEventListener(
+//         "resize",
+//         () => {
 
-            if (window.innerWidth > 768) {
+//             if (window.innerWidth > 768) {
 
-                closeSidebar();
+//                 closeSidebar();
 
-            }
+//             }
 
-        }
-    );
+//         }
+//     );
 
-});
+// });

@@ -1,6 +1,9 @@
 /* =====================================================
    PJT CLASSES - STUDENT PERFORMANCE
    Supabase integration
+   - Live student performance
+   - Student profile details
+   - Real unread notification count
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -133,11 +136,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function statusFor(value) {
-        if (value >= 90) return { label: "Excellent", className: "result-excellent" };
-        if (value >= 75) return { label: "Good", className: "result-good" };
-        if (value >= 50) return { label: "Average", className: "result-average" };
+        if (value >= 90) {
+            return {
+                label: "Excellent",
+                className: "result-excellent"
+            };
+        }
 
-        return { label: "Needs Improvement", className: "result-average" };
+        if (value >= 75) {
+            return {
+                label: "Good",
+                className: "result-good"
+            };
+        }
+
+        if (value >= 50) {
+            return {
+                label: "Average",
+                className: "result-average"
+            };
+        }
+
+        return {
+            label: "Needs Improvement",
+            className: "result-average"
+        };
     }
 
     function makeCell(value) {
@@ -184,6 +207,109 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* =================================================
+       NOTIFICATION COUNT - SAME AS PROFILE PAGE
+    ================================================= */
+
+    async function loadNotificationCount(userId) {
+        const badges = document.querySelectorAll(
+            ".notification-badge, #notificationButton span, " +
+            ".notification-button span, .mobile-alert b"
+        );
+
+        // Hide hard-coded notification counts.
+        badges.forEach(badge => {
+            badge.textContent = "0";
+            badge.style.display = "none";
+        });
+
+        if (!client || !userId) {
+            console.error(
+                "Notification count: Supabase client or student session missing."
+            );
+            return;
+        }
+
+        try {
+            const {
+                data: notificationRows,
+                error: notificationsError
+            } = await client
+                .from("notifications")
+                .select("id, student_id, target_student_id");
+
+            if (notificationsError) throw notificationsError;
+
+            // Include messages for this student and broadcast messages.
+            const relevantNotifications = (
+                notificationRows || []
+            ).filter(notification => {
+                const studentId = notification.student_id || null;
+                const targetStudentId =
+                    notification.target_student_id || null;
+
+                return (
+                    studentId === userId ||
+                    targetStudentId === userId ||
+                    (!studentId && !targetStudentId)
+                );
+            });
+
+            if (relevantNotifications.length === 0) {
+                return;
+            }
+
+            const {
+                data: readRows,
+                error: readsError
+            } = await client
+                .from("notification_reads")
+                .select("notification_id")
+                .eq("student_id", userId);
+
+            if (readsError) throw readsError;
+
+            const readIds = new Set(
+                (readRows || []).map(row =>
+                    String(row.notification_id)
+                )
+            );
+
+            const unreadCount = relevantNotifications.filter(
+                notification =>
+                    !readIds.has(String(notification.id))
+            ).length;
+
+            // Update sidebar, top bar and mobile badges.
+            badges.forEach(badge => {
+                badge.textContent = String(unreadCount);
+                badge.style.display =
+                    unreadCount > 0 ? "" : "none";
+
+                badge.setAttribute(
+                    "aria-label",
+                    `${unreadCount} unread notifications`
+                );
+            });
+
+            console.log(
+                "Unread notifications loaded:",
+                unreadCount
+            );
+        } catch (error) {
+            console.error(
+                "Could not load unread notification count:",
+                error
+            );
+
+            // Do not show a false notification count.
+            badges.forEach(badge => {
+                badge.textContent = "0";
+                badge.style.display = "none";
+            });
+        }
+    }
+
+    /* =================================================
        SUBJECT DISPLAY
     ================================================= */
 
@@ -207,29 +333,39 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             const subject = bySubject.get(name);
+
             subject.obtained += Number(record.marks_obtained);
             subject.maximum += Number(record.max_marks);
         });
 
-        const subjects = [...bySubject.entries()].map(([name, data]) => ({
-            name,
-            obtained: data.obtained,
-            maximum: data.maximum,
-            percentage: data.maximum > 0
-                ? (data.obtained / data.maximum) * 100
-                : 0
-        }));
+        const subjects = [...bySubject.entries()].map(
+            ([name, data]) => ({
+                name,
+                obtained: data.obtained,
+                maximum: data.maximum,
+                percentage: data.maximum > 0
+                    ? (data.obtained / data.maximum) * 100
+                    : 0
+            })
+        );
 
         subjectRows.forEach(row => {
-            const nameElement = row.querySelector(".subject-info strong");
+            const nameElement = row.querySelector(
+                ".subject-info strong"
+            );
+
             const name = nameElement?.textContent.trim();
 
-            const detail = row.querySelector(".subject-info span");
+            const detail = row.querySelector(
+                ".subject-info span"
+            );
+
             const score = row.querySelector(".subject-score");
             const bar = row.querySelector(".progress-bar");
 
             const subject = subjects.find(item =>
-                item.name.toLowerCase() === (name || "").toLowerCase()
+                item.name.toLowerCase() ===
+                (name || "").toLowerCase()
             );
 
             if (!subject) {
@@ -253,7 +389,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (bar) {
                 bar.dataset.progress = subject.percentage;
-                bar.style.width = `${Math.min(100, subject.percentage)}%`;
+
+                bar.style.width =
+                    `${Math.min(100, subject.percentage)}%`;
             }
         });
 
@@ -271,17 +409,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const recent = [...records]
             .filter(record => percent(record) !== null)
-            .sort((a, b) => {
-                return (b.exam_date || "").localeCompare(a.exam_date || "");
-            })
+            .sort((a, b) =>
+                (b.exam_date || "").localeCompare(a.exam_date || "")
+            )
             .slice(0, 10);
 
         if (recent.length === 0) {
             const row = document.createElement("tr");
-            const cell = makeCell("No performance records available yet.");
+            const cell = makeCell(
+                "No performance records available yet."
+            );
+
             cell.colSpan = 6;
             row.appendChild(cell);
             resultsBody.appendChild(row);
+
             return;
         }
 
@@ -295,8 +437,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 makeCell(record.assessment_name || "Assessment")
             );
 
-            row.appendChild(makeCell(record.subject || "—"));
-            row.appendChild(makeCell(formatDate(record.exam_date)));
+            row.appendChild(
+                makeCell(record.subject || "—")
+            );
+
+            row.appendChild(
+                makeCell(formatDate(record.exam_date))
+            );
 
             row.appendChild(
                 makeCell(
@@ -304,7 +451,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 )
             );
 
-            row.appendChild(makeCell(rounded(percentage)));
+            row.appendChild(
+                makeCell(rounded(percentage))
+            );
 
             const statusCell = document.createElement("td");
             const badge = document.createElement("span");
@@ -329,12 +478,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         const totalObtained = validRecords.reduce(
-            (sum, record) => sum + Number(record.marks_obtained),
+            (sum, record) =>
+                sum + Number(record.marks_obtained),
             0
         );
 
         const totalMaximum = validRecords.reduce(
-            (sum, record) => sum + Number(record.max_marks),
+            (sum, record) =>
+                sum + Number(record.max_marks),
             0
         );
 
@@ -342,9 +493,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             ? (totalObtained / totalMaximum) * 100
             : null;
 
-        // Count distinct assessment names.
         const assessmentNames = new Set(
-            validRecords.map(record => record.assessment_name)
+            validRecords
+                .map(record => record.assessment_name)
                 .filter(Boolean)
         );
 
@@ -388,16 +539,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             setText(
                 cards[2].querySelector("small"),
-                highest ? rounded(highest.percentage) : "No records yet"
+                highest
+                    ? rounded(highest.percentage)
+                    : "No records yet"
             );
         }
 
         if (cards[3]) {
-            // Compare the two most recent assessments by average percentage.
             const grouped = new Map();
 
             validRecords.forEach(record => {
-                const key = record.assessment_name || "Assessment";
+                const key =
+                    record.assessment_name || "Assessment";
 
                 if (!grouped.has(key)) {
                     grouped.set(key, {
@@ -408,6 +561,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 const group = grouped.get(key);
+
                 group.obtained += Number(record.marks_obtained);
                 group.maximum += Number(record.max_marks);
 
@@ -424,39 +578,56 @@ document.addEventListener("DOMContentLoaded", async () => {
                         ? data.obtained / data.maximum * 100
                         : 0
                 }))
-                .sort((a, b) => b.date.localeCompare(a.date));
+                .sort((a, b) =>
+                    b.date.localeCompare(a.date)
+                );
 
             let progressText = "Not enough results";
             let progressValue = "—";
 
             if (assessments.length >= 2) {
                 const change =
-                    assessments[0].percentage - assessments[1].percentage;
+                    assessments[0].percentage -
+                    assessments[1].percentage;
 
-                progressValue = `${change > 0 ? "+" : ""}${rounded(change)}`;
-                progressText = "Compared with previous assessment";
+                progressValue =
+                    `${change > 0 ? "+" : ""}${rounded(change)}`;
+
+                progressText =
+                    "Compared with previous assessment";
             }
 
-            setText(cards[3].querySelector("strong"), progressValue);
-            setText(cards[3].querySelector("small"), progressText);
+            setText(
+                cards[3].querySelector("strong"),
+                progressValue
+            );
+
+            setText(
+                cards[3].querySelector("small"),
+                progressText
+            );
         }
     }
 
     /* =================================================
-       AUTHENTICATE AND LOAD ONLY THIS STUDENT'S RECORDS
+       AUTHENTICATE AND LOAD STUDENT DATA
     ================================================= */
 
     if (!client) {
         clearResults();
+
         showMessage(
             "Supabase has not initialized. Please check the script loading order."
         );
+
         return;
     }
 
     try {
-        const { data: authData, error: authError } =
-            await client.auth.getUser();
+        const {
+            data: authData,
+            error: authError
+        } = await client.auth.getUser();
 
         if (authError || !authData?.user) {
             window.location.href = "../login.html";
@@ -465,22 +636,45 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const user = authData.user;
 
-        const { data: profile, error: profileError } = await client
+        // Notification fix: load the real unread count.
+        await loadNotificationCount(user.id);
+
+        const {
+            data: profile,
+            error: profileError
+        } = await client
             .from("profiles")
-            .select("id, full_name, student_id, student_class, role")
+            .select(
+                "id, full_name, student_id, student_class, role"
+            )
             .eq("id", user.id)
             .single();
 
         if (profileError) throw profileError;
 
-        if (profile.role !== "student") {
-            showMessage("This page is available to student accounts only.");
+        if (
+            String(profile.role || "").toLowerCase() !== "student"
+        ) {
+            showMessage(
+                "This page is available to student accounts only."
+            );
+
             return;
         }
 
-        // Update visible student details in the existing page.
-        const sidebarStudent = document.querySelector(".sidebar-student");
-        const topbarUser = document.querySelector(".topbar-user");
+        // Update student information in the sidebar.
+        const sidebarStudent =
+            document.querySelector(".sidebar-student");
+
+        const topbarUser =
+            document.querySelector(".topbar-user");
+
+        const initials = (profile.full_name || "S")
+            .split(/\s+/)
+            .map(part => part[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
 
         if (sidebarStudent) {
             setText(
@@ -495,12 +689,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             setText(
                 sidebarStudent.querySelector(".student-avatar"),
-                (profile.full_name || "S")
-                    .split(/\s+/)
-                    .map(part => part[0])
-                    .join("")
-                    .slice(0, 2)
-                    .toUpperCase()
+                initials
             );
         }
 
@@ -513,22 +702,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             setText(
                 topbarUser.querySelector("small"),
                 profile.student_class
-                    ? `Class ${profile.student_class}`
+                    ? `Class ${String(profile.student_class).replace(/^Class\s*/i, "")}`
                     : "Student"
             );
 
             setText(
                 topbarUser.querySelector(".user-avatar"),
-                (profile.full_name || "S")
-                    .split(/\s+/)
-                    .map(part => part[0])
-                    .join("")
-                    .slice(0, 2)
-                    .toUpperCase()
+                initials
             );
         }
 
-        const { data: records, error: recordsError } = await client
+        // Load performance records for the logged-in student.
+        const {
+            data: records,
+            error: recordsError
+        } = await client
             .from("performance_records")
             .select(
                 "id, student_id, subject, assessment_name, marks_obtained, max_marks, exam_date, remarks"
@@ -543,9 +731,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (safeRecords.length === 0) {
             clearResults();
             updateResultsTable([]);
+
             showMessage(
                 "No performance records have been added for your account yet."
             );
+
             return;
         }
 
@@ -554,10 +744,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateResultsTable(safeRecords);
         updateSummary(safeRecords, subjects);
 
-        showMessage("Your performance records have been loaded.");
+        showMessage(
+            "Your performance records have been loaded."
+        );
 
     } catch (error) {
-        console.error("Student performance loading failed:", error);
+        console.error(
+            "Student performance loading failed:",
+            error
+        );
+
         clearResults();
 
         showMessage(

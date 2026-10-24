@@ -1,6 +1,7 @@
+
 /* =========================================================
    PJT CLASSES — STUDENT DASHBOARD
-   Live Supabase Profile, Fees, Performance and Search
+   Supabase Profile, Fees, Performance, Notifications & Search
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,36 +15,37 @@ document.addEventListener("DOMContentLoaded", () => {
     let studentProfile = null;
     let feeRecords = [];
     let performanceRecords = [];
+    let dashboardNotifications = [];
 
-    const $ = (selector) => document.querySelector(selector);
-    const byId = (id) => document.getElementById(id);
+    const $ = selector => document.querySelector(selector);
+    const byId = id => document.getElementById(id);
 
-    const money = (amount) =>
+    const money = amount =>
         new Intl.NumberFormat("en-IN", {
             style: "currency",
             currency: "INR",
             maximumFractionDigits: 2
         }).format(Number(amount) || 0);
 
-    const initials = (name) =>
+    const initials = name =>
         String(name || "Student")
             .trim()
             .split(/\s+/)
             .filter(Boolean)
             .slice(0, 2)
-            .map((word) => word[0].toUpperCase())
+            .map(word => word[0].toUpperCase())
             .join("");
 
-    const formatDate = (dateString) => {
-        if (!dateString) return "";
+    const formatDate = value => {
+        if (!value) return "";
 
-        const date = new Date(`${dateString}T00:00:00`);
+        const date = new Date(value);
 
         if (Number.isNaN(date.getTime())) return "";
 
         return date.toLocaleDateString("en-IN", {
-            month: "short",
             day: "numeric",
+            month: "short",
             year: "numeric"
         });
     };
@@ -69,142 +71,150 @@ document.addEventListener("DOMContentLoaded", () => {
             .from("profiles")
             .select("id, full_name, student_id, student_class, role")
             .eq("id", session.user.id)
-            .single();
+            .maybeSingle();
 
         if (error) throw error;
 
-        if (profile.role !== "student") {
-            throw new Error(
-                "This account is not registered as a student."
-            );
+        if (!profile) {
+            throw new Error("Student profile was not found.");
+        }
+
+        if (
+            String(profile.role || "").trim().toLowerCase() !== "student"
+        ) {
+            throw new Error("This account is not registered as a student.");
         }
 
         studentProfile = profile;
 
         const fullName = profile.full_name || "Student";
-        const studentId = profile.student_id || "ID not assigned";
-        const studentClass =
-            profile.student_class || "Class not assigned";
+        const studentCode = profile.student_id || "ID not assigned";
+        const studentClass = profile.student_class
+            ? (
+                String(profile.student_class)
+                    .toLowerCase()
+                    .startsWith("class")
+                    ? String(profile.student_class)
+                    : `Class ${profile.student_class}`
+            )
+            : "Class not assigned";
 
-        if (byId("studentName")) {
-            byId("studentName").textContent = fullName;
-        }
+        // Update the IDs used by this dashboard, if present.
+        setText("studentName", fullName);
+        setText("studentDetails", `${studentClass} • ${studentCode}`);
+        setText("studentAvatar", initials(fullName));
+        setText("welcomeStudentName", fullName);
+        setText("welcomeStudentClass", studentClass);
+        setText("welcomeStudentId", studentCode);
 
-        if (byId("studentDetails")) {
-            byId("studentDetails").textContent =
-                `${studentClass} • ${studentId}`;
-        }
+        // Also support the data attributes used on other project pages.
+        document.querySelectorAll("[data-student-name]").forEach(el => {
+            el.textContent = fullName;
+        });
 
-        if (byId("studentAvatar")) {
-            byId("studentAvatar").textContent = initials(fullName);
-        }
+        document.querySelectorAll("[data-student-initials]").forEach(el => {
+            el.textContent = initials(fullName);
+        });
 
-        if (byId("welcomeStudentName")) {
-            byId("welcomeStudentName").textContent = fullName;
-        }
+        document.querySelectorAll("[data-student-id]").forEach(el => {
+            el.textContent = studentCode;
+        });
 
-        if (byId("welcomeStudentClass")) {
-            byId("welcomeStudentClass").textContent = studentClass;
-        }
-
-        if (byId("welcomeStudentId")) {
-            byId("welcomeStudentId").textContent = studentId;
-        }
+        document.querySelectorAll("[data-student-class]").forEach(el => {
+            el.textContent = studentClass;
+        });
 
         console.log("Student profile loaded.");
 
         return profile;
     }
 
+    function setText(id, value) {
+        const element = byId(id);
+        if (element) element.textContent = value;
+    }
+
     /* =====================================================
-       FEE SUMMARY CARDS
+       FEE SUMMARY
     ===================================================== */
 
     function updateCardValue(selector, value) {
         const card = $(selector);
         if (!card) return;
 
-        const valueElement = card.querySelector(
+        const element = card.querySelector(
             "[data-value], .fee-amount, .amount, .card-value, strong"
         );
 
-        if (valueElement) {
-            valueElement.textContent = value;
-        }
+        if (element) element.textContent = value;
     }
 
-    /* =====================================================
-       LOAD AND DISPLAY REAL FEE RECORDS
-    ===================================================== */
+    async function loadFees(studentId) {
+        const { data, error } = await client
+            .from("fee_records")
+            .select(
+                "student_id, description, amount, paid_amount, status, due_date, academic_year"
+            )
+            .eq("student_id", studentId)
+            .order("due_date", { ascending: true });
 
-  async function loadFees(studentId) {
-    const { data, error } = await client
-        .from("fee_records")
-        .select(
-            "student_id, description, amount, paid_amount, status, due_date, academic_year"
-        )
-        .eq("student_id", studentId)
-        .order("due_date", { ascending: true });
+        if (error) throw error;
 
-    if (error) throw error;
+        feeRecords = data || [];
 
-    feeRecords = data || [];
+        const monthlyFee = 600;
+        const totalFees = monthlyFee * 12;
 
-    // Annual fee structure: ₹600 per month × 12 months.
-    const monthlyFee = 600;
-    const totalFees = monthlyFee * 12;
+        const paidAmount = feeRecords.reduce((sum, fee) => {
+            const amount = Math.max(Number(fee.paid_amount) || 0, 0);
+            const status = String(fee.status || "").toLowerCase();
 
-    // Calculate the actual amount paid from Supabase.
-    const paidAmount = feeRecords.reduce(
-        (sum, fee) => {
-            const paid = Math.max(Number(fee.paid_amount) || 0, 0);
-            return sum + paid;
-        },
-        0
-    );
+            // Compatibility with legacy records marked paid but with
+            // an empty paid_amount field.
+            if (status === "paid" && amount === 0) {
+                return sum + Math.max(Number(fee.amount) || monthlyFee, 0);
+            }
 
-    // Never show a negative pending balance.
-    const pendingAmount = Math.max(0, totalFees - paidAmount);
+            return sum + amount;
+        }, 0);
 
-    // Update only the existing fee summary cards.
-    updateCardValue(".total-fee", money(totalFees));
-    updateCardValue(".paid-fee", money(paidAmount));
-    updateCardValue(".pending-fee", money(pendingAmount));
+        const pendingAmount = Math.max(0, totalFees - paidAmount);
 
-    // Keep the existing fee table and search data working.
-    renderFeeRows(feeRecords);
+        updateCardValue(".total-fee", money(totalFees));
+        updateCardValue(".paid-fee", money(paidAmount));
+        updateCardValue(".pending-fee", money(pendingAmount));
 
-    console.log("Fee records loaded:", feeRecords.length);
-    console.log("Fee totals:", {
-        totalFees,
-        paidAmount,
-        pendingAmount
-    });
-}
+        renderFeeRows(feeRecords);
+
+        console.log("Fee records loaded:", feeRecords.length);
+        console.log("Fee totals:", {
+            totalFees,
+            paidAmount,
+            pendingAmount
+        });
+    }
 
     function getFeeStatus(fee) {
         const amount = Number(fee.amount) || 0;
-        const paid = Number(fee.paid_amount) || 0;
+        let paid = Math.max(Number(fee.paid_amount) || 0, 0);
         const databaseStatus = String(fee.status || "")
             .trim()
             .toLowerCase();
+
+        if (databaseStatus === "paid" && paid === 0) {
+            paid = amount;
+        }
 
         if (amount > 0 && paid >= amount) {
             return { label: "Paid", className: "paid" };
         }
 
-        if (paid > 0 && paid < amount) {
+        if (paid > 0) {
             return { label: "Partially Paid", className: "pending" };
         }
 
-        if (databaseStatus === "paid") {
-            return { label: "Paid", className: "paid" };
-        }
-
-        if (
-            databaseStatus === "partial" ||
-            databaseStatus === "partially paid"
-        ) {
+        if (databaseStatus === "partial" ||
+            databaseStatus === "partially paid") {
             return { label: "Partially Paid", className: "pending" };
         }
 
@@ -231,17 +241,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderFeeRows(records) {
-        // Actual HTML uses .fees-card > .fee-table.
         const table = $(".fees-card .fee-table");
+        if (!table) return;
 
-        if (!table) {
-            console.warn("Fee table container was not found.");
-            return;
-        }
-
-        // Keep the existing Month / Amount / Status header.
         table.querySelectorAll(".fee-row:not(.fee-head)")
-            .forEach((row) => row.remove());
+            .forEach(row => row.remove());
 
         if (!records.length) {
             const row = document.createElement("div");
@@ -256,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        records.forEach((fee) => {
+        records.forEach(fee => {
             const row = document.createElement("div");
             row.className = "fee-row";
 
@@ -267,8 +271,8 @@ document.addEventListener("DOMContentLoaded", () => {
             amount.textContent = money(fee.amount);
 
             const status = getFeeStatus(fee);
-
             const statusElement = document.createElement("b");
+
             statusElement.className = `status ${status.className}`;
             statusElement.textContent = status.label;
             statusElement.title = fee.due_date
@@ -281,7 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* =====================================================
-       LOAD AND DISPLAY REAL ACADEMIC PERFORMANCE
+       ACADEMIC PERFORMANCE
     ===================================================== */
 
     async function loadPerformance(studentId) {
@@ -297,10 +301,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         performanceRecords = data || [];
 
-        // Group assessments by subject and calculate actual percentages.
         const subjects = {};
 
-        performanceRecords.forEach((record) => {
+        performanceRecords.forEach(record => {
             const subject = (record.subject || "Other").trim();
 
             if (!subjects[subject]) {
@@ -322,32 +325,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         renderPerformanceSubjects(subjects);
 
-        console.log(
-            "Performance records loaded:",
-            performanceRecords.length
-        );
-
-        console.log("Calculated subject performance:", subjects);
+        console.log("Performance records loaded:", performanceRecords.length);
     }
 
     function getSubjectIconClass(subject) {
         const name = subject.toLowerCase();
 
-        if (
-            name.includes("math") ||
-            name.includes("algebra")
-        ) {
+        if (name.includes("math") || name.includes("algebra")) {
             return "maths";
         }
 
-        if (name.includes("science")) {
-            return "science";
-        }
+        if (name.includes("science")) return "science";
 
-        if (
-            name.includes("english") ||
-            name.includes("language")
-        ) {
+        if (name.includes("english") || name.includes("language")) {
             return "english";
         }
 
@@ -365,13 +355,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderPerformanceSubjects(subjects) {
-        // Actual HTML uses .performance-card > .subjects.
         const container = $(".performance-card .subjects");
-
-        if (!container) {
-            console.warn("Performance subjects container was not found.");
-            return;
-        }
+        if (!container) return;
 
         container.replaceChildren();
 
@@ -393,8 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
             row.className = "subject";
 
             const icon = document.createElement("div");
-            icon.className =
-                `subject-icon ${getSubjectIconClass(subject)}`;
+            icon.className = `subject-icon ${getSubjectIconClass(subject)}`;
             icon.textContent = getSubjectIcon(subject);
 
             const middle = document.createElement("div");
@@ -409,7 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const score = document.createElement("b");
             score.textContent = percentage === null
                 ? "No marks"
-                : `${percentage.toFixed(percentage % 1 ? 1 : 0)}%`;
+                : `${Number(percentage.toFixed(1))}%`;
 
             top.append(subjectName, score);
 
@@ -417,16 +401,12 @@ document.addEventListener("DOMContentLoaded", () => {
             progressBar.className = "progress-bar";
 
             const progress = document.createElement("span");
-
             const safePercentage = percentage === null
                 ? 0
                 : Math.min(100, Math.max(0, percentage));
 
             progress.style.width = `${safePercentage}%`;
-            progress.setAttribute(
-                "aria-valuenow",
-                String(Math.round(safePercentage))
-            );
+            progress.setAttribute("aria-valuenow", String(Math.round(safePercentage)));
             progress.setAttribute("aria-valuemin", "0");
             progress.setAttribute("aria-valuemax", "100");
 
@@ -434,6 +414,243 @@ document.addEventListener("DOMContentLoaded", () => {
             middle.append(top, progressBar);
             row.append(icon, middle);
             container.appendChild(row);
+        });
+    }
+
+    /* =====================================================
+       LIVE NOTIFICATIONS AND BADGES
+    ===================================================== */
+
+    function updateDashboardNotificationBadges(count) {
+        const selectors = [
+            ".notification-nav-icon b",
+            "#notificationButton span",
+            ".mobile-alert b",
+            ".notification-badge",
+            ".notification-button span"
+        ];
+
+        const found = new Set();
+
+        selectors.forEach(selector => {
+            document.querySelectorAll(selector).forEach(badge => {
+                if (found.has(badge)) return;
+                found.add(badge);
+
+                badge.textContent = String(count);
+                badge.style.display = count > 0 ? "" : "none";
+            });
+        });
+
+        const button = byId("notificationButton");
+
+        if (button) {
+            button.setAttribute(
+                "aria-label",
+                count > 0
+                    ? `Notifications, ${count} unread`
+                    : "Notifications"
+            );
+        }
+    }
+
+    function notificationIcon(type) {
+        const value = String(type || "").toLowerCase();
+
+        if (value.includes("fee") || value.includes("payment")) {
+            return { symbol: "₹", color: "red" };
+        }
+
+        if (value.includes("test") || value.includes("performance")) {
+            return { symbol: "✓", color: "blue" };
+        }
+
+        if (value.includes("study") || value.includes("material")) {
+            return { symbol: "★", color: "orange" };
+        }
+
+        if (value.includes("announcement") || value.includes("class")) {
+            return { symbol: "i", color: "blue" };
+        }
+
+        return { symbol: "!", color: "orange" };
+    }
+
+    function relativeNotificationDate(value) {
+        if (!value) return "";
+
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "";
+
+        const minutes = Math.floor((Date.now() - date.getTime()) / 60000);
+
+        if (minutes < 1) return "Just now";
+        if (minutes < 60) return `${minutes} min ago`;
+
+        const hours = Math.floor(minutes / 60);
+
+        if (hours < 24) {
+            return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+        }
+
+        const days = Math.floor(hours / 24);
+
+        if (days === 1) return "Yesterday";
+        if (days < 7) return `${days} days ago`;
+
+        return date.toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "short"
+        });
+    }
+
+    function renderDashboardNotifications() {
+        const list = $(".notifications-card .notification-list");
+        if (!list) return;
+
+        list.replaceChildren();
+
+        if (!dashboardNotifications.length) {
+            const empty = document.createElement("p");
+            empty.className = "dashboard-notification-empty";
+            empty.textContent = "You have no notifications yet.";
+            list.appendChild(empty);
+            return;
+        }
+
+        dashboardNotifications.slice(0, 4).forEach(notification => {
+            const item = document.createElement("a");
+            item.href = "notifications.html";
+            item.className = "notification";
+
+            if (notification.unread) {
+                item.classList.add("unread");
+            }
+
+            const iconInfo = notificationIcon(notification.type);
+
+            const icon = document.createElement("span");
+            icon.className = `notification-icon ${iconInfo.color}`;
+            icon.textContent = iconInfo.symbol;
+
+            const content = document.createElement("span");
+            content.className = "notification-content";
+
+            const title = document.createElement("strong");
+            title.textContent = notification.title || "Notification";
+
+            const body = document.createElement("small");
+            body.textContent = notification.body || "You have a new update.";
+
+            const date = document.createElement("em");
+            date.textContent = relativeNotificationDate(notification.created_at);
+
+            const arrow = document.createElement("span");
+            arrow.className = "notification-arrow";
+            arrow.textContent = "→";
+
+            content.append(title, body, date);
+            item.append(icon, content, arrow);
+            list.appendChild(item);
+        });
+    }
+
+    async function loadDashboardNotifications(userId) {
+        const list = $(".notifications-card .notification-list");
+
+        try {
+            const { data: rows, error } = await client
+                .from("notifications")
+                .select(
+                    "id, student_id, target_student_id, title, body, notification_type, created_at"
+                )
+                .order("created_at", { ascending: false });
+
+            if (error) throw error;
+
+            const relevantRows = (rows || []).filter(notification => {
+                const recipients = [
+                    notification.student_id,
+                    notification.target_student_id
+                ].filter(value =>
+                    value !== null &&
+                    value !== undefined &&
+                    value !== ""
+                );
+
+                // An empty recipient means the notification is a broadcast.
+                if (recipients.length === 0) return true;
+
+                return recipients.some(
+                    recipient => String(recipient) === String(userId)
+                );
+            });
+
+            const { data: readRows, error: readError } = await client
+                .from("notification_reads")
+                .select("notification_id")
+                .eq("student_id", userId);
+
+            if (readError) throw readError;
+
+            const readIds = new Set(
+                (readRows || []).map(row => String(row.notification_id))
+            );
+
+            dashboardNotifications = relevantRows.map(row => ({
+                id: row.id,
+                type: row.notification_type || "general",
+                title: row.title || "Notification",
+                body: row.body || "",
+                created_at: row.created_at,
+                unread: !readIds.has(String(row.id))
+            }));
+
+            const unreadCount = dashboardNotifications.filter(
+                item => item.unread
+            ).length;
+
+            updateDashboardNotificationBadges(unreadCount);
+            renderDashboardNotifications();
+
+        } catch (error) {
+            console.error("Unable to load dashboard notifications:", error);
+
+            updateDashboardNotificationBadges(0);
+
+            if (list) {
+                list.replaceChildren();
+
+                const message = document.createElement("p");
+                message.className = "dashboard-notification-empty";
+                message.textContent =
+                    "Notifications could not be loaded. Please refresh the page.";
+
+                list.appendChild(message);
+            }
+        }
+    }
+
+    /* =====================================================
+       DASHBOARD CARD ORDER
+       Row 1: Fee Status + Recent Notifications
+       Row 2: Behaviour + Academic Performance
+    ===================================================== */
+
+    function reorderDashboardCards() {
+        const grid = $(".dashboard-grid");
+        if (!grid) return;
+
+        const selectors = [
+            ".fees-card",
+            ".notifications-card",
+            ".behaviour-card",
+            ".performance-card"
+        ];
+
+        selectors.forEach(selector => {
+            const card = grid.querySelector(selector);
+            if (card) grid.appendChild(card);
         });
     }
 
@@ -462,7 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.overflow = "";
     }
 
-    mobileMenu?.addEventListener("click", (event) => {
+    mobileMenu?.addEventListener("click", event => {
         event.stopPropagation();
 
         if (sidebar?.classList.contains("open")) {
@@ -475,7 +692,7 @@ document.addEventListener("DOMContentLoaded", () => {
     sidebarClose?.addEventListener("click", closeSidebar);
     sidebarOverlay?.addEventListener("click", closeSidebar);
 
-    document.querySelectorAll(".nav-item").forEach((item) => {
+    document.querySelectorAll(".nav-item").forEach(item => {
         item.addEventListener("click", () => {
             if (window.innerWidth <= 768) closeSidebar();
         });
@@ -486,7 +703,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* =====================================================
-       SEARCH — USE LIVE PROFILE, FEE AND PERFORMANCE DATA
+       SEARCH
     ===================================================== */
 
     const searchInput = byId("dashboardSearch");
@@ -508,15 +725,18 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        const total = feeRecords.reduce(
-            (sum, fee) => sum + (Number(fee.amount) || 0),
-            0
-        );
+        const total = 600 * 12;
 
-        const paid = feeRecords.reduce(
-            (sum, fee) => sum + (Number(fee.paid_amount) || 0),
-            0
-        );
+        const paid = feeRecords.reduce((sum, fee) => {
+            const value = Math.max(Number(fee.paid_amount) || 0, 0);
+            const status = String(fee.status || "").toLowerCase();
+
+            if (status === "paid" && value === 0) {
+                return sum + Math.max(Number(fee.amount) || 600, 0);
+            }
+
+            return sum + value;
+        }, 0);
 
         data.push(
             {
@@ -536,7 +756,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
-        performanceRecords.forEach((record) => {
+        performanceRecords.forEach(record => {
             const marks = Number(record.marks_obtained) || 0;
             const maximum = Number(record.max_marks) || 0;
 
@@ -553,12 +773,20 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        feeRecords.forEach((fee) => {
+        feeRecords.forEach(fee => {
             data.push({
                 title: getFeeDescription(fee),
                 description:
                     `${money(fee.amount)} — ${getFeeStatus(fee).label}`,
                 target: ".fees-card"
+            });
+        });
+
+        dashboardNotifications.forEach(notification => {
+            data.push({
+                title: notification.title,
+                description: notification.body,
+                target: ".notifications-card"
             });
         });
 
@@ -579,11 +807,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const words = query.split(/\s+/).filter(Boolean);
 
-        const matches = buildSearchData().filter((item) => {
+        const matches = buildSearchData().filter(item => {
             const text =
                 `${item.title} ${item.description}`.toLowerCase();
 
-            return words.every((word) => text.includes(word));
+            return words.every(word => text.includes(word));
         });
 
         renderSearchResults(matches);
@@ -598,12 +826,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const empty = document.createElement("div");
             empty.className = "search-empty";
             empty.textContent = "No matching information found.";
+
             searchResults.appendChild(empty);
             searchResults.classList.add("show");
             return;
         }
 
-        matches.slice(0, 8).forEach((item) => {
+        matches.slice(0, 8).forEach(item => {
             const button = document.createElement("button");
             button.type = "button";
             button.className = "search-result";
@@ -629,12 +858,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const element = document.querySelector(item.target);
 
                 hideSearchResults();
-                searchInput.value = "";
+
+                if (searchInput) {
+                    searchInput.value = "";
+                    searchInput.blur();
+                }
+
                 searchContainer?.classList.remove("searching");
 
                 if (!element) return;
-
-                searchInput.blur();
 
                 element.scrollIntoView({
                     behavior: "smooth",
@@ -656,6 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function hideSearchResults() {
         searchResults?.classList.remove("show");
+        searchContainer?.classList.remove("searching");
     }
 
     function clearSearch() {
@@ -663,25 +896,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         searchInput.value = "";
         hideSearchResults();
-        searchContainer?.classList.remove("searching");
         searchInput.focus();
     }
 
     searchInput?.addEventListener("input", performSearch);
     searchClear?.addEventListener("click", clearSearch);
 
-    searchInput?.addEventListener("keydown", (event) => {
+    searchInput?.addEventListener("keydown", event => {
         if (event.key === "Enter") {
             event.preventDefault();
             searchResults?.querySelector(".search-result")?.click();
         }
 
-        if (event.key === "Escape") {
-            hideSearchResults();
-        }
+        if (event.key === "Escape") hideSearchResults();
     });
 
-    document.addEventListener("click", (event) => {
+    document.addEventListener("click", event => {
         if (
             searchContainer &&
             !searchContainer.contains(event.target)
@@ -694,7 +924,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "notifications.html";
     });
 
-    document.addEventListener("keydown", (event) => {
+    document.addEventListener("keydown", event => {
         if (event.key === "Escape") {
             closeSidebar();
             hideSearchResults();
@@ -709,18 +939,23 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const profile = await loadStudentProfile();
 
-            // The user was redirected to login if no session exists.
             if (!profile) return;
 
-            // Each query uses the logged-in student's profile UUID.
+            reorderDashboardCards();
+
             const results = await Promise.allSettled([
                 loadFees(profile.id),
-                loadPerformance(profile.id)
+                loadPerformance(profile.id),
+                loadDashboardNotifications(profile.id)
             ]);
 
             results.forEach((result, index) => {
                 if (result.status === "rejected") {
-                    const section = index === 0 ? "fees" : "performance";
+                    const section = [
+                        "fees",
+                        "performance",
+                        "notifications"
+                    ][index];
 
                     console.error(
                         `Unable to load ${section}:`,
@@ -729,24 +964,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            if (results.every((result) => result.status === "fulfilled")) {
+            if (results.every(result => result.status === "fulfilled")) {
                 console.log("Student dashboard data loaded successfully.");
             } else {
                 console.warn(
-                    "Dashboard loaded with one or more data sections unavailable."
+                    "Dashboard loaded, but some sections could not be retrieved."
                 );
             }
+
         } catch (error) {
             console.error("Dashboard loading error:", error);
 
-            if (byId("studentName")) {
-                byId("studentName").textContent = "Unable to load profile";
-            }
-
-            if (byId("studentDetails")) {
-                byId("studentDetails").textContent =
-                    "Please refresh or contact your administrator.";
-            }
+            setText("studentName", "Unable to load profile");
+            setText(
+                "studentDetails",
+                "Please refresh or contact your administrator."
+            );
         }
     }
 
