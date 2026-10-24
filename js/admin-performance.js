@@ -1,484 +1,648 @@
+
 /* =========================================================
    PJT CLASSES — ADMIN PERFORMANCE
-   Supabase-connected version
+   Fixed Supabase integration and notification badges
 ========================================================= */
 
-const client = window.supabaseClient;
+(() => {
+    "use strict";
 
-const $ = (id) => document.getElementById(id);
+    const $ = (id) => document.getElementById(id);
 
-const studentSelect = $("studentSelect");
-const previewAvatar = $("previewAvatar");
-const previewName = $("previewName");
-const previewInfo = $("previewInfo");
+    const getClient = () => window.supabaseClient;
 
-const mathInput = $("mathMarks");
-const scienceInput = $("scienceMarks");
-const englishInput = $("englishMarks");
+    const ASSESSMENT_NAME = "Overall Performance";
 
-const mathDisplay = $("mathDisplay");
-const scienceDisplay = $("scienceDisplay");
-const englishDisplay = $("englishDisplay");
+    const studentSelect = $("studentSelect");
+    const previewAvatar = $("previewAvatar");
+    const previewName = $("previewName");
+    const previewInfo = $("previewInfo");
 
-const mathProgress = $("mathProgress");
-const scienceProgress = $("scienceProgress");
-const englishProgress = $("englishProgress");
+    const mathInput = $("mathMarks");
+    const scienceInput = $("scienceMarks");
+    const englishInput = $("englishMarks");
 
-const overallDisplay = $("overallDisplay");
-const overallProgress = $("overallProgress");
+    const mathDisplay = $("mathDisplay");
+    const scienceDisplay = $("scienceDisplay");
+    const englishDisplay = $("englishDisplay");
 
-const recordName = $("recordName");
-const recordId = $("recordId");
-const recordClass = $("recordClass");
-const recordOverall = $("recordOverall");
-const formMessage = $("formMessage");
-const saveButton = $("savePerformance");
+    const mathProgress = $("mathProgress");
+    const scienceProgress = $("scienceProgress");
+    const englishProgress = $("englishProgress");
 
-const ASSESSMENT_NAME = "Overall Performance";
-const SUBJECTS = [
-    { key: "mathematics", label: "Mathematics", input: mathInput },
-    { key: "science", label: "Science", input: scienceInput },
-    { key: "english", label: "English", input: englishInput }
-];
+    const overallDisplay = $("overallDisplay");
+    const overallProgress = $("overallProgress");
 
-let students = [];
-let currentStudent = null;
-let savedRecords = [];
-let isLoading = false;
+    const recordName = $("recordName");
+    const recordId = $("recordId");
+    const recordClass = $("recordClass");
+    const recordOverall = $("recordOverall");
 
-/* =========================================================
-   HELPERS
-========================================================= */
+    const formMessage = $("formMessage");
+    const saveButton = $("savePerformance");
 
-function showMessage(message, success = false) {
-    if (!formMessage) return;
+    const SUBJECTS = [
+        { label: "Mathematics", input: mathInput, display: mathDisplay, progress: mathProgress },
+        { label: "Science", input: scienceInput, display: scienceDisplay, progress: scienceProgress },
+        { label: "English", input: englishInput, display: englishDisplay, progress: englishProgress }
+    ];
 
-    formMessage.style.color = success ? "#16a34a" : "#dc2626";
-    formMessage.textContent = message;
-}
+    let students = [];
+    let currentStudent = null;
+    let savedRecords = [];
+    let isLoadingStudents = false;
+    let isLoadingPerformance = false;
+    let isSaving = false;
+    let requestNumber = 0;
 
-function getToday() {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+    /* =====================================================
+       MESSAGES AND HELPERS
+    ===================================================== */
 
-    return `${year}-${month}-${day}`;
-}
+    function showMessage(message, success = false) {
+        if (!formMessage) return;
 
-function getInitials(name) {
-    return (name || "Student")
-        .trim()
-        .split(/\s+/)
-        .map(word => word.charAt(0))
-        .join("")
-        .substring(0, 2)
-        .toUpperCase();
-}
-
-function setProgress(element, percentage) {
-    if (element) {
-        element.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
+        formMessage.textContent = message;
+        formMessage.style.color = success ? "#16a34a" : "#dc2626";
     }
-}
 
-function calculatePercentage(records) {
-    const totalMarks = records.reduce(
-        (sum, record) => sum + Number(record.marks_obtained || 0),
-        0
-    );
+    function setText(element, value) {
+        if (element) element.textContent = value;
+    }
 
-    const totalMaximum = records.reduce(
-        (sum, record) => sum + Number(record.max_marks || 0),
-        0
-    );
+    function getToday() {
+        const now = new Date();
 
-    return totalMaximum > 0
-        ? Math.round((totalMarks / totalMaximum) * 100)
-        : 0;
-}
+        return [
+            now.getFullYear(),
+            String(now.getMonth() + 1).padStart(2, "0"),
+            String(now.getDate()).padStart(2, "0")
+        ].join("-");
+    }
 
-function getSubjectRecord(subject) {
-    return savedRecords.find(
-        record =>
-            record.subject.toLowerCase() === subject.toLowerCase() &&
+    function getInitials(name) {
+        return String(name || "Student")
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .map(part => part.charAt(0))
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
+    }
+
+    function setProgress(element, percentage) {
+        if (!element) return;
+
+        const safePercentage = Math.max(
+            0,
+            Math.min(100, Number(percentage) || 0)
+        );
+
+        element.style.width = `${safePercentage}%`;
+    }
+
+    function resetInputDisplays() {
+        SUBJECTS.forEach(subject => {
+            if (subject.input) subject.input.value = "";
+
+            setText(subject.display, "0%");
+            setProgress(subject.progress, 0);
+        });
+
+        setText(overallDisplay, "0%");
+        setProgress(overallProgress, 0);
+
+        setText(recordName, "-");
+        setText(recordId, "-");
+        setText(recordClass, "-");
+        setText(recordOverall, "-");
+    }
+
+    function getSubjectRecord(subjectName) {
+        return savedRecords.find(record =>
+            String(record.subject || "").trim().toLowerCase() ===
+                subjectName.trim().toLowerCase() &&
             record.assessment_name === ASSESSMENT_NAME
-    );
-}
-
-/* =========================================================
-   LOAD REAL STUDENTS FROM PROFILES
-========================================================= */
-
-async function loadStudentOptions() {
-    if (!supabaseClient) {
-        showMessage(
-            "Supabase client not found. Check your script loading order."
         );
-        return;
     }
 
-    if (!studentSelect) return;
+    function calculateOverall(values) {
+        if (!values.length) return 0;
 
-    studentSelect.innerHTML =
-        '<option value="">Loading students...</option>';
-
-    const { data, error } = await supabaseClient
-        .from("profiles")
-        .select("id, full_name, email, student_id, student_class, role")
-        .eq("role", "student")
-        .order("full_name");
-
-    if (error) {
-        console.error("Loading students failed:", error);
-        studentSelect.innerHTML =
-            '<option value="">Could not load students</option>';
-        showMessage("Could not load students: " + error.message);
-        return;
-    }
-
-    students = data || [];
-    studentSelect.innerHTML =
-        '<option value="">Select a student</option>';
-
-    students.forEach(student => {
-        const option = document.createElement("option");
-
-        // This UUID is the value stored in performance_records.student_id.
-        option.value = student.id;
-
-        option.textContent =
-            `${student.full_name || "Unnamed Student"} — ${student.student_id || "No Student ID"}`;
-
-        studentSelect.appendChild(option);
-    });
-
-    showMessage(
-        students.length
-            ? "Student list loaded successfully."
-            : "No student profiles were found.",
-        students.length > 0
-    );
-}
-
-/* =========================================================
-   LOAD SAVED PERFORMANCE
-========================================================= */
-
-async function loadPerformance(student) {
-    if (!student) {
-        resetPerformance();
-        return;
-    }
-
-    currentStudent = student;
-    savedRecords = [];
-
-    previewAvatar.textContent = getInitials(student.full_name);
-    previewName.textContent = student.full_name || "Student";
-    previewInfo.textContent =
-        `${student.student_id || "No Student ID"} · ${student.student_class || "Class not set"}`;
-
-    if (saveButton) saveButton.disabled = true;
-    showMessage("Loading saved performance...", true);
-
-    const { data, error } = await supabaseClient
-        .from("performance_records")
-        .select(
-            "id, student_id, subject, assessment_name, marks_obtained, max_marks, exam_date, remarks, created_by"
-        )
-        .eq("student_id", student.id)
-        .eq("assessment_name", ASSESSMENT_NAME)
-        .order("exam_date", { ascending: false });
-
-    if (error) {
-        console.error("Loading performance failed:", error);
-        showMessage("Could not load performance: " + error.message);
-
-        if (saveButton) saveButton.disabled = false;
-        return;
-    }
-
-    savedRecords = data || [];
-
-    SUBJECTS.forEach(subject => {
-        const record = getSubjectRecord(subject.label);
-        if (subject.input) {
-            subject.input.value = record
-                ? Number(record.marks_obtained)
-                : "";
-        }
-    });
-
-    updatePerformanceDisplay();
-    showMessage("Saved performance loaded.", true);
-
-    if (saveButton) saveButton.disabled = false;
-}
-
-/* =========================================================
-   UPDATE PERFORMANCE DISPLAY
-========================================================= */
-
-function updatePerformanceDisplay() {
-    if (!currentStudent) return;
-
-    const values = SUBJECTS.map(subject => {
-        const value = Number(subject.input?.value);
-        return Number.isFinite(value) ? value : 0;
-    });
-
-    const [math, science, english] = values;
-
-    if (mathDisplay) mathDisplay.textContent = `${math}%`;
-    if (scienceDisplay) scienceDisplay.textContent = `${science}%`;
-    if (englishDisplay) englishDisplay.textContent = `${english}%`;
-
-    setProgress(mathProgress, math);
-    setProgress(scienceProgress, science);
-    setProgress(englishProgress, english);
-
-    const overall = Math.round((math + science + english) / 3);
-
-    if (overallDisplay) overallDisplay.textContent = `${overall}%`;
-    setProgress(overallProgress, overall);
-
-    if (recordName) recordName.textContent = currentStudent.full_name || "-";
-    if (recordId) recordId.textContent = currentStudent.student_id || "-";
-    if (recordClass) {
-        recordClass.textContent = currentStudent.student_class || "-";
-    }
-    if (recordOverall) recordOverall.textContent = `${overall}%`;
-}
-
-function liveUpdate() {
-    updatePerformanceDisplay();
-}
-
-[mathInput, scienceInput, englishInput].forEach(input => {
-    if (input) input.addEventListener("input", liveUpdate);
-});
-
-/* =========================================================
-   SAVE PERFORMANCE TO SUPABASE
-========================================================= */
-
-async function savePerformance() {
-    if (isLoading) return;
-
-    if (!currentStudent) {
-        showMessage("Please select a student.");
-        return;
-    }
-
-    const marks = SUBJECTS.map(subject => ({
-        subject: subject.label,
-        value: Number(subject.input?.value)
-    }));
-
-    const invalid = marks.some(
-        item =>
-            !Number.isFinite(item.value) ||
-            item.value < 0 ||
-            item.value > 100 ||
-            String(item.value).trim() === ""
-    );
-
-    if (invalid) {
-        showMessage("Enter valid marks from 0 to 100 for all subjects.");
-        return;
-    }
-
-    isLoading = true;
-    if (saveButton) {
-        saveButton.disabled = true;
-        saveButton.textContent = "Saving...";
-    }
-
-    try {
-        const { data: authData, error: authError } =
-            await supabaseClient.auth.getUser();
-
-        if (authError || !authData?.user) {
-            throw new Error("Your admin session has expired. Please log in again.");
-        }
-
-        const adminId = authData.user.id;
-
-        for (const item of marks) {
-            const existingRecord = getSubjectRecord(item.subject);
-
-            const recordData = {
-                student_id: currentStudent.id,
-                subject: item.subject,
-                assessment_name: ASSESSMENT_NAME,
-                marks_obtained: item.value,
-                max_marks: 100,
-                exam_date: getToday(),
-                created_by: adminId,
-                updated_at: new Date().toISOString()
-            };
-
-            let result;
-
-            if (existingRecord) {
-                result = await supabaseClient
-                    .from("performance_records")
-                    .update({
-                        marks_obtained: recordData.marks_obtained,
-                        max_marks: recordData.max_marks,
-                        exam_date: recordData.exam_date,
-                        updated_at: recordData.updated_at
-                    })
-                    .eq("id", existingRecord.id)
-                    .eq("student_id", currentStudent.id);
-            } else {
-                result = await supabaseClient
-                    .from("performance_records")
-                    .insert(recordData);
-            }
-
-            if (result.error) {
-                throw result.error;
-            }
-        }
-
-        // Fetch again so the screen reflects what is actually stored.
-        await loadPerformance(currentStudent);
-        showMessage("Performance saved successfully to Supabase.", true);
-
-    } catch (error) {
-        console.error("Saving performance failed:", error);
-        showMessage(
-            "Could not save performance: " +
-            (error.message || "Unknown error")
+        return Math.round(
+            values.reduce((sum, value) => sum + value, 0) / values.length
         );
-    } finally {
-        isLoading = false;
-
-        if (saveButton) {
-            saveButton.disabled = false;
-            saveButton.textContent = "Save Performance";
-        }
     }
-}
 
-if (saveButton) {
-    saveButton.addEventListener("click", savePerformance);
-}
+    /* =====================================================
+       NOTIFICATION BADGES
 
-/* =========================================================
-   RESET
-========================================================= */
+       Shows the total notification row count, not unread
+       notifications. Both badges use the same database count.
+    ===================================================== */
 
-function resetPerformance() {
-    currentStudent = null;
-    savedRecords = [];
+    function getNotificationBadges() {
+        return [
+            ...document.querySelectorAll(
+                '.admin-nav-link[href="notifications.html"] .nav-count'
+            ),
+            ...document.querySelectorAll(
+                '.notification-button .notification-badge'
+            )
+        ];
+    }
 
-    if (previewAvatar) previewAvatar.textContent = "--";
-    if (previewName) previewName.textContent = "Select Student";
-    if (previewInfo) previewInfo.textContent = "Student ID · Class";
+    function renderNotificationCount(count) {
+        const safeCount = Math.max(0, Number(count) || 0);
 
-    [mathInput, scienceInput, englishInput].forEach(input => {
-        if (input) input.value = "";
-    });
+        getNotificationBadges().forEach(badge => {
+            badge.textContent = safeCount > 99 ? "99+" : String(safeCount);
+            badge.style.display = safeCount > 0 ? "" : "none";
+            badge.setAttribute("aria-label", `${safeCount} notifications`);
+        });
+    }
 
-    [mathDisplay, scienceDisplay, englishDisplay].forEach(element => {
-        if (element) element.textContent = "0%";
-    });
+    async function updateNotificationBadges() {
+        const client = getClient();
 
-    [mathProgress, scienceProgress, englishProgress].forEach(element => {
-        setProgress(element, 0);
-    });
+        // Prevent a hardcoded HTML value from remaining visible.
+        renderNotificationCount(0);
 
-    if (overallDisplay) overallDisplay.textContent = "0%";
-    setProgress(overallProgress, 0);
-
-    if (recordName) recordName.textContent = "-";
-    if (recordId) recordId.textContent = "-";
-    if (recordClass) recordClass.textContent = "-";
-    if (recordOverall) recordOverall.textContent = "-";
-
-    if (saveButton) saveButton.disabled = false;
-}
-
-/* =========================================================
-   STUDENT SELECTION
-========================================================= */
-
-if (studentSelect) {
-    studentSelect.addEventListener("change", async function () {
-        const student = students.find(item => item.id === this.value);
-
-        if (!student) {
-            resetPerformance();
+        if (!client) {
+            console.error(
+                "Notification count unavailable: Supabase client is missing."
+            );
             return;
         }
 
-        await loadPerformance(student);
-    });
-}
+        const { count, error } = await client
+            .from("notifications")
+            .select("id", { count: "exact", head: true });
 
-/* =========================================================
-   MOBILE SIDEBAR
-========================================================= */
+        if (error) {
+            console.error("Notification count error:", error.message);
+            return;
+        }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const menuButton = $("menuButton");
-    const sidebar = $("adminSidebar");
-    const overlay = $("sidebarOverlay");
-    const closeButton = $("sidebarClose");
-
-    function closeSidebar() {
-        if (sidebar) sidebar.classList.remove("open");
-        if (overlay) overlay.classList.remove("show");
+        renderNotificationCount(count ?? 0);
     }
 
-    if (menuButton) {
-        menuButton.addEventListener("click", function () {
-            if (sidebar) sidebar.classList.add("open");
-            if (overlay) overlay.classList.add("show");
-        });
+    /* =====================================================
+       LOAD STUDENTS
+    ===================================================== */
+
+    async function loadStudentOptions() {
+        const client = getClient();
+
+        if (!studentSelect || isLoadingStudents) return;
+
+        if (!client) {
+            studentSelect.innerHTML =
+                '<option value="">Supabase is unavailable</option>';
+            showMessage("Supabase is not initialized. Check js/supabase.js.");
+            return;
+        }
+
+        isLoadingStudents = true;
+        studentSelect.disabled = true;
+        studentSelect.innerHTML =
+            '<option value="">Loading students...</option>';
+
+        try {
+            const { data, error } = await client
+                .from("profiles")
+                .select("id, full_name, email, student_id, student_class, role")
+                .eq("role", "student")
+                .order("full_name", { ascending: true });
+
+            if (error) throw error;
+
+            students = data || [];
+
+            studentSelect.replaceChildren();
+
+            const placeholder = document.createElement("option");
+            placeholder.value = "";
+            placeholder.textContent = "Select a student";
+            studentSelect.appendChild(placeholder);
+
+            students.forEach(student => {
+                const option = document.createElement("option");
+
+                // Use the profile UUID because performance_records.student_id
+                // stores the student's Auth/profile UUID.
+                option.value = student.id;
+                option.textContent =
+                    `${student.full_name || "Unnamed Student"} — ` +
+                    `${student.student_id || "No Student ID"}`;
+
+                studentSelect.appendChild(option);
+            });
+
+            showMessage(
+                students.length
+                    ? `${students.length} student(s) loaded successfully.`
+                    : "No student profiles were found.",
+                students.length > 0
+            );
+        } catch (error) {
+            console.error("Loading students failed:", error);
+
+            studentSelect.innerHTML =
+                '<option value="">Could not load students</option>';
+
+            showMessage("Could not load students: " + error.message);
+        } finally {
+            isLoadingStudents = false;
+            studentSelect.disabled = false;
+        }
     }
 
-    if (closeButton) {
-        closeButton.addEventListener("click", closeSidebar);
-    }
+    /* =====================================================
+       LOAD SAVED PERFORMANCE
+    ===================================================== */
 
-    if (overlay) {
-        overlay.addEventListener("click", closeSidebar);
-    }
-});
+    async function loadPerformance(student) {
+        const client = getClient();
 
-/* =========================================================
-   LOGOUT
-========================================================= */
+        const thisRequest = ++requestNumber;
 
-document.addEventListener("DOMContentLoaded", function () {
-    const logoutButton = $("logoutButton");
+        if (!student) {
+            currentStudent = null;
+            savedRecords = [];
+            resetInputDisplays();
 
-    if (logoutButton) {
-        logoutButton.addEventListener("click", async function () {
-            try {
-                if (supabaseClient) {
-                    await supabaseClient.auth.signOut();
-                }
-            } catch (error) {
-                console.error("Logout error:", error);
+            if (previewAvatar) previewAvatar.textContent = "--";
+            if (previewName) previewName.textContent = "Select Student";
+            if (previewInfo) {
+                previewInfo.textContent = "Student ID · Class";
             }
 
-            sessionStorage.removeItem("pjtAdminLoggedIn");
-            sessionStorage.removeItem("pjtAdminId");
+            showMessage("Please select a student.", true);
+            if (saveButton) saveButton.disabled = true;
+            return;
+        }
 
-            window.location.href = "login.html";
+        if (!client) {
+            showMessage("Supabase is not initialized.");
+            return;
+        }
+
+        currentStudent = student;
+        savedRecords = [];
+
+        if (previewAvatar) {
+            previewAvatar.textContent = getInitials(student.full_name);
+        }
+
+        setText(previewName, student.full_name || "Student");
+        setText(
+            previewInfo,
+            `${student.student_id || "No Student ID"} · ` +
+            `${student.student_class || "Class not set"}`
+        );
+
+        resetInputDisplays();
+
+        if (recordName) recordName.textContent = student.full_name || "-";
+        if (recordId) recordId.textContent = student.student_id || "-";
+        if (recordClass) recordClass.textContent = student.student_class || "-";
+
+        isLoadingPerformance = true;
+        if (saveButton) saveButton.disabled = true;
+
+        showMessage("Loading saved performance...", true);
+
+        try {
+            const { data, error } = await client
+                .from("performance_records")
+                .select(
+                    "id, student_id, subject, assessment_name, " +
+                    "marks_obtained, max_marks, exam_date, remarks, created_by"
+                )
+                .eq("student_id", student.id)
+                .eq("assessment_name", ASSESSMENT_NAME)
+                .order("exam_date", { ascending: false });
+
+            if (error) throw error;
+
+            // Ignore an old response if another student was selected.
+            if (thisRequest !== requestNumber) return;
+
+            savedRecords = data || [];
+
+            SUBJECTS.forEach(subject => {
+                const record = getSubjectRecord(subject.label);
+
+                if (subject.input) {
+                    subject.input.value = record
+                        ? String(record.marks_obtained)
+                        : "";
+                }
+            });
+
+            updatePerformanceDisplay();
+
+            showMessage(
+                savedRecords.length
+                    ? "Saved performance loaded successfully."
+                    : "No saved performance found. Enter marks to create a record.",
+                true
+            );
+        } catch (error) {
+            if (thisRequest !== requestNumber) return;
+
+            console.error("Loading performance failed:", error);
+            showMessage("Could not load performance: " + error.message);
+        } finally {
+            if (thisRequest === requestNumber) {
+                isLoadingPerformance = false;
+                if (saveButton) saveButton.disabled = false;
+            }
+        }
+    }
+
+    /* =====================================================
+       LIVE PERFORMANCE DISPLAY
+    ===================================================== */
+
+    function updatePerformanceDisplay() {
+        if (!currentStudent) return;
+
+        const values = SUBJECTS.map(subject => {
+            const rawValue = subject.input?.value ?? "";
+            const value = rawValue.trim() === "" ? 0 : Number(rawValue);
+
+            return Number.isFinite(value)
+                ? Math.max(0, Math.min(100, value))
+                : 0;
+        });
+
+        SUBJECTS.forEach((subject, index) => {
+            setText(subject.display, `${values[index]}%`);
+            setProgress(subject.progress, values[index]);
+        });
+
+        const overall = calculateOverall(values);
+
+        setText(overallDisplay, `${overall}%`);
+        setProgress(overallProgress, overall);
+
+        setText(recordName, currentStudent.full_name || "-");
+        setText(recordId, currentStudent.student_id || "-");
+        setText(recordClass, currentStudent.student_class || "-");
+        setText(recordOverall, `${overall}%`);
+    }
+
+    SUBJECTS.forEach(subject => {
+        subject.input?.addEventListener("input", updatePerformanceDisplay);
+    });
+
+    /* =====================================================
+       SAVE PERFORMANCE
+    ===================================================== */
+
+    async function savePerformance() {
+        const client = getClient();
+
+        if (isSaving) return;
+
+        if (!client) {
+            showMessage("Supabase is not initialized.");
+            return;
+        }
+
+        if (!currentStudent) {
+            showMessage("Please select a student first.");
+            return;
+        }
+
+        if (isLoadingPerformance) {
+            showMessage("Please wait until the current record finishes loading.");
+            return;
+        }
+
+        const marks = [];
+
+        for (const subject of SUBJECTS) {
+            const rawValue = subject.input?.value ?? "";
+
+            if (rawValue.trim() === "") {
+                showMessage(`Enter marks for ${subject.label}.`);
+                subject.input?.focus();
+                return;
+            }
+
+            const value = Number(rawValue);
+
+            if (!Number.isFinite(value) || value < 0 || value > 100) {
+                showMessage(
+                    `Marks for ${subject.label} must be between 0 and 100.`
+                );
+                subject.input?.focus();
+                return;
+            }
+
+            marks.push({
+                subject: subject.label,
+                value
+            });
+        }
+
+        isSaving = true;
+
+        if (saveButton) {
+            saveButton.disabled = true;
+            saveButton.textContent = "Saving...";
+        }
+
+        try {
+            const { data: authData, error: authError } =
+                await client.auth.getUser();
+
+            if (authError || !authData?.user) {
+                throw new Error(
+                    "Your admin session has expired. Please log in again."
+                );
+            }
+
+            const adminId = authData.user.id;
+
+            const { data: adminProfile, error: adminError } = await client
+                .from("profiles")
+                .select("id, role")
+                .eq("id", adminId)
+                .maybeSingle();
+
+            if (adminError) throw adminError;
+
+            if (
+                !adminProfile ||
+                String(adminProfile.role || "").trim().toLowerCase() !== "admin"
+            ) {
+                throw new Error(
+                    "Administrator verification failed. Please sign in with an admin account."
+                );
+            }
+
+            // Save each subject. Existing records are updated; missing records
+            // are inserted. Do not send optional timestamp columns that may
+            // not exist in the database schema.
+            for (const item of marks) {
+                const existingRecord = getSubjectRecord(item.subject);
+
+                const recordData = {
+                    student_id: currentStudent.id,
+                    subject: item.subject,
+                    assessment_name: ASSESSMENT_NAME,
+                    marks_obtained: item.value,
+                    max_marks: 100,
+                    exam_date: getToday(),
+                    created_by: adminId
+                };
+
+                let result;
+
+                if (existingRecord) {
+                    result = await client
+                        .from("performance_records")
+                        .update({
+                            marks_obtained: item.value,
+                            max_marks: 100,
+                            exam_date: getToday()
+                        })
+                        .eq("id", existingRecord.id)
+                        .eq("student_id", currentStudent.id)
+                        .select("id");
+                } else {
+                    result = await client
+                        .from("performance_records")
+                        .insert(recordData)
+                        .select("id");
+                }
+
+                if (result.error) throw result.error;
+            }
+
+            await loadPerformance(currentStudent);
+
+            showMessage(
+                "Performance saved successfully.",
+                true
+            );
+        } catch (error) {
+            console.error("Saving performance failed:", error);
+
+            showMessage(
+                "Could not save performance: " +
+                (error.message || "Unknown error")
+            );
+        } finally {
+            isSaving = false;
+
+            if (saveButton) {
+                saveButton.disabled = false;
+                saveButton.textContent = "Save Performance";
+            }
+        }
+    }
+
+    saveButton?.addEventListener("click", savePerformance);
+
+    /* =====================================================
+       STUDENT SELECTION
+    ===================================================== */
+
+    studentSelect?.addEventListener("change", async () => {
+        const student = students.find(
+            item => item.id === studentSelect.value
+        );
+
+        await loadPerformance(student || null);
+    });
+
+    /* =====================================================
+       MOBILE SIDEBAR
+    ===================================================== */
+
+    function initializeSidebar() {
+        const sidebar = $("adminSidebar");
+        const overlay = $("sidebarOverlay");
+        const menuButton = $("menuButton");
+        const closeButton = $("sidebarClose");
+
+        function openSidebar() {
+            sidebar?.classList.add("open");
+            overlay?.classList.add("show");
+        }
+
+        function closeSidebar() {
+            sidebar?.classList.remove("open");
+            overlay?.classList.remove("show");
+        }
+
+        menuButton?.addEventListener("click", openSidebar);
+        closeButton?.addEventListener("click", closeSidebar);
+        overlay?.addEventListener("click", closeSidebar);
+
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") closeSidebar();
+        });
+
+        document.querySelectorAll(".admin-nav-link").forEach(link => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 768) closeSidebar();
+            });
         });
     }
-});
 
-/* =========================================================
-   INITIALIZE
-========================================================= */
+    /* =====================================================
+       LOGOUT
+    ===================================================== */
 
-document.addEventListener("DOMContentLoaded", async function () {
-    await loadStudentOptions();
-});
+    function initializeLogout() {
+        const logoutButton = $("logoutButton");
+
+        logoutButton?.addEventListener("click", async () => {
+            if (!window.confirm("Are you sure you want to log out?")) {
+                return;
+            }
+
+            const client = getClient();
+
+            try {
+                if (client) {
+                    const { error } = await client.auth.signOut();
+                    if (error) throw error;
+                }
+
+                sessionStorage.removeItem("pjtAdminLoggedIn");
+                sessionStorage.removeItem("pjtAdminId");
+
+                window.location.replace("../login.html");
+            } catch (error) {
+                console.error("Logout failed:", error);
+                window.alert("Logout failed: " + error.message);
+            }
+        });
+    }
+
+    /* =====================================================
+       INITIALIZATION
+    ===================================================== */
+
+    document.addEventListener("DOMContentLoaded", async () => {
+        initializeSidebar();
+        initializeLogout();
+
+        // Render zero immediately so stale hardcoded badge values disappear.
+        renderNotificationCount(0);
+
+        await Promise.allSettled([
+            loadStudentOptions(),
+            updateNotificationBadges()
+        ]);
+    });
+
+})();

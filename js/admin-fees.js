@@ -2,6 +2,7 @@
 /* =========================================================
    PJT CLASSES — ADMIN FEE MANAGEMENT
    Supabase + Academic Year + Monthly Fee Status
+   + Real Notification Badges
 ========================================================= */
 
 const months = [
@@ -29,6 +30,10 @@ const paymentPercentage = document.getElementById("paymentPercentage");
 const paymentProgress = document.getElementById("paymentProgress");
 const formMessage = document.getElementById("formMessage");
 const saveButton = document.getElementById("saveFees");
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function formatRupees(value) {
     return "₹" + Number(value || 0).toLocaleString("en-IN");
@@ -72,6 +77,7 @@ function getMonthRecord(month) {
 
 function isMonthPaid(month) {
     const record = getMonthRecord(month);
+
     if (!record) return false;
 
     const amount = Number(record.amount || monthlyFee);
@@ -79,6 +85,10 @@ function isMonthPaid(month) {
 
     return amount > 0 && received >= amount;
 }
+
+/* =========================================================
+   RESET PAGE
+========================================================= */
 
 function resetPage() {
     selectedStudent = null;
@@ -97,6 +107,10 @@ function resetPage() {
     showMessage("");
 }
 
+/* =========================================================
+   UPDATE FEE SUMMARY
+========================================================= */
+
 function updateSummary() {
     let paid = 0;
     let pending = 0;
@@ -104,8 +118,12 @@ function updateSummary() {
 
     months.forEach(month => {
         const record = getMonthRecord(month);
-        const amount = record ? Number(record.amount || monthlyFee) : monthlyFee;
-        const received = record ? Number(record.paid_amount || 0) : 0;
+        const amount = record
+            ? Number(record.amount || monthlyFee)
+            : monthlyFee;
+        const received = record
+            ? Number(record.paid_amount || 0)
+            : 0;
 
         paid += received;
         pending += Math.max(0, amount - received);
@@ -120,12 +138,30 @@ function updateSummary() {
         Math.round((paid / annualFee) * 100)
     );
 
-    if (paidAmount) paidAmount.textContent = formatRupees(paid);
-    if (pendingAmount) pendingAmount.textContent = formatRupees(pending);
-    if (paidMonths) paidMonths.textContent = `${paidCount} / 12`;
-    if (paymentPercentage) paymentPercentage.textContent = `${percentage}%`;
-    if (paymentProgress) paymentProgress.style.width = `${percentage}%`;
+    if (paidAmount) {
+        paidAmount.textContent = formatRupees(paid);
+    }
+
+    if (pendingAmount) {
+        pendingAmount.textContent = formatRupees(pending);
+    }
+
+    if (paidMonths) {
+        paidMonths.textContent = `${paidCount} / 12`;
+    }
+
+    if (paymentPercentage) {
+        paymentPercentage.textContent = `${percentage}%`;
+    }
+
+    if (paymentProgress) {
+        paymentProgress.style.width = `${percentage}%`;
+    }
 }
+
+/* =========================================================
+   RENDER MONTHLY FEE STATUS
+========================================================= */
 
 function renderMonths() {
     if (!monthlyGrid) return;
@@ -134,11 +170,14 @@ function renderMonths() {
 
     months.forEach((month, index) => {
         const record = getMonthRecord(month);
-        const amount = record ? Number(record.amount || monthlyFee) : monthlyFee;
+        const amount = record
+            ? Number(record.amount || monthlyFee)
+            : monthlyFee;
         const paid = isMonthPaid(month);
 
         const item = document.createElement("div");
-        item.className = `month-item ${paid ? "selected-paid" : "selected-pending"}`;
+        item.className =
+            `month-item ${paid ? "selected-paid" : "selected-pending"}`;
 
         const top = document.createElement("div");
         top.className = "month-top";
@@ -166,6 +205,11 @@ function renderMonths() {
         toggle.textContent = paid ? "Mark Pending" : "Mark Paid";
 
         toggle.addEventListener("click", () => {
+            if (!selectedStudent) {
+                showMessage("Please select a student first.", "#dc2626");
+                return;
+            }
+
             let target = getMonthRecord(month);
 
             if (!target) {
@@ -191,6 +235,7 @@ function renderMonths() {
 
             renderMonths();
             updateSummary();
+
             showMessage(
                 "Change not saved yet. Click Save Fee Status.",
                 "#ea580c"
@@ -202,6 +247,10 @@ function renderMonths() {
         monthlyGrid.appendChild(item);
     });
 }
+
+/* =========================================================
+   LOAD SELECTED STUDENT FEES
+========================================================= */
 
 async function loadStudentFees(student) {
     selectedStudent = student;
@@ -247,7 +296,8 @@ async function loadStudentFees(student) {
         }
 
         if (previewName) {
-            previewName.textContent = student.full_name || "Unnamed student";
+            previewName.textContent =
+                student.full_name || "Unnamed student";
         }
 
         if (previewInfo) {
@@ -264,21 +314,34 @@ async function loadStudentFees(student) {
         );
     } catch (error) {
         console.error("Unable to load fee records:", error);
-        showMessage("Could not load fees: " + error.message, "#dc2626");
+
+        showMessage(
+            "Could not load fees: " + error.message,
+            "#dc2626"
+        );
     }
 }
+
+/* =========================================================
+   LOAD STUDENTS FROM SUPABASE
+========================================================= */
 
 async function loadStudents() {
     const client = window.supabaseClient;
 
     if (!client) {
-        showMessage("Supabase is not initialized. Check script imports.", "#dc2626");
+        showMessage(
+            "Supabase is not initialized. Check script imports.",
+            "#dc2626"
+        );
         return;
     }
 
     if (!studentSelect) return;
 
-    studentSelect.replaceChildren(new Option("Loading students...", ""));
+    studentSelect.replaceChildren(
+        new Option("Loading students...", "")
+    );
 
     try {
         const { data, error } = await client
@@ -290,7 +353,10 @@ async function loadStudents() {
         if (error) throw error;
 
         students = data || [];
-        studentSelect.replaceChildren(new Option("Select a student", ""));
+
+        studentSelect.replaceChildren(
+            new Option("Select a student", "")
+        );
 
         students.forEach(student => {
             studentSelect.add(
@@ -309,14 +375,27 @@ async function loadStudents() {
         );
     } catch (error) {
         console.error("Unable to load students:", error);
-        studentSelect.replaceChildren(new Option("Unable to load students", ""));
-        showMessage("Could not load students: " + error.message, "#dc2626");
+
+        studentSelect.replaceChildren(
+            new Option("Unable to load students", "")
+        );
+
+        showMessage(
+            "Could not load students: " + error.message,
+            "#dc2626"
+        );
     }
 }
 
+/* =========================================================
+   STUDENT SELECTOR
+========================================================= */
+
 if (studentSelect) {
     studentSelect.addEventListener("change", async () => {
-        const student = students.find(item => item.id === studentSelect.value);
+        const student = students.find(
+            item => item.id === studentSelect.value
+        );
 
         if (!student) {
             resetPage();
@@ -327,7 +406,10 @@ if (studentSelect) {
     });
 }
 
-/* Save the current month's records without duplicate inserts. */
+/* =========================================================
+   SAVE FEE PAYMENTS
+========================================================= */
+
 if (saveButton) {
     saveButton.addEventListener("click", async () => {
         if (!selectedStudent) {
@@ -352,13 +434,16 @@ if (saveButton) {
                 const month = months[index];
                 const record = getMonthRecord(month);
 
-                // Do not create unpaid rows for months that have never been saved.
+                /* Do not create unpaid rows for unsaved months. */
                 if (!record) continue;
 
                 const amount = Number(record.amount || monthlyFee);
                 const received = Number(record.paid_amount || 0);
+
                 const status =
-                    amount > 0 && received >= amount ? "paid" : "pending";
+                    amount > 0 && received >= amount
+                        ? "paid"
+                        : "pending";
 
                 const payload = {
                     student_id: selectedStudent.id,
@@ -394,20 +479,83 @@ if (saveButton) {
             }
 
             await loadStudentFees(selectedStudent);
+
             showMessage(
                 `Fee payments saved for ${academicYear}.`,
                 "#16a34a"
             );
         } catch (error) {
             console.error("Unable to save fee payments:", error);
-            showMessage("Could not save payments: " + error.message, "#dc2626");
+
+            showMessage(
+                "Could not save payments: " + error.message,
+                "#dc2626"
+            );
         } finally {
             saveButton.disabled = false;
         }
     });
 }
 
-/* Mobile sidebar and logout */
+/* =========================================================
+   REAL ADMIN NOTIFICATION BADGES
+   Reads the total notification count from Supabase
+========================================================= */
+
+async function loadAdminNotificationBadges() {
+    const client = window.supabaseClient;
+
+    const sidebarBadge = document.querySelector(
+        '.admin-nav-link[href="notifications.html"] .nav-count'
+    );
+
+    const topbarBadge = document.querySelector(
+        ".notification-button .notification-badge"
+    );
+
+    if (!client) {
+        console.error(
+            "Notification badges: Supabase is not initialized."
+        );
+        return;
+    }
+
+    try {
+        const { count, error } = await client
+            .from("notifications")
+            .select("id", {
+                count: "exact",
+                head: true
+            });
+
+        if (error) throw error;
+
+        const total = Number(count || 0);
+
+        [sidebarBadge, topbarBadge].forEach(badge => {
+            if (!badge) return;
+
+            badge.textContent = total > 99 ? "99+" : String(total);
+            badge.style.display =
+                total > 0 ? "inline-flex" : "none";
+
+            badge.setAttribute(
+                "aria-label",
+                `${total} notifications`
+            );
+        });
+    } catch (error) {
+        console.error(
+            "Could not load admin notification count:",
+            error
+        );
+    }
+}
+
+/* =========================================================
+   MOBILE SIDEBAR AND LOGOUT
+========================================================= */
+
 document.addEventListener("DOMContentLoaded", () => {
     const menuButton = document.getElementById("menuButton");
     const sidebar = document.getElementById("adminSidebar");
@@ -427,18 +575,42 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    if (closeButton) closeButton.addEventListener("click", closeSidebar);
-    if (overlay) overlay.addEventListener("click", closeSidebar);
+    if (closeButton) {
+        closeButton.addEventListener("click", closeSidebar);
+    }
+
+    if (overlay) {
+        overlay.addEventListener("click", closeSidebar);
+    }
 
     if (logoutButton) {
-        logoutButton.addEventListener("click", () => {
-            if (!window.confirm("Are you sure you want to logout?")) return;
+        logoutButton.addEventListener("click", async () => {
+            if (!window.confirm("Are you sure you want to logout?")) {
+                return;
+            }
+
+            try {
+                if (window.supabaseClient) {
+                    await window.supabaseClient.auth.signOut();
+                }
+            } catch (error) {
+                console.error("Supabase logout error:", error);
+            }
 
             sessionStorage.removeItem("pjtAdminLoggedIn");
             sessionStorage.removeItem("pjtAdminId");
+
             window.location.href = "login.html";
         });
     }
+
+    loadAdminNotificationBadges();
 });
 
-document.addEventListener("DOMContentLoaded", loadStudents);
+/* =========================================================
+   INITIALIZE PAGE
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    loadStudents();
+});

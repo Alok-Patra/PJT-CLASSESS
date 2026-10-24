@@ -1,56 +1,49 @@
 
-/* =========================================
-   PJT CLASSES
-   ADMIN NOTIFICATIONS JAVASCRIPT
-   Supabase-connected version
-========================================= */
+/* =========================================================
+   PJT CLASSES — ADMIN NOTIFICATIONS
+   Real Supabase data, recipients, badges and notification history
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", async () => {
-    /* =====================================
-       ADMIN AUTH CHECK
-    ===================================== */
+document.addEventListener("DOMContentLoaded", initNotifications);
 
-    const adminLoggedIn =
-        sessionStorage.getItem("pjtAdminLoggedIn");
-
-    if (adminLoggedIn !== "true") {
-        window.location.href = "login.html";
-        return;
-    }
-
+async function initNotifications() {
     const client = window.supabaseClient;
 
-    if (!client) {
-        console.error("Supabase client is not initialized.");
-        alert("Unable to connect to the database. Please refresh the page.");
-        return;
-    }
-
-    /* =====================================
-       ELEMENTS
-    ===================================== */
+    // -----------------------------------------------------
+    // ELEMENTS
+    // -----------------------------------------------------
 
     const form = document.getElementById("notificationForm");
-    const type = document.getElementById("notificationType");
-    const recipient = document.getElementById("recipient");
-    const title = document.getElementById("notificationTitle");
-    const message = document.getElementById("notificationMessage");
+    const typeInput = document.getElementById("notificationType");
+    const recipientInput = document.getElementById("recipient");
+    const titleInput = document.getElementById("notificationTitle");
+    const messageInput = document.getElementById("notificationMessage");
     const characterCount = document.getElementById("characterCount");
     const clearButton = document.getElementById("clearButton");
     const sendButton = document.getElementById("sendButton");
     const formMessage = document.getElementById("formMessage");
     const tableBody = document.getElementById("notificationsTableBody");
+
     const totalNotifications = document.getElementById("totalNotifications");
     const sentNotifications = document.getElementById("sentNotifications");
     const unreadNotifications = document.getElementById("unreadNotifications");
     const recentCount = document.getElementById("recentCount");
+
     const menuButton = document.getElementById("menuButton");
     const sidebar = document.getElementById("adminSidebar");
     const overlay = document.getElementById("sidebarOverlay");
     const logoutButton = document.getElementById("logoutButton");
 
-    let notifications = [];
+    const sidebarBadge = document.querySelector(
+        '.admin-nav a[href="notifications.html"] .nav-badge'
+    );
+
+    const topbarBadge = document.querySelector(
+        ".notification-button span"
+    );
+
     let students = [];
+    let notifications = [];
 
     const typeConfig = {
         fee: {
@@ -80,9 +73,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    /* =====================================
-       HELPERS
-    ===================================== */
+    // -----------------------------------------------------
+    // HELPERS
+    // -----------------------------------------------------
+
+    function showMessage(message, kind = "") {
+        if (!formMessage) return;
+
+        formMessage.textContent = message;
+        formMessage.className = "form-message";
+
+        if (kind) {
+            formMessage.classList.add(kind);
+        }
+    }
 
     function escapeHTML(value) {
         return String(value ?? "")
@@ -93,15 +97,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             .replace(/'/g, "&#039;");
     }
 
-    function showMessage(text, className = "") {
-        formMessage.textContent = text;
-        formMessage.className = "form-message " + className;
-    }
-
     function formatDate(value) {
         if (!value) return "—";
 
-        return new Date(value).toLocaleString("en-IN", {
+        const date = new Date(value);
+
+        if (Number.isNaN(date.getTime())) return "—";
+
+        return date.toLocaleString("en-IN", {
             day: "2-digit",
             month: "short",
             year: "numeric",
@@ -110,59 +113,115 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    function recipientLabel(notification) {
-        if (!notification.student_id && !notification.target_student_id) {
+    function getNotificationType(notification) {
+        const key = String(
+            notification.notification_type || "general"
+        ).toLowerCase();
+
+        return typeConfig[key] || typeConfig.general;
+    }
+
+    function getRecipientLabel(notification) {
+        // Both fields NULL means a broadcast to all students.
+        if (
+            !notification.student_id &&
+            !notification.target_student_id
+        ) {
             return "All Students";
         }
 
-        const id = notification.target_student_id || notification.student_id;
-        const student = students.find(item => item.id === id);
+        const studentId =
+            notification.target_student_id ||
+            notification.student_id;
 
-        return student
-            ? `${student.full_name} (${student.student_id || "Student"})`
-            : "Individual Student";
+        const student = students.find(item => item.id === studentId);
+
+        if (!student) return "Individual Student";
+
+        return `${student.full_name || "Unnamed student"} — ${
+            student.student_id || "No student ID"
+        }`;
     }
 
-    /* =====================================
-       LOAD REAL STUDENTS
-    ===================================== */
+    function updateBadges(total) {
+        const count = Number(total || 0);
+        const label = count > 99 ? "99+" : String(count);
+
+        [sidebarBadge, topbarBadge].forEach(badge => {
+            if (!badge) return;
+
+            badge.textContent = label;
+            badge.style.display = count > 0 ? "inline-flex" : "none";
+            badge.setAttribute(
+                "aria-label",
+                `${count} notifications`
+            );
+        });
+    }
+
+    // -----------------------------------------------------
+    // LOAD REAL STUDENTS
+    // -----------------------------------------------------
 
     async function loadStudents() {
+        if (!recipientInput) return;
+
+        recipientInput.replaceChildren(
+            new Option("Loading students...", "")
+        );
+
         const { data, error } = await client
             .from("profiles")
             .select("id, full_name, student_id")
             .eq("role", "student")
-            .order("full_name");
+            .order("full_name", { ascending: true });
 
         if (error) {
             console.error("Unable to load students:", error);
+
+            recipientInput.replaceChildren(
+                new Option("Could not load students", "")
+            );
+
             showMessage(
-                "Could not load students. Check the profiles table permissions.",
+                "Could not load students: " + error.message,
                 "error"
             );
-            return;
+
+            throw error;
         }
 
         students = data || [];
 
-        recipient.innerHTML =
-            '<option value="all">All Students</option>';
+        recipientInput.replaceChildren(
+            new Option("All Students", "all")
+        );
 
         students.forEach(student => {
-            const option = document.createElement("option");
-            option.value = student.id;
-            option.textContent =
-                `${student.full_name} — ${student.student_id || "No student ID"}`;
-
-            recipient.appendChild(option);
+            recipientInput.add(
+                new Option(
+                    `${student.full_name || "Unnamed student"} — ${
+                        student.student_id || "No student ID"
+                    }`,
+                    student.id
+                )
+            );
         });
     }
 
-    /* =====================================
-       LOAD NOTIFICATIONS FROM SUPABASE
-    ===================================== */
+    // -----------------------------------------------------
+    // LOAD NOTIFICATIONS FROM SUPABASE
+    // -----------------------------------------------------
 
     async function loadNotifications() {
+        if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5">Loading notifications...</td>
+                </tr>
+            `;
+        }
+
         const { data, error, count } = await client
             .from("notifications")
             .select(
@@ -173,228 +232,314 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (error) {
             console.error("Unable to load notifications:", error);
+
+            if (tableBody) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            Could not load notifications.
+                            Check Supabase permissions.
+                        </td>
+                    </tr>
+                `;
+            }
+
             showMessage(
-                "Could not load notification history. Check database permissions.",
+                "Could not load notifications: " + error.message,
                 "error"
             );
 
-            notifications = [];
-            renderNotifications();
-            updateSummary(null);
-            return;
+            throw error;
         }
 
         notifications = data || [];
+
         renderNotifications();
-        updateSummary(count);
+        updateSummary(count ?? notifications.length);
+        updateBadges(count ?? notifications.length);
     }
 
-    /* =====================================
-       CHARACTER COUNTER
-    ===================================== */
+    // -----------------------------------------------------
+    // RENDER RECENT NOTIFICATIONS
+    // -----------------------------------------------------
 
-    message.addEventListener("input", () => {
-        characterCount.textContent = message.value.length;
-    });
+    function renderNotifications() {
+        if (!tableBody) return;
 
-    /* =====================================
-       CLEAR FORM
-    ===================================== */
+        tableBody.replaceChildren();
 
-    clearButton.addEventListener("click", () => {
-        form.reset();
-        characterCount.textContent = "0";
-        showMessage("");
-    });
+        const recentNotifications = notifications.slice(0, 5);
 
-    /* =====================================
-       SEND REAL NOTIFICATION
-    ===================================== */
+        if (recentNotifications.length === 0) {
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
 
-    form.addEventListener("submit", async event => {
-        event.preventDefault();
+            cell.colSpan = 5;
+            cell.textContent = "No notifications have been sent yet.";
+            cell.style.textAlign = "center";
+            cell.style.padding = "24px";
 
-        const notificationTitle = title.value.trim();
-        const notificationBody = message.value.trim();
-        const selectedType = type.value;
-        const selectedRecipient = recipient.value;
+            row.appendChild(cell);
+            tableBody.appendChild(row);
 
-        if (!notificationTitle || !notificationBody) {
-            showMessage("Please enter both title and message.", "error");
+            if (recentCount) recentCount.textContent = "0";
             return;
         }
 
-        if (sendButton.disabled) return;
-
-        sendButton.disabled = true;
-        sendButton.classList.add("loading");
-        sendButton.textContent = "Sending...";
-
-        try {
-            const { data: sessionData, error: sessionError } =
-                await client.auth.getSession();
-
-            if (sessionError || !sessionData.session) {
-                throw new Error(
-                    "Your Supabase session has expired. Please log in again."
-                );
-            }
-
-            const adminId = sessionData.session.user.id;
-
-            const { data: profile, error: profileError } = await client
-                .from("profiles")
-                .select("role")
-                .eq("id", adminId)
-                .single();
-
-            if (profileError || profile?.role !== "admin") {
-                throw new Error(
-                    "Your account is not authorized to send notifications."
-                );
-            }
-
-            const selectedStudent =
-                selectedRecipient === "all"
-                    ? null
-                    : students.find(
-                        student => student.id === selectedRecipient
-                    );
-
-            if (selectedRecipient !== "all" && !selectedStudent) {
-                throw new Error(
-                    "Please select a valid student and try again."
-                );
-            }
-
-            /*
-             * Keep both recipient fields consistent.
-             * NULL recipient means a notification for all students.
-             */
-
-            const notificationData = {
-                student_id: selectedStudent?.id ?? null,
-                target_student_id: selectedStudent?.id ?? null,
-                title: notificationTitle,
-                body: notificationBody,
-                notification_type: selectedType,
-                created_by: adminId
-            };
-
-            const { error: insertError } = await client
-                .from("notifications")
-                .insert(notificationData);
-
-            if (insertError) {
-                console.error("Notification insert failed:", insertError);
-                throw new Error(insertError.message);
-            }
-
-            showMessage(
-                "Notification saved successfully!",
-                "success"
-            );
-
-            form.reset();
-            characterCount.textContent = "0";
-
-            await loadNotifications();
-
-        } catch (error) {
-            console.error("Send notification failed:", error);
-
-            showMessage(
-                error.message || "Unable to send notification.",
-                "error"
-            );
-        } finally {
-            sendButton.disabled = false;
-            sendButton.classList.remove("loading");
-            sendButton.innerHTML =
-                "<span>➤</span> Send Notification";
-        }
-    });
-
-    /* =====================================
-       RENDER NOTIFICATIONS
-    ===================================== */
-
-    function renderNotifications() {
-        tableBody.innerHTML = "";
-
-        notifications.slice(0, 5).forEach(notification => {
-            const config =
-                typeConfig[notification.notification_type] ||
-                typeConfig.general;
-
+        recentNotifications.forEach(notification => {
+            const config = getNotificationType(notification);
             const row = document.createElement("tr");
 
-            row.innerHTML = `
-                <td>
-                    <div class="notification-cell">
-                        <div class="table-icon">
-                            ${config.icon}
-                        </div>
-                        <div>
-                            <strong>${escapeHTML(notification.title)}</strong>
-                            <span>${escapeHTML(notification.body)}</span>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <span class="type-badge ${config.className}">
-                        ${config.label}
-                    </span>
-                </td>
-                <td>${escapeHTML(recipientLabel(notification))}</td>
-                <td>${escapeHTML(formatDate(notification.created_at))}</td>
-                <td>
-                    <span class="status-badge sent">Saved</span>
-                </td>
-            `;
+            const notificationCell = document.createElement("td");
+            const notificationWrapper = document.createElement("div");
+            notificationWrapper.className = "notification-cell";
+
+            const icon = document.createElement("div");
+            icon.className = "table-icon";
+            icon.textContent = config.icon;
+
+            const details = document.createElement("div");
+
+            const heading = document.createElement("strong");
+            heading.textContent = notification.title || "Untitled notification";
+
+            const body = document.createElement("span");
+            body.textContent = notification.body || "";
+
+            details.append(heading, body);
+            notificationWrapper.append(icon, details);
+            notificationCell.appendChild(notificationWrapper);
+
+            const typeCell = document.createElement("td");
+            const typeBadge = document.createElement("span");
+            typeBadge.className = `type-badge ${config.className}`;
+            typeBadge.textContent = config.label;
+            typeCell.appendChild(typeBadge);
+
+            const recipientCell = document.createElement("td");
+            recipientCell.textContent = getRecipientLabel(notification);
+
+            const dateCell = document.createElement("td");
+            dateCell.textContent = formatDate(notification.created_at);
+
+            const statusCell = document.createElement("td");
+            const statusBadge = document.createElement("span");
+            statusBadge.className = "status-badge sent";
+            statusBadge.textContent = "Saved";
+            statusCell.appendChild(statusBadge);
+
+            row.append(
+                notificationCell,
+                typeCell,
+                recipientCell,
+                dateCell,
+                statusCell
+            );
 
             tableBody.appendChild(row);
         });
 
-        recentCount.textContent = Math.min(notifications.length, 5);
-    }
-
-    /* =====================================
-       UPDATE SUMMARY
-    ===================================== */
-
-    function updateSummary(total = notifications.length) {
-        totalNotifications.textContent = total ?? notifications.length;
-        sentNotifications.textContent = total ?? notifications.length;
-
-        if (unreadNotifications) {
-            unreadNotifications.textContent = "—";
+        if (recentCount) {
+            recentCount.textContent = String(recentNotifications.length);
         }
     }
 
-    /* =====================================
-       MOBILE SIDEBAR
-    ===================================== */
+    // -----------------------------------------------------
+    // UPDATE SUMMARY
+    // -----------------------------------------------------
 
-    if (menuButton && sidebar && overlay) {
-        menuButton.addEventListener("click", () => {
-            sidebar.classList.toggle("open");
-            overlay.classList.toggle("show");
-        });
+    function updateSummary(total) {
+        const count = Number(total ?? notifications.length);
 
-        overlay.addEventListener("click", () => {
-            sidebar.classList.remove("open");
-            overlay.classList.remove("show");
+        if (totalNotifications) {
+            totalNotifications.textContent = String(count);
+        }
+
+        if (sentNotifications) {
+            sentNotifications.textContent = String(count);
+        }
+
+        // The current database structure does not establish
+        // an admin-side unread/read status for notifications.
+        if (unreadNotifications) {
+            unreadNotifications.textContent = "—";
+            unreadNotifications.title =
+                "Unread count requires a read-status system.";
+        }
+    }
+
+    // -----------------------------------------------------
+    // CHARACTER COUNTER
+    // -----------------------------------------------------
+
+    if (messageInput && characterCount) {
+        messageInput.addEventListener("input", () => {
+            characterCount.textContent = String(messageInput.value.length);
         });
     }
 
-    /* =====================================
-       LOGOUT
-    ===================================== */
+    // -----------------------------------------------------
+    // CLEAR FORM
+    // -----------------------------------------------------
+
+    if (clearButton && form) {
+        clearButton.addEventListener("click", () => {
+            form.reset();
+
+            if (characterCount) {
+                characterCount.textContent = "0";
+            }
+
+            showMessage("");
+        });
+    }
+
+    // -----------------------------------------------------
+    // SEND NOTIFICATION
+    // -----------------------------------------------------
+
+    if (form) {
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const notificationTitle = titleInput?.value.trim() || "";
+            const notificationBody = messageInput?.value.trim() || "";
+            const selectedType = typeInput?.value || "announcement";
+            const selectedRecipient = recipientInput?.value || "";
+
+            if (!notificationTitle || !notificationBody) {
+                showMessage(
+                    "Please enter both a notification title and message.",
+                    "error"
+                );
+                return;
+            }
+
+            if (!selectedRecipient) {
+                showMessage(
+                    "Please select a recipient.",
+                    "error"
+                );
+                return;
+            }
+
+            if (sendButton?.disabled) return;
+
+            if (sendButton) {
+                sendButton.disabled = true;
+                sendButton.classList.add("loading");
+                sendButton.textContent = "Sending...";
+            }
+
+            try {
+                const selectedStudent =
+                    selectedRecipient === "all"
+                        ? null
+                        : students.find(
+                            student => student.id === selectedRecipient
+                        );
+
+                if (
+                    selectedRecipient !== "all" &&
+                    !selectedStudent
+                ) {
+                    throw new Error(
+                        "The selected student could not be found. Please select again."
+                    );
+                }
+
+                /*
+                 * Existing student-side logic treats both recipient
+                 * fields being NULL as a broadcast.
+                 *
+                 * Student-specific notifications use the student's
+                 * Supabase profile UUID in both fields.
+                 *
+                 * Do not include created_by unless that column
+                 * actually exists in your notifications table.
+                 */
+                const notificationData = {
+                    student_id: selectedStudent?.id ?? null,
+                    target_student_id: selectedStudent?.id ?? null,
+                    title: notificationTitle,
+                    body: notificationBody,
+                    notification_type: selectedType
+                };
+
+                const { error } = await client
+                    .from("notifications")
+                    .insert(notificationData);
+
+                if (error) throw error;
+
+                showMessage(
+                    "Notification saved successfully!",
+                    "success"
+                );
+
+                form.reset();
+
+                if (characterCount) {
+                    characterCount.textContent = "0";
+                }
+
+                await loadNotifications();
+
+            } catch (error) {
+                console.error("Could not send notification:", error);
+
+                showMessage(
+                    "Could not send notification: " + error.message,
+                    "error"
+                );
+            } finally {
+                if (sendButton) {
+                    sendButton.disabled = false;
+                    sendButton.classList.remove("loading");
+                    sendButton.innerHTML =
+                        "<span>➤</span> Send Notification";
+                }
+            }
+        });
+    }
+
+    // -----------------------------------------------------
+    // MOBILE SIDEBAR
+    // -----------------------------------------------------
+
+    function closeSidebar() {
+        sidebar?.classList.remove("open");
+        overlay?.classList.remove("show");
+    }
+
+    if (menuButton) {
+        menuButton.addEventListener("click", () => {
+            sidebar?.classList.toggle("open");
+            overlay?.classList.toggle("show");
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener("click", closeSidebar);
+    }
+
+    // -----------------------------------------------------
+    // LOGOUT
+    // -----------------------------------------------------
 
     if (logoutButton) {
         logoutButton.addEventListener("click", async () => {
-            await client.auth.signOut();
+            if (!window.confirm("Are you sure you want to logout?")) {
+                return;
+            }
+
+            try {
+                if (client.auth) {
+                    await client.auth.signOut();
+                }
+            } catch (error) {
+                console.error("Logout error:", error);
+            }
 
             sessionStorage.removeItem("pjtAdminLoggedIn");
             sessionStorage.removeItem("pjtAdminId");
@@ -403,10 +548,40 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    /* =====================================
-       INITIAL LOAD
-    ===================================== */
+    // -----------------------------------------------------
+    // INITIALIZE
+    // -----------------------------------------------------
 
-    await loadStudents();
-    await loadNotifications();
-});
+    if (!client) {
+        console.error("Supabase client is not initialized.");
+
+        showMessage(
+            "Database connection unavailable. Check js/supabase.js.",
+            "error"
+        );
+
+        if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5">Database connection unavailable.</td>
+                </tr>
+            `;
+        }
+
+        return;
+    }
+
+    if (
+        sessionStorage.getItem("pjtAdminLoggedIn") !== "true"
+    ) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        await loadStudents();
+        await loadNotifications();
+    } catch (error) {
+        console.error("Notification page initialization failed:", error);
+    }
+}
