@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof supabaseClient === "undefined") {
         showMessage("Unable to connect to authentication. Please refresh.");
         submitButton.disabled = true;
-        return;
+        return;;
     }
 
     // Verify the recovery session created by the email reset link.
