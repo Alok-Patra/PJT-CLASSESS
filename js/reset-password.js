@@ -1,69 +1,73 @@
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("resetPasswordForm");
     const newPasswordInput = document.getElementById("newPassword");
     const confirmPasswordInput = document.getElementById("confirmNewPassword");
     const submitButton = document.getElementById("resetSubmitButton");
     const message = document.getElementById("resetMessage");
 
+    if (!form || !newPasswordInput || !confirmPasswordInput ||
+        !submitButton || !message) {
+        console.error("Password reset form elements are missing.");
+        return;
+    }
+
     const showMessage = (text, success = false) => {
         message.textContent = text;
         message.style.color = success ? "#15803d" : "#dc2626";
     };
 
+    let recoverySessionReady = false;
+
     if (typeof supabaseClient === "undefined") {
-        showMessage("Authentication could not load. Please refresh the page.");
+        showMessage("Unable to connect to authentication. Please refresh.");
         submitButton.disabled = true;
         return;
     }
 
-    // Listen for a valid password-recovery session from Supabase.
-    let recoverySessionReady = false;
-
-    const { data: listener } = supabaseClient.auth.onAuthStateChange(
-        (event, session) => {
-            if (event === "PASSWORD_RECOVERY" && session) {
-                recoverySessionReady = true;
-                showMessage("Enter and confirm your new password.", true);
-            }
+    // Verify the recovery session created by the email reset link.
+    supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (event === "PASSWORD_RECOVERY" && session) {
+            recoverySessionReady = true;
+            showMessage("Reset link verified. Enter your new password.", true);
         }
-    );
+    });
 
-    // Also check for a session already established from the email link.
-    const { data: sessionData, error: sessionError } =
-        await supabaseClient.auth.getSession();
+    // Check whether a session already exists.
+    supabaseClient.auth.getSession().then(({ data, error }) => {
+        if (error) {
+            showMessage("Could not verify the reset link. Request a new one.");
+            return;
+        }
 
-    if (sessionError) {
-        showMessage("Could not verify your reset session. Request a new link.");
-    } else if (sessionData.session) {
-        recoverySessionReady = true;
-        showMessage("Enter and confirm your new password.", true);
-    } else {
-        showMessage(
-            "Open this page using the password-reset link sent to your email."
-        );
-    }
+        if (data.session) {
+            recoverySessionReady = true;
+            showMessage("Enter your new password.", true);
+        } else {
+            showMessage("Please open this page from your password reset email.");
+        }
+    });
 
+    // UPDATE PASSWORD BUTTON
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
-        const newPassword = newPasswordInput.value;
+        const password = newPasswordInput.value;
         const confirmPassword = confirmPasswordInput.value;
 
         if (!recoverySessionReady) {
-            showMessage(
-                "Your reset session is not valid. Please request a new reset link."
-            );
+            showMessage("Your reset link is invalid or expired. Request a new one.");
             return;
         }
 
-        if (newPassword.length < 6) {
-            showMessage("Your password must contain at least 6 characters.");
+        if (password.length < 6) {
+            showMessage("Password must contain at least 6 characters.");
             return;
         }
 
-        if (newPassword !== confirmPassword) {
-            showMessage("The passwords do not match.");
+        if (password !== confirmPassword) {
+            showMessage("Both passwords must match.");
+            confirmPasswordInput.focus();
             return;
         }
 
@@ -72,13 +76,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
             const { error } = await supabaseClient.auth.updateUser({
-                password: newPassword
+                password: password
             });
 
             if (error) throw error;
 
             showMessage(
-                "Password updated successfully! You can now log in with your new password.",
+                "Password updated successfully! Redirecting to login...",
                 true
             );
 
@@ -87,21 +91,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             await supabaseClient.auth.signOut();
 
-            submitButton.textContent = "Password Updated";
-            submitButton.disabled = true;
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1800);
 
         } catch (error) {
-            console.error("Password update error:", error);
+            console.error("Password reset error:", error);
+
             showMessage(
-                error.message || "Could not update your password. Please request a new link."
+                error.message || "Password update failed. Please try again."
             );
+
             submitButton.disabled = false;
             submitButton.textContent = "Update Password";
         }
-    });
-
-    // Clean up the auth-state listener when the page is unloaded.
-    window.addEventListener("pagehide", () => {
-        listener.subscription.unsubscribe();
     });
 });
