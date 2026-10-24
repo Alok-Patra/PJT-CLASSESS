@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09254b">
+  <title>Offline | PJT CLASSES</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #f4f7fb;
+      color: #09254b;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .offline-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 36px 24px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 35px rgba(9, 37, 75, 0.1);
+    }
+
+    .offline-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+    }
+
+    p {
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    button {
+      margin-top: 18px;
+      padding: 13px 22px;
+      border: 0;
+      border-radius: 8px;
+      background: #0864f7;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="offline-card">
+    <div class="offline-icon">📡</div>
+    <h1>You're Offline</h1>
+
+    <p>
+      PJT CLASSES needs an internet connection to load your
+      account, attendance, fees and student records.
+    </p>
+
+    <p>Please reconnect to the internet and try again.</p>
+
+    <button onclick="window.location.reload()">
+      Try Again
+    </button>
+  </main>
+</body>
+</html>

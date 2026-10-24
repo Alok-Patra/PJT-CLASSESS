@@ -1,0 +1,27 @@
+
+{
+  "id": "/",
+  "name": "PJT CLASSES",
+  "short_name": "PJT CLASSES",
+  "description": "PJT CLASSES student and administration portal",
+  "lang": "en-IN",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#09254b",
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
