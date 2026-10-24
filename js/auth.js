@@ -123,6 +123,54 @@ if (error) {
     }
 
     /* =========================================
+       REGISTRATION PASSWORD SHOW / HIDE
+    ========================================== */
+
+    function setupRegisterPasswordToggle(inputId, buttonId) {
+        const input = document.getElementById(inputId);
+        const button = document.getElementById(buttonId);
+
+        if (!input || !button) return;
+
+        button.addEventListener("click", () => {
+            const isHidden = input.type === "password";
+
+            input.type = isHidden ? "text" : "password";
+
+            const eyeOpen = button.querySelector(".eye-open");
+            const eyeClosed = button.querySelector(".eye-closed");
+
+            if (eyeOpen) {
+                eyeOpen.style.display = isHidden ? "none" : "block";
+            }
+
+            if (eyeClosed) {
+                eyeClosed.style.display = isHidden ? "block" : "none";
+            }
+
+            button.setAttribute(
+                "aria-label",
+                isHidden ? "Hide password" : "Show password"
+            );
+
+            button.setAttribute(
+                "aria-pressed",
+                String(isHidden)
+            );
+        });
+    }
+
+    setupRegisterPasswordToggle(
+        "registerPassword",
+        "registerPasswordToggle"
+    );
+
+    setupRegisterPasswordToggle(
+        "confirmPassword",
+        "confirmPasswordToggle"
+    );
+
+    /* =========================================
        STUDENT REGISTRATION - SUPABASE
     ========================================== */
 
@@ -225,3 +273,57 @@ if (error) {
     }
 
 });
+
+    /* =========================================
+       FORGOT PASSWORD - SUPABASE
+    ========================================== */
+
+    const forgotPasswordLink = document.getElementById("forgotPasswordLink");
+
+    if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener("click", async (event) => {
+            event.preventDefault();
+
+            const emailInput = document.getElementById("studentId");
+            const email = emailInput?.value.trim();
+
+            if (!email) {
+                alert("Please enter your registered email address first.");
+                emailInput?.focus();
+                return;
+            }
+
+            if (!emailInput.checkValidity()) {
+                alert("Please enter a valid email address.");
+                emailInput.focus();
+                return;
+            }
+
+            try {
+                forgotPasswordLink.textContent = "Sending reset link...";
+                forgotPasswordLink.style.pointerEvents = "none";
+
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(
+                    email,
+                    {
+                        redirectTo:
+                            "https://alok-patra.github.io/PJT-CLASSESS/student/reset-password.html"
+                    }
+                );
+
+                if (error) throw error;
+
+                alert(
+                    "If an account exists for this email, a password reset link will be sent. Please check your inbox and spam folder."
+                );
+
+            } catch (error) {
+                console.error("PJT password recovery error:", error);
+                alert(error.message || "Could not send the reset email. Please try again.");
+            } finally {
+                forgotPasswordLink.textContent = "Forgot Password?";
+                forgotPasswordLink.style.pointerEvents = "";
+            }
+        });
+    }
+

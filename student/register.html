@@ -597,13 +597,53 @@
 
                         </span>
 
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            placeholder="Confirm your password"
-                            autocomplete="new-password"
-                            required
-                        >
+                      
+<input
+    type="password"
+    id="confirmPassword"
+    placeholder="Confirm your password"
+    autocomplete="new-password"
+    required
+>
+
+<button
+    type="button"
+    class="password-toggle"
+    id="confirmPasswordToggle"
+    aria-label="Show password"
+    aria-pressed="false"
+>
+    <svg class="eye-open" viewBox="0 0 24 24" fill="none">
+        <path
+            d="M2.5 12C4.5 8.2 7.8 6 12 6C16.2 6 19.5 8.2 21.5 12C19.5 15.8 16.2 18 12 18C7.8 18 4.5 15.8 2.5 12Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+        />
+        <circle
+            cx="12"
+            cy="12"
+            r="2.7"
+            stroke="currentColor"
+            stroke-width="1.8"
+        />
+    </svg>
+
+    <svg class="eye-closed" viewBox="0 0 24 24" fill="none">
+        <path
+            d="M3 3L21 21"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+        />
+        <path
+            d="M10.6 6.2C11.05 6.07 11.51 6 12 6C16.2 6 19.5 8.2 21.5 12"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+        />
+    </svg>
+</button>
+
 
                     </div>
 

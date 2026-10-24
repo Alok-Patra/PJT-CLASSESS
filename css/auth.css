@@ -1640,3 +1640,46 @@ a {
     color: #1d4ed8;
     text-decoration: underline;
 }
+
+/* Prevent duplicate native password reveal icons in Edge/Chromium */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+
+
+/* Hide the browser's built-in password reveal button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="text"]::-ms-reveal,
+input[type="text"]::-ms-clear {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Student login: Create Account link */
+.auth-register {
+    margin-top: 6px;
+    color: #09254b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.auth-register a,
+.auth-register a:link,
+.auth-register a:visited {
+    color: #0864f7 !important;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.auth-register a:hover,
+.auth-register a:focus-visible {
+    color: #064fc4 !important;
+    text-decoration: underline;
+}
