@@ -50,3 +50,11 @@ supabaseClient.auth.getSession()
             error
         );
     });
+
+window.supabaseClient.auth.getSession().then(({ data, error }) => {
+    console.log("PJT SESSION CHECK:", {
+        sessionExists: Boolean(data?.session),
+        userId: data?.session?.user?.id || null,
+        error: error?.message || null
+    });
+});
