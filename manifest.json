@@ -5,7 +5,7 @@
   "short_name": "PJT CLASSES",
   "description": "PJT CLASSES student and administration portal",
   "lang": "en-IN",
-  "start_url": "/index.html",
+  "start_url": "/student/login.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#f4f7fb",
