@@ -218,16 +218,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             (readRows || []).map(row => String(row.notification_id))
         );
 
-        notifications = (rows || []).map(row => ({
-            id: row.id,
-            type: String(row.notification_type || "general")
-                .trim()
-                .toLowerCase(),
-            title: row.title || "Notification",
-            message: row.body || "",
-            date: formatDate(row.created_at),
-            unread: !readIds.has(String(row.id))
-        }));
+        notifications = (rows || [])
+    .filter(row => !readIds.has(String(row.id)))
+    .map(row => ({
+        id: row.id,
+        type: String(row.notification_type || "general")
+            .trim()
+            .toLowerCase(),
+        title: row.title || "Notification",
+        message: row.body || "",
+        date: formatDate(row.created_at),
+        unread: true
+    }));
 
         updateCounts();
         renderNotifications();
@@ -474,10 +476,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (error) throw error;
             }
 
-            notification.unread = false;
+    
+notifications = notifications.filter(
+    item => String(item.id) !== String(id)
+);
 
-            updateCounts();
-            renderNotifications();
+updateCounts();
+renderNotifications();
+
+            
 
         } catch (error) {
             console.error(
@@ -544,8 +551,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (error) throw error;
                     }
 
-                    notification.unread = false;
+                    
                 }
+                notifications = [];
 
                 updateCounts();
                 renderNotifications();
