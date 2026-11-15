@@ -53,10 +53,7 @@ const { data, error } = await supabaseClient.auth.signInWithPassword({
 });
 
 if (error) {
-    const message = "Incorrect email or password. Please try again.";
-
-    alert(message);
-    return;
+    throw new Error("Incorrect email or password. Please try again.");
 }
 
 
